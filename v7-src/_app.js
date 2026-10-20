@@ -33,7 +33,7 @@ function placer(id) {
 function rafraichirPlacement(id) {
  const owner = proprietaire(id); placer(owner);
  const pose = poses[owner], g=pose.closest('.bd-lieu');
- const b=pose.getBBox(), m=pose.transform.baseVal.consolidate()?.matrix;
+ const b=owner==='scatolina'?{x:1390,y:735,width:130,height:82}:pose.getBBox(), m=pose.transform.baseVal.consolidate()?.matrix;
  if(m){ const p1=new DOMPoint(b.x,b.y).matrixTransform(m), p2=new DOMPoint(b.x+b.width,b.y+b.height).matrixTransform(m); const z=g.querySelector(':scope > .bd-zone'); z.setAttribute('x',p1.x-4); z.setAttribute('y',p1.y-4); z.setAttribute('width',p2.x-p1.x+8); z.setAttribute('height',p2.y-p1.y+8); boites[owner]=[p1.x,p1.y,p2.x,p2.y]; const cons=constructions.find(c=>c.id===owner); if(cons){cons.boite={x:p1.x,y:p1.y,width:p2.x-p1.x,height:p2.y-p1.y};const masque=svg.querySelector('#revelation-'+owner);masque.setAttribute('x',p1.x-300);masque.setAttribute('y',p1.y-500);masque.setAttribute('width',p2.x-p1.x+600);masque.setAttribute('height',p2.y-p1.y+1000);const rect=masque.querySelector('rect');for(const k of ['x','y','width','height'])rect.setAttribute(k,masque.getAttribute(k));} }
  construire();
 }
@@ -43,7 +43,10 @@ let boites = {}, vb = [0, 0, 1600, 900], vivante = false;
 
 /* ── la vue suit le format de l'écran ── */
 const aspect = () => { const r = scene.getBoundingClientRect(); return r.width / r.height; };
-function cadrer(x) { const a = aspect(); if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,900-h,w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
+const promenadeMobile=()=>matchMedia('(max-width:767px) and (orientation:portrait)').matches;
+let chapitreMobile=null,hauteurMobile=1080,decalageMobile=0;
+const ETAPES_MOBILE=[['cimetiere',122],['tour',374],['maison',627],['serre',846],['usine',973],['bar',1106],['creche',1250],['arbre',1380],['scatolina',1452]];
+function cadrer(x) { const a = aspect(); if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,900-h,w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
 const versEcran = (x, y) => { const r = scene.getBoundingClientRect(); return [(x - vb[0]) / vb[2] * r.width, (y - vb[1]) / vb[3] * r.height]; };
 
 /* ── dessin ── */
@@ -116,13 +119,19 @@ function dessiner() {
     el('rect',{x:b.x-200,y:b.y-400,width:b.width+400,height:b.height+800,fill:`url(#${gradientId})`},masque);
     cons.setAttribute('mask',`url(#${masqueId})`);
     if(l.id==='cimetiere')g.setAttribute('aria-label','Norma, mausolée et cierges');
-    boites[l.id] = [b.x, b.y, b.x + b.width, b.y + b.height];
-    g.insertBefore(el('rect', { class: 'bd-zone', x: b.x - 4, y: b.y - 4, width: b.width + 8, height: b.height + 8 }), g.firstChild);
+    let hit=b;
+    if(l.id==='scatolina'){
+      const m=pose.transform.baseVal.consolidate()?.matrix||new DOMMatrix();
+      const a=new DOMPoint(1390,735).matrixTransform(m),z=new DOMPoint(1520,817).matrixTransform(m);
+      hit={x:a.x,y:a.y,width:z.x-a.x,height:z.y-a.y};
+    }
+    boites[l.id] = [hit.x, hit.y, hit.x + hit.width, hit.y + hit.height];
+    g.insertBefore(el('rect', { class: 'bd-zone', x: hit.x - 4, y: hit.y - 4, width: hit.width + 8, height: hit.height + 8 }), g.firstChild);
     constructions.push({id:l.id,g:cons, gradient:grad, boite:b, debut:0.10 + rangLieu*0.006, lune:l.id === 'lune'});
-    g.addEventListener('pointerenter', e => { if (e.pointerType !== 'touch') survoler(l.id); });
-    g.addEventListener('pointerleave', e => { if (e.pointerType !== 'touch') survoler(null); });
+    g.addEventListener('pointerenter', e => { if (!promenadeMobile()&&e.pointerType !== 'touch') survoler(l.id); });
+    g.addEventListener('pointerleave', e => { if (!promenadeMobile()&&e.pointerType !== 'touch') survoler(null); });
     g.addEventListener('focus', () => survoler(l.id)); g.addEventListener('blur', () => survoler(null));
-    g.addEventListener('click', e => { if (edition) { choisir(l.id); return; } if (!vivante || glisse.bouge) return; if (e.pointerType === 'touch' && arme !== l.id) { arme = l.id; survoler(l.id); return; } ouvrirProjet(l.id); });
+    g.addEventListener('click', e => { if (edition) { choisir(l.id); return; } if (!vivante || glisse.bouge) return; if (e.pointerType === 'touch' && arme !== l.id && !(promenadeMobile()&&survole===l.id)) { arme = l.id; survoler(l.id); return; } ouvrirProjet(l.id); });
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if(edition) choisir(l.id); else ouvrirProjet(l.id); } });
   });
   tmp.remove();
@@ -133,11 +142,13 @@ let arme = null;
 const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.PI * borne(k)) / 2;
 function construire() {
   const r = rue.getBoundingClientRect(), course = rue.offsetHeight - innerHeight;
-  const p = reduit ? 1 : borne(-r.top / course);
-  const kc = edition ? 1 : doux((p - 0.08) / 0.55);
-  sol.style.opacity = edition ? 1 : doux((p - 0.09) / 0.5);
+  const mobile=promenadeMobile()&&!edition;
+  const p = reduit&&!mobile ? 1 : borne(-r.top / course);
+  const revelation=mobile?borne(p/.17):p;
+  const kc = edition ? 1 : doux((revelation - 0.08) / 0.55);
+  sol.style.opacity = edition ? 1 : doux((revelation - 0.09) / 0.5);
   for (const c of constructions) {
-    const k = edition ? 1 : doux((p - c.debut) / 0.5);
+    const k = edition ? 1 : doux((revelation - c.debut) / 0.5);
     const bord = c.boite.y + c.boite.height + 90 - k*(c.boite.height+180);
     c.gradient.setAttribute('y1',bord-36); c.gradient.setAttribute('y2',bord+36);
     c.g.style.opacity = k === 0 ? 0 : 1;
@@ -151,9 +162,21 @@ function construire() {
   // parallaxe : au fil de la descente, le fond glisse moins vite que la rue
   const t = Math.max(0,p - 0.86) * 60;
   calques[0].style.transform = ''; calques[3].style.transform = '';
-  const etaitVivante = vivante; vivante = edition || p >= 0.68; scene.classList.toggle('vivante', vivante);
+  const etaitVivante = vivante; vivante = edition || (mobile?revelation>=.68:p>=0.68); scene.classList.toggle('vivante', vivante);
   $('#bd-indice').style.opacity = vivante && !survole ? 0.8 : 0;
   if (!vivante && etaitVivante) survoler(null);
+  if(mobile){
+    const voyage=borne((p-.12)/.82)*(ETAPES_MOBILE.length-1),i=Math.min(ETAPES_MOBILE.length-1,Math.floor(voyage)),j=Math.min(i+1,ETAPES_MOBILE.length-1);
+    const phase=voyage-i,fondu=doux(borne((phase-.30)/.58));
+    const centre=ETAPES_MOBILE[i][1]+(ETAPES_MOBILE[j][1]-ETAPES_MOBILE[i][1])*fondu;
+    hauteurMobile=1080-280*doux(borne((voyage-5)/3));decalageMobile=100*doux(borne((voyage-5)/3));
+    const largeur=hauteurMobile*aspect();cadrer(centre-largeur/2);
+    const courant=ETAPES_MOBILE[fondu>.5?j:i][0];
+    if(vivante&&(chapitreMobile!==courant||survole!==courant)){chapitreMobile=courant;survoler(courant);}
+    if(!vivante)chapitreMobile=null;
+    scene.style.setProperty('--bd-mobile-progress',String(borne(p)));
+    scene.dataset.chapitre=String((fondu>.5?j:i)+1).padStart(2,'0')+' / 09';
+  }else if(chapitreMobile){chapitreMobile=null;survoler(null);}
   if (hero) { if (kc > 0.98 && !hero.paused) hero.pause(); else if (kc < 0.95 && hero.paused && heroLance) hero.play().catch(() => {}); }
 }
 let heroLance = true, attenteCadre = 0;
@@ -181,7 +204,7 @@ function survoler(id) {
 
 /* ── glisser à l'horizontale sur téléphone ── */
 const glisse = { x0: null, vb0: 0, bouge: false };
-scene.addEventListener('pointerdown', e => { if (e.pointerType !== 'touch' || aspect() >= 1) return; glisse.x0 = e.clientX; glisse.vb0 = vb[0]; glisse.bouge = false; });
+scene.addEventListener('pointerdown', e => { if (promenadeMobile() || e.pointerType !== 'touch' || aspect() >= 1) return; glisse.x0 = e.clientX; glisse.vb0 = vb[0]; glisse.bouge = false; });
 addEventListener('pointermove', e => { if (glisse.x0 == null) return; const dx = e.clientX - glisse.x0; if (Math.abs(dx) > 8) glisse.bouge = true; cadrer(glisse.vb0 - dx / scene.getBoundingClientRect().width * vb[2]); });
 addEventListener('pointerup', () => { glisse.x0 = null; setTimeout(() => glisse.bouge = false, 0); });
 
@@ -328,7 +351,7 @@ function defilerVers(top,hash) {
 }
 document.querySelectorAll('.entry-enter').forEach(lien=>lien.addEventListener('click',e=>{
  e.preventDefault();entrer();
- defilerVers(rue.offsetTop+(rue.offsetHeight-innerHeight)*.74,'#rue');
+ defilerVers(rue.offsetTop+(rue.offsetHeight-innerHeight)*(promenadeMobile()?.025:.74),'#rue');
 }));
 document.querySelectorAll('#site-navigation a[href="#contact"]').forEach(lien=>lien.addEventListener('click',e=>{
  e.preventDefault();defilerVers($('#contact').getBoundingClientRect().top+scrollY-32,'#contact');
@@ -369,7 +392,7 @@ document.querySelectorAll('a[href*="#"]').forEach(a=>a.addEventListener('click',
 addEventListener('scroll',()=>{
  const nouveau=scrollY; if(!aideEnCours)sensScroll=Math.sign(nouveau-dernierScroll)||sensScroll;dernierScroll=nouveau;
  clearTimeout(aideTimer);
- if(!intentionDescente||reduit||edition||aideEnCours||projet.classList.contains('ouvert'))return;
+ if(promenadeMobile()||!intentionDescente||reduit||edition||aideEnCours||projet.classList.contains('ouvert'))return;
  aideTimer=setTimeout(()=>{
   const course=rue.offsetHeight-innerHeight,progression=(scrollY-rue.offsetTop)/course;
   if(sensScroll<=0||progression<.09||progression>=.7)return;
