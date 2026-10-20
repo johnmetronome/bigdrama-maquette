@@ -59,6 +59,26 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 .reglage textarea{width:100%;height:84px;font:11px/1.4 ui-monospace,Menlo,monospace;background:#000;color:#9f9;border:1px solid #333}
 .reglage button{font:500 11px/1 var(--f-texte);padding:8px;cursor:pointer}
 
+/* blueprint, épuré */
+.photo-piece{opacity:0;filter:grayscale(1) sepia(1) hue-rotate(178deg) saturate(2.4) brightness(.72) contrast(1.1);animation:developpe 1.6s var(--lent) forwards;animation-delay:var(--t,0s);transition:filter 1.4s var(--lent),opacity 1.4s var(--lent)}
+@keyframes developpe{to{opacity:.32}}
+.piece:hover .photo-piece,.piece:focus .photo-piece,.piece.vue .photo-piece{animation:none;opacity:1;filter:none}
+/* écran du support et salle de projection */
+.ouvrir-ecran{all:unset;cursor:zoom-in;display:block}
+.ecran{position:relative;margin:0;aspect-ratio:4/3;width:100%;-webkit-mask:var(--masque) center/100% 100% no-repeat;mask:var(--masque) center/100% 100% no-repeat;background:#000;overflow:hidden}
+.ecran .defile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02);transform-origin:50% 40%;transition:opacity 1.8s var(--lent),transform 7s linear}
+.ecran .defile img.actif{opacity:1;transform:scale(1.12)}
+.ecran video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s var(--lent)}
+.ecran video.pret{opacity:1}
+.support .logo{width:72%;justify-self:center}
+.support .encre,.salle .encre{display:block;width:100%;background:currentColor;-webkit-mask:var(--masque) center/contain no-repeat;mask:var(--masque) center/contain no-repeat}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.salle{position:fixed;inset:0;z-index:20;background:rgba(5,4,3,.94);display:grid;place-items:center;align-content:center;gap:14px;opacity:0;transition:opacity 700ms var(--lent);cursor:zoom-out;padding:24px}
+.salle.vu{opacity:1}
+.salle .ecran{width:min(88vw,calc(78svh * 4 / 3));transform:scale(.92);transition:transform 1s var(--lent)}
+.salle.vu .ecran{transform:none}
+.salle .legende{margin:0;font:400 12px/1.5 var(--f-texte);color:#a89c8b;max-width:70ch;text-align:center}
+.salle .fermer{position:absolute;right:18px;top:12px;background:none;border:0;color:#efe8dc;font:300 30px/1 var(--f-texte);cursor:pointer}
 /* blueprint */
 .bleu{opacity:0;pointer-events:none;transition:opacity 900ms var(--lent)}
 .coupe .bleu{opacity:1;pointer-events:auto}
@@ -68,17 +88,17 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 .trait path,.fantome path{fill:none;stroke:var(--trait);stroke-width:1.2;vector-effect:non-scaling-stroke;stroke-linejoin:round}
 .trace{stroke-dasharray:var(--l);stroke-dashoffset:var(--l);animation:trace var(--d,2.6s) var(--lent) forwards;animation-delay:var(--t,0s)}
 @keyframes trace{to{stroke-dashoffset:0}}
-.fantome{opacity:.13;cursor:pointer;transition:opacity 700ms var(--lent)}
+.fantome{opacity:.1;cursor:pointer;transition:opacity 700ms var(--lent)}
 .fantome .zone-f{fill:transparent;stroke:none}
 .fantome:hover,.fantome:focus,.fantome.vu{opacity:.55}
 .cote{fill:none;stroke:var(--trait);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.75}
-.piece rect{fill:rgba(234,242,255,0);stroke:var(--trait);stroke-width:1.1;stroke-dasharray:5 4;vector-effect:non-scaling-stroke;transition:fill 400ms var(--lent)}
+.piece rect{fill:none;stroke:var(--trait);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.9}
 .piece rect.trace{stroke-dasharray:var(--l)}
 .piece path{fill:none;stroke:var(--trait);stroke-width:1;vector-effect:non-scaling-stroke;opacity:.85}
 .piece .num{font:11px var(--f-machine);fill:var(--trait);opacity:0;animation:apparait 800ms var(--lent) forwards;animation-delay:var(--t,0s)}
 @keyframes apparait{to{opacity:.85}}
 .piece{cursor:help}
-.piece:hover rect,.piece:focus rect,.piece.vue rect{fill:rgba(234,242,255,.14)}
+.piece:hover rect,.piece:focus rect,.piece.vue rect{opacity:1;stroke-width:2}
 .bulle{position:absolute;pointer-events:none;background:rgba(31,78,140,.96);color:var(--trait);font:13px/1.45 var(--f-texte);padding:11px 14px;border:1px solid var(--trait);width:max-content;max-width:min(280px,70vw);opacity:0;transform:translate(-50%,calc(-100% - 6px));transition:opacity 400ms var(--lent),transform 400ms var(--lent)}
 .bulle.vue{opacity:1;transform:translate(-50%,calc(-100% - 14px))}
 .bulle.dessous{transform:translate(-50%,6px)}.bulle.dessous.vue{transform:translate(-50%,14px)}
@@ -89,8 +109,6 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 /* le support de l'histoire : il se déroule à côté du plan */
 .support{position:absolute;z-index:4;right:3%;top:8%;width:min(34%,400px);max-height:84%;overflow:auto;padding:28px 26px 24px;display:grid;gap:12px;visibility:hidden;color:#1b1712;font:400 14px/1.6 var(--f-texte);scrollbar-width:thin}
 .support.vu{visibility:visible}
-.support .logo{max-width:78%;justify-self:center}
-.support .logo img{display:block;width:100%;height:auto}
 .support h2{margin:0;font:italic 400 32px/1.05 var(--f-titre);text-align:center;text-wrap:balance}
 .support .cap{font:500 10px/1.4 var(--f-texte);letter-spacing:.26em;text-transform:uppercase;text-align:center;opacity:.7}
 .support .resume{font:italic 400 18px/1.45 var(--f-titre);margin:0;text-align:center}
@@ -283,18 +301,29 @@ async function ouvrir(id) {
   if (selection === id) remplirSupport(l);
 }
 function tracer(p, duree, retard) { if (reduit) return; const L = Math.min(6000, p.getTotalLength ? p.getTotalLength() : 600); p.style.setProperty('--l', L); p.style.setProperty('--d', duree + 's'); p.style.setProperty('--t', retard + 's'); p.classList.add('trace'); }
+// pour le plan, on ne garde que la structure d'un bâtiment : les formes noires assez grandes (masses, toits, corniches)
+const structures = {};
+function structure(id) {
+  if (structures[id]) return structures[id];
+  const b = boites[id], W = b[2] - b[0], H = b[3] - b[1], tmp = el('path', {}, svg), garde = [];
+  for (const fm of S.lieux[id]) {
+    if (fm.fill === 'lumiere' || fm.opacite) continue;
+    for (const sous of fm.d.split(/(?=M)/)) { tmp.setAttribute('d', sous); const bb = tmp.getBBox(); if (bb.width * bb.height > W * H * 0.012 || bb.width > W * 0.45 || bb.height > H * 0.35) garde.push(sous); }
+  }
+  tmp.remove(); return structures[id] = garde;
+}
 function blueprint(l, coupe, enchaine) {
   const bleu = $('#bleu'); bleu.innerHTML = '';
   const defs = el('defs', {}, bleu);
   const p1 = el('pattern', { id: 'g1', width: 20, height: 20, patternUnits: 'userSpaceOnUse' }, defs); el('path', { d: 'M20 0H0V20', fill: 'none', stroke: COULEURS.trait, 'stroke-opacity': .1, 'stroke-width': .6 }, p1);
   const p2 = el('pattern', { id: 'g2', width: 100, height: 100, patternUnits: 'userSpaceOnUse' }, defs); el('path', { d: 'M100 0H0V100', fill: 'none', stroke: COULEURS.trait, 'stroke-opacity': .2, 'stroke-width': .8 }, p2);
-  el('rect', { class: 'fond', x: -400, y: -400, width: 2400, height: 1700, opacity: .97 }, bleu);
+  el('rect', { class: 'fond', x: -400, y: -400, width: 2400, height: 1700 }, bleu);
   const gr = el('g', { class: 'grille' }, bleu); el('rect', { x: -400, y: -400, width: 2400, height: 1700, fill: 'url(#g1)' }, gr); el('rect', { x: -400, y: -400, width: 2400, height: 1700, fill: 'url(#g2)' }, gr);
   // les autres lieux, en fantômes : on passe de l'un à l'autre
   for (const o of LIEUX) {
     if (o.id === l.id) continue;
     const g = el('g', { class: 'fantome trait', 'data-id': o.id, tabindex: 0, role: 'button', 'aria-label': o.creation }, bleu);
-    S.lieux[o.id].filter(fm => fm.fill !== 'lumiere').forEach(fm => el('path', { d: fm.d }, g));
+    structure(o.id).forEach(d => el('path', { d }, g));
     const b = boites[o.id]; el('rect', { class: 'zone-f', x: b[0], y: b[1], width: b[2] - b[0], height: b[3] - b[1] }, g);
     const allume = () => { g.classList.add('vu'); g.querySelectorAll('path').forEach((p, i) => tracer(p, 1.4, i * 0.03)); montrerLogo(o.id); son(o.id); };
     const eteint = () => { g.classList.remove('vu'); logo.classList.remove('vu'); son(selection); };
@@ -305,7 +334,7 @@ function blueprint(l, coupe, enchaine) {
   }
   // le bâtiment choisi, tracé lentement
   const base = enchaine ? 0.6 : 0.9, tr = el('g', { class: 'trait' }, bleu);
-  S.lieux[l.id].filter(fm => fm.fill !== 'lumiere').forEach((fm, i) => tracer(el('path', { d: fm.d }, tr), 2.8, base + i * 0.08));
+  structure(l.id).forEach((d, i) => tracer(el('path', { d }, tr), 2.8, base + Math.min(i, 30) * 0.05));
   const [x0, y0, x1, y1] = coupe.contour, c = el('g', { class: 'cote' }, bleu);
   [`M${x0} ${y0 - 16}H${x1}`, `M${x0 - 16} ${y0}V${y1}`, `M${x0} ${y0 - 22}v12M${x1} ${y0 - 22}v12M${x0 - 22} ${y0}h12M${x0 - 22} ${y1}h12`].forEach((d, i) => tracer(el('path', { d }, c), 1.6, base + 1 + i * 0.2));
   // les pièces, une à une
@@ -313,8 +342,10 @@ function blueprint(l, coupe, enchaine) {
     const info = l.pieces.find(p => p.id === pc.id); if (!info) return;
     const [a, b, cx, d] = pc.boite, t0 = base + 1.6 + i * 0.35;
     const g = el('g', { class: 'piece', tabindex: 0, role: 'button', 'aria-label': info.nom }, bleu);
+    const cp = el('clipPath', { id: 'cp-' + i }, defs); el('rect', { x: a + 3, y: b + 3, width: cx - a - 6, height: d - b - 6 }, cp);
+    const photo = l.photos[i % l.photos.length];
+    if (photo) { const im = el('image', { class: 'photo-piece', href: photo, x: a + 3, y: b + 3, width: cx - a - 6, height: d - b - 6, preserveAspectRatio: 'xMidYMid slice', 'clip-path': `url(#cp-${i})` }, g); im.style.setProperty('--t', (t0 + 0.9) + 's'); }
     tracer(el('rect', { x: a + 2, y: b + 2, width: cx - a - 4, height: d - b - 4 }, g), 1.2, t0);
-    if (pc.mobilier) tracer(el('path', { d: pc.mobilier }, g), 1.4, t0 + 0.5);
     const n = el('text', { class: 'num', x: a + 6, y: b + 15 }, g); n.textContent = String(i + 1).padStart(2, '0'); n.style.setProperty('--t', (t0 + 0.6) + 's');
     const montrer = () => {
       g.classList.add('vue'); const r = scene.getBoundingClientRect(), dessous = versEcran(0, b)[1] < r.height * 0.36;
@@ -328,18 +359,63 @@ function blueprint(l, coupe, enchaine) {
     g.addEventListener('click', e => { e.stopPropagation(); montrer(); });
   });
 }
+// l'écran de chaque histoire : le teaser (videos/<id>.mp4) vu à travers une forme propre au monde, sinon les photos qui défilent
+const FORMES = {
+  'carte-maison-close': '<circle cx="50" cy="24" r="17"/><path d="M41 34 L32 73 H68 L59 34 Z"/>',                        // trou de serrure : à quelle porte écouter
+  'dossier-enquete': '<circle cx="46" cy="34" r="30"/><path d="M66 56 L72 50 L96 72 L90 75 Z"/>',                           // loupe
+  'boite-orange': '<circle cx="50" cy="37.5" r="35"/>',                                                                     // hublot
+  'ardoise-bistrot': '<path d="M5 75 V16 Q5 3 18 3 H82 Q95 3 95 16 V75 Z"/>',                                               // vitrine du bistrot
+  'livre-enfant': '<circle cx="50" cy="33" r="31"/><path d="M28 60 H72 L78 75 H22 Z"/>',                                    // boule à neige
+  'faire-part': '<path d="M14 75 V36 Q14 6 50 2 Q86 6 86 36 V75 Z"/>',                                                      // porte de caveau
+  'affiche-tsigane': '<ellipse cx="50" cy="37.5" rx="47" ry="36"/>',                                                         // médaillon
+  'parchemin-balkans': '<path d="M50 2 C70 2 90 14 90 37.5 C90 61 70 73 50 73 C30 73 10 61 10 37.5 C10 14 30 2 50 2 Z M44 0 H56 V6 H44 Z"/>', // portrait royal ovale
+  'etiquette-cigare': '<path d="M12 3 H88 L97 13 V62 L88 72 H12 L3 62 V13 Z"/>',                                            // bague de cigare
+  'etiquette-brulee': '<path d="M8 75 V32 A42 28 0 0 1 92 32 V75 Z"/>'                                                       // porte du four
+};
+const masque = s => `url(data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 75" preserveAspectRatio="none">${FORMES[s]}</svg>`).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29')})`;
+function ecran(l, grand = false) {
+  const photos = l.photos.map((p, i) => `<img src="${p}" alt="" style="--i:${i};--n:${l.photos.length}" loading="lazy">`).join('');
+  return `<figure class="ecran${grand ? ' grand' : ''}" style="--masque:${masque(l.support)}"><div class="defile" style="--n:${l.photos.length}">${photos}</div>
+    <video muted loop playsinline preload="metadata" src="${l.video}"></video></figure>`;
+}
+function brancherVideo(racine) {
+  racine.querySelectorAll('.ecran video').forEach(v => {
+    v.addEventListener('loadeddata', () => { v.classList.add('pret'); v.play().catch(() => {}); }, { once: true });
+    v.addEventListener('error', () => v.remove(), { once: true });
+  });
+}
+// les photos défilent lentement, une à la fois, en fondu et en léger travelling
+setInterval(() => document.querySelectorAll('.ecran .defile').forEach(d => {
+  const ims = [...d.children], i = ims.findIndex(x => x.classList.contains('actif'));
+  ims.forEach(x => x.classList.remove('actif')); ims[(i + 1) % ims.length]?.classList.add('actif');
+}), 5000);
+const allumer = racine => racine.querySelectorAll('.ecran .defile').forEach(d => d.children[0]?.classList.add('actif'));
 function remplirSupport(l) {
   const infos = l.infos.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('');
   support.className = 'support s-' + l.support;
   support.innerHTML = `<button class="fermer" type="button" aria-label="Fermer">×</button>
-    ${l.logo ? `<div class="logo"><img src="${l.logo}" alt="${l.creation}"></div>` : `<h2>${l.creation}</h2>`}
+    <button class="ouvrir-ecran" type="button" aria-label="Voir en grand">${ecran(l)}</button>
+    <div class="logo"><span class="encre" style="--masque:url('${l.logo}');aspect-ratio:${ratios[l.id] || 2}"></span><span class="sr">${l.creation}</span></div>
     <div class="cap">${l.annee} · ${l.cadre}</div>
     <p class="resume">${l.resume}</p>
     <dl>${infos}</dl>
     <p class="lorem">${LOREM_LONG}</p>
-    <p class="bientot">Images à venir</p>`;
+    ${l.legende ? `<p class="bientot">${l.legende}</p>` : ''}`;
   support.querySelector('.fermer').onclick = e => { e.stopPropagation(); fermer(); };
+  support.querySelector('.ouvrir-ecran').onclick = e => { e.stopPropagation(); projection(l); };
+  brancherVideo(support); allumer(support);
   void support.offsetWidth; support.classList.add('vu');
+}
+// la salle de projection : l'écran en grand, le son du teaser possible
+function projection(l) {
+  const s = document.createElement('div'); s.className = 'salle'; s.setAttribute('role', 'dialog'); s.setAttribute('aria-label', l.creation);
+  s.innerHTML = `${ecran(l, true)}<p class="legende">${l.legende || ''}</p><button class="fermer" type="button" aria-label="Fermer">×</button>`;
+  document.body.appendChild(s); brancherVideo(s); allumer(s);
+  const v = s.querySelector('video'); if (v) v.muted = !sonActif;
+  const quitter = () => { s.classList.remove('vu'); setTimeout(() => s.remove(), 700); removeEventListener('keydown', esc, true); };
+  const esc = e => { if (e.key === 'Escape') { e.stopPropagation(); quitter(); } };
+  addEventListener('keydown', esc, true); s.onclick = quitter;
+  requestAnimationFrame(() => s.classList.add('vu'));
 }
 function fermer() {
   selection = null; scene.classList.remove('coupe'); document.body.classList.remove('en-coupe'); bulle.classList.remove('vue'); logo.classList.remove('vu');
