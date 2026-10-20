@@ -40,21 +40,24 @@ body{font:300 15px/1.6 var(--f-texte);-webkit-font-smoothing:antialiased}
 button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-visible{outline:2px solid #c9a35b;outline-offset:3px}
 
 /* lieux au repos et au survol */
-.lieu{cursor:pointer;transition:opacity 350ms ease-out,filter 350ms ease-out}
+.lieu{cursor:pointer;transition:opacity 500ms ease-out,filter 500ms ease-out,transform 700ms var(--lent);transform-box:fill-box}
 .lieu:focus{outline:none}
-.scene.survol .lieu,.scene.survol .calque-decor{transition:opacity 600ms var(--lent),filter 600ms var(--lent)}
-.scene.survol .lieu:not(.actif),.scene.survol .calque-decor{opacity:.45;filter:blur(1.2px)}
-.lieu.actif{filter:drop-shadow(0 0 16px rgba(255,214,120,.35))}
+.scene.survol .lieu,.scene.survol .calque-decor{transition:opacity 900ms var(--lent),filter 900ms var(--lent),transform 900ms var(--lent)}
+.scene.survol .lieu:not(.actif){opacity:.84}
+.lieu.actif{filter:drop-shadow(0 0 5px rgba(255,227,77,.3));transform:translateY(-2px)}
 .zone{fill:transparent}
 
 /* le logo se dessine à l'encre, sans carton */
-.logo-survol{position:absolute;pointer-events:none;transform:translate(-50%,-100%);opacity:0;filter:blur(6px) drop-shadow(0 0 10px rgba(255,227,77,.9));clip-path:inset(0 100% 0 0);transition:opacity 280ms ease-out,filter 280ms ease-out,clip-path 0s 280ms}
-.logo-survol.vu{opacity:1;filter:blur(0) drop-shadow(0 0 10px rgba(255,227,77,.9));clip-path:inset(0 0 0 0);transition:opacity 500ms var(--lent),filter 900ms var(--lent),clip-path 1100ms var(--lent)}
-.logo-survol img{display:block;width:100%;height:auto}
-.logo-survol .titre{display:block;font:italic 400 clamp(22px,3.2vw,42px)/1 var(--f-titre);color:var(--noir);white-space:nowrap}
-.coupe .logo-survol img{filter:invert(1) brightness(1.1)}
-.coupe .logo-survol .titre{color:var(--trait)}
-.coupe .logo-survol{filter:blur(0) drop-shadow(0 0 0 transparent)}
+/* le logo apparaît en bas, au centre, dans la bande noire de la rue. Réglages : REGLAGE_LOGOS, ou ?reglage dans l'adresse */
+.logo-survol{position:absolute;left:50%;top:var(--logo-y,88%);pointer-events:none;transform:translate(-50%,-50%);opacity:0;filter:blur(4px);clip-path:inset(0 100% 0 0);transition:opacity 300ms ease-out,filter 300ms ease-out,clip-path 0s 300ms;color:var(--lumiere)}
+.logo-survol.vu{opacity:1;filter:blur(0);clip-path:inset(0 0 0 0);transition:opacity 700ms var(--lent),filter 1000ms var(--lent),clip-path 1300ms var(--lent)}
+.logo-survol .encre{display:block;background:currentColor;-webkit-mask:var(--masque) center/contain no-repeat;mask:var(--masque) center/contain no-repeat}
+.logo-survol .titre{display:block;font:italic 400 var(--titre-px,28px)/1 var(--f-titre);white-space:nowrap}
+.coupe .logo-survol{color:var(--trait)}
+.reglage{position:fixed;left:16px;bottom:16px;z-index:9;background:#111;color:#eee;border:1px solid #444;padding:12px 14px;font:12px/1.5 var(--f-texte);display:grid;gap:6px;width:300px}
+.reglage label{display:grid;grid-template-columns:110px 1fr 40px;gap:8px;align-items:center}
+.reglage textarea{width:100%;height:84px;font:11px/1.4 ui-monospace,Menlo,monospace;background:#000;color:#9f9;border:1px solid #333}
+.reglage button{font:500 11px/1 var(--f-texte);padding:8px;cursor:pointer}
 
 /* blueprint */
 .bleu{opacity:0;pointer-events:none;transition:opacity 900ms var(--lent)}
@@ -180,7 +183,13 @@ function borner([x, y, w]) {
   const a = aspect(); w = Math.min(largeurMax(), Math.max(selection ? 420 : 760, w)); const h = w / a;
   return [Math.min(1600 - w, Math.max(0, x)), Math.min(900 - h, Math.max(0, y)), w, h];
 }
-const appliquer = () => svg.setAttribute('viewBox', vb.map(n => n.toFixed(2)).join(' '));
+// parallaxe : en avançant, les calques du fond grandissent moins vite que ceux de devant
+const PROFONDEUR = { 0: 0.08, 1: 0.03, 2: 0, 3: -0.03 };
+const appliquer = () => {
+  svg.setAttribute('viewBox', vb.map(n => n.toFixed(2)).join(' '));
+  const z = largeurMax() / vb[2], cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2;
+  svg.querySelectorAll(':scope > g[data-plan]').forEach(g => { const s = 1 - PROFONDEUR[g.dataset.plan] * (z - 1); g.setAttribute('transform', reduit ? '' : `translate(${cx.toFixed(1)} ${cy.toFixed(1)}) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)} ${(-cy).toFixed(1)})`); });
+};
 function aller(v, duree = 1400) {
   v = borner(v); if (reduit || !duree) { vb = v; appliquer(); return Promise.resolve(); }
   const de = vb.slice(), t0 = performance.now(), jeton = anim = {};
@@ -195,7 +204,7 @@ function dessiner() {
   svg.innerHTML = ''; const plans = {};
   const calque = n => plans[n] ||= el('g', { 'data-plan': n }, svg);
   [0, 1, 2, 3].forEach(calque);
-  const forme = (fm, parent) => { const p = el('path', { d: fm.d, fill: COULEURS[fm.fill] }, parent); if (fm.anim && !reduit) { p.classList.add('a-' + fm.anim); if (fm.centre) p.style.transformOrigin = `${fm.centre[0]}px ${fm.centre[1]}px`; } return p; };
+  const forme = (fm, parent) => { if (fm.transform) parent = el('g', { transform: fm.transform }, parent); const p = el('path', { d: fm.d, fill: COULEURS[fm.fill] }, parent); if (fm.opacite) p.setAttribute('fill-opacity', fm.opacite); if (fm.anim && !reduit) { p.classList.add('a-' + fm.anim); if (fm.centre) p.style.transformOrigin = `${fm.centre[0]}px ${fm.centre[1]}px`; } return p; };
   for (const fm of S.decor) { const g = calque(fm.plan ?? 0); forme(fm, g.querySelector('.calque-decor') || el('g', { class: 'calque-decor' }, g)); }
   const aire = l => (l.scene.boite[2] - l.scene.boite[0]) * (l.scene.boite[3] - l.scene.boite[1]);
   for (const l of [...LIEUX].sort((a, b) => aire(b) - aire(a))) {
@@ -214,16 +223,42 @@ function dessiner() {
 let arme = null;
 
 /* ── survol : le logo seul, qui se dessine ── */
+// position et taille des logos au survol : y = centre vertical en % de la scène, h = hauteur en % de la scène
+const REGLAGE_LOGOS = { y: 88, h: 7, echelles: { maison: 1.15, serre: 1, scatolina: 1, bar: 1, creche: 1, cimetiere: 0.85, lune: 0.75, tour: 1, arbre: 1, usine: 1 } };
+let reglage = REGLAGE_LOGOS; try { const s = localStorage.getItem('bd-reglage-logos'); if (s) reglage = JSON.parse(s); } catch {}
+const ratios = {}; LIEUX.forEach(l => { if (l.logo) { const im = new Image(); im.onload = () => ratios[l.id] = im.naturalWidth / im.naturalHeight; im.src = l.logo; } });
+let fige = null;
 function montrerLogo(id) {
+  id = fige || id;
   if (!id) { logo.classList.remove('vu'); return; }
-  const l = parId[id], b = boites[id], r = scene.getBoundingClientRect();
-  logo.innerHTML = l.logo ? `<img src="${l.logo}" alt="">` : `<span class="titre">${l.titreCarton}</span>`;
-  const larg = Math.min(260, Math.max(130, r.width * 0.17)); logo.style.width = l.logo ? larg + 'px' : 'auto';
-  let [x, y] = versEcran((b[0] + b[2]) / 2, b[1]);
-  if (y < r.height * 0.22) { const [xd, ym] = versEcran(b[2], (b[1] + b[3]) / 2), [xg] = versEcran(b[0], 0); x = xd + larg * 0.6 < r.width ? xd + larg * 0.55 : xg - larg * 0.55; y = ym; }
-  logo.style.left = Math.min(r.width - larg / 2 - 8, Math.max(larg / 2 + 8, x)) + 'px';
-  logo.style.top = Math.max(r.height * 0.14, y - 10) + 'px';
+  const l = parId[id], r = scene.getBoundingClientRect(), k = reglage.echelles[id] ?? 1, hp = r.height * reglage.h / 100 * k;
+  scene.style.setProperty('--logo-y', reglage.y + '%');
+  if (l.logo) { const w = hp * (ratios[id] || 2); logo.innerHTML = `<span class="encre" style="width:${Math.min(w, r.width * 0.6)}px;height:${hp}px;--masque:url('${l.logo}')"></span>`; }
+  else logo.innerHTML = `<span class="titre" style="--titre-px:${hp * 0.8}px">${l.titreCarton}</span>`;
   logo.classList.remove('vu'); void logo.offsetWidth; logo.classList.add('vu');
+}
+if (new URLSearchParams(location.search).has('reglage')) {
+  const p = document.createElement('div'); p.className = 'reglage';
+  p.innerHTML = `<b>Réglage des logos</b>
+    <label>Lieu affiché <select id="rg-lieu"><option value="">au survol</option>${LIEUX.map(l => `<option value="${l.id}">${l.creation}</option>`).join('')}</select><span></span></label>
+    <label>Hauteur dans la page <input id="rg-y" type="range" min="60" max="98" step="0.5"><span id="rg-yv"></span></label>
+    <label>Taille <input id="rg-h" type="range" min="2" max="16" step="0.25"><span id="rg-hv"></span></label>
+    <label>Échelle du logo <input id="rg-k" type="range" min="0.4" max="2" step="0.05"><span id="rg-kv"></span></label>
+    <textarea id="rg-sortie" readonly></textarea>
+    <button id="rg-copier" type="button">Copier les réglages</button><button id="rg-zero" type="button">Revenir aux réglages d'origine</button>`;
+  document.body.appendChild(p);
+  const q = s => p.querySelector(s), maj = () => {
+    q('#rg-y').value = reglage.y; q('#rg-yv').textContent = reglage.y; q('#rg-h').value = reglage.h; q('#rg-hv').textContent = reglage.h;
+    const id = q('#rg-lieu').value; q('#rg-k').disabled = !id; q('#rg-k').value = id ? (reglage.echelles[id] ?? 1) : 1; q('#rg-kv').textContent = id ? (reglage.echelles[id] ?? 1) : '';
+    q('#rg-sortie').value = 'const REGLAGE_LOGOS = ' + JSON.stringify(reglage) + ';';
+    try { localStorage.setItem('bd-reglage-logos', JSON.stringify(reglage)); } catch {}
+    fige = id || null; montrerLogo(fige);
+  };
+  q('#rg-lieu').oninput = maj; q('#rg-y').oninput = e => { reglage.y = +e.target.value; maj(); }; q('#rg-h').oninput = e => { reglage.h = +e.target.value; maj(); };
+  q('#rg-k').oninput = e => { reglage.echelles[q('#rg-lieu').value] = +e.target.value; maj(); };
+  q('#rg-copier').onclick = () => { q('#rg-sortie').select(); navigator.clipboard?.writeText(q('#rg-sortie').value).catch(() => {}); };
+  q('#rg-zero').onclick = () => { reglage = JSON.parse(JSON.stringify(REGLAGE_LOGOS)); try { localStorage.removeItem('bd-reglage-logos'); } catch {} maj(); };
+  setTimeout(maj, 300);
 }
 function survoler(id) {
   son(id || selection);

@@ -205,6 +205,31 @@ const hasard = graine => { let s = graine; return () => (s = (s * 16807) % 21474
 const quad = (cx, cy, w, h, a = 0, sk = 0) => P(tourner([[cx - w / 2 + sk, cy - h / 2], [cx + w / 2 + sk, cy - h / 2], [cx + w / 2 - sk, cy + h / 2], [cx - w / 2 - sk, cy + h / 2]], cx, cy, a));
 const coeur = (cx, cy, s) => `M${f(cx)} ${f(cy + s * 0.6)}C${f(cx - s * 1.2)} ${f(cy - s * 0.1)} ${f(cx - s * 0.5)} ${f(cy - s * 0.95)} ${f(cx)} ${f(cy - s * 0.3)}C${f(cx + s * 0.5)} ${f(cy - s * 0.95)} ${f(cx + s * 1.2)} ${f(cy - s * 0.1)} ${f(cx)} ${f(cy + s * 0.6)}Z`;
 
+/* ───────── v5.1 · personnages aux fenêtres ─────────
+   Chaque figure tient dans une fenêtre (x, y, w, h), posée sur l'appui. Ombre noire sur la vitre éclairée.
+   noir = la silhouette, lum = les découpes lumineuses (yeux, monocle, perles). */
+const buste = (cx, b, w, h) => P([[cx - w * 0.36, b], [cx - w * 0.3, b - h * 0.24], [cx - w * 0.12, b - h * 0.34], [cx + w * 0.12, b - h * 0.34], [cx + w * 0.3, b - h * 0.24], [cx + w * 0.36, b]]);
+const FIG = {
+  // Viva Barbessia · une galerie de personnages bizarres
+  hautDeForme: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; return { noir: buste(cx, b, w, h) + C(cx, b - h * 0.46, w * 0.15) + R(cx - w * 0.15, b - h * 0.86, w * 0.3, h * 0.28) + R(cx - w * 0.24, b - h * 0.6, w * 0.48, h * 0.04), lum: "" }; },
+  couronne: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; return { noir: buste(cx, b, w, h) + C(cx, b - h * 0.47, w * 0.16) + P([[cx - w * 0.18, b - h * 0.6], [cx - w * 0.2, b - h * 0.78], [cx - w * 0.08, b - h * 0.68], [cx, b - h * 0.84], [cx + w * 0.08, b - h * 0.68], [cx + w * 0.2, b - h * 0.78], [cx + w * 0.18, b - h * 0.6]]), lum: C(cx, b - h * 0.71, w * 0.03) }; },
+  chouette: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h * 0.96; return { noir: E(cx, b - h * 0.3, w * 0.3, h * 0.3) + P([[cx - w * 0.28, b - h * 0.48], [cx - w * 0.3, b - h * 0.72], [cx - w * 0.1, b - h * 0.56], [cx + w * 0.1, b - h * 0.56], [cx + w * 0.3, b - h * 0.72], [cx + w * 0.28, b - h * 0.48]]) + R(x + w * 0.08, b, w * 0.84, h * 0.04), lum: C(cx - w * 0.12, b - h * 0.44, w * 0.08) + C(cx + w * 0.12, b - h * 0.44, w * 0.08) }; },
+  moustache: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; return { noir: buste(cx, b, w, h) + C(cx, b - h * 0.48, w * 0.17) + spirale(cx - w * 0.2, b - h * 0.42, w * 0.12, 1, 0, 2, 0.6, -1, 12) + spirale(cx + w * 0.2, b - h * 0.42, w * 0.12, 1, Math.PI, 2, 0.6, 1, 12) + R(cx - w * 0.2, b - h * 0.68, w * 0.4, h * 0.05), lum: anneau(cx + w * 0.06, b - h * 0.52, w * 0.06, w * 0.035) }; },
+  longCou: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; return { noir: buste(cx, b, w * 0.9, h * 0.8) + R(cx - w * 0.05, b - h * 0.7, w * 0.1, h * 0.44) + E(cx, b - h * 0.76, w * 0.1, h * 0.08) + C(cx, b - h * 0.9, w * 0.09), lum: R(cx - w * 0.06, b - h * 0.42, w * 0.12, h * 0.015) + R(cx - w * 0.06, b - h * 0.48, w * 0.12, h * 0.015) + R(cx - w * 0.06, b - h * 0.54, w * 0.12, h * 0.015) }; },
+  cage: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h * 0.94; let d = R(cx - w * 0.3, b, w * 0.6, h * 0.04) + R(cx - 0.6, b - h * 0.9, 1.2, h * 0.16); for (let k = -2; k <= 2; k++) d += R(cx + k * w * 0.13 - 0.5, b - h * 0.62 + Math.abs(k) * h * 0.05, 1, h * 0.62 - Math.abs(k) * h * 0.05); d += anneau(cx, b - h * 0.62, w * 0.3, w * 0.27).replace(/Z/g, "Z"); return { noir: d + E(cx, b - h * 0.24, w * 0.1, h * 0.07) + C(cx + w * 0.08, b - h * 0.32, w * 0.05), lum: "" }; },
+  main: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; let d = E(cx, b - h * 0.32, w * 0.2, h * 0.16) + R(cx - w * 0.12, b - h * 0.2, w * 0.24, h * 0.2); [-0.15, -0.05, 0.05, 0.15].forEach((o, i) => d += ruban([cx + o * w, b - h * 0.42], [cx + o * w * 1.4, b - h * 0.55], [cx + o * w * 2, b - h * (0.66 + (i % 2) * 0.06)], w * 0.07, w * 0.05, 6)); d += ruban([cx + w * 0.18, b - h * 0.3], [cx + w * 0.3, b - h * 0.36], [cx + w * 0.36, b - h * 0.46], w * 0.07, w * 0.05, 6); return { noir: d, lum: "" }; },
+  chat: (x, y, w, h) => { const cx = x + w * 0.46, b = y + h * 0.98; return { noir: E(cx, b - h * 0.18, w * 0.24, h * 0.18) + C(cx, b - h * 0.46, w * 0.15) + P([[cx - w * 0.14, b - h * 0.52], [cx - w * 0.12, b - h * 0.68], [cx - w * 0.03, b - h * 0.58]]) + P([[cx + w * 0.14, b - h * 0.52], [cx + w * 0.12, b - h * 0.68], [cx + w * 0.03, b - h * 0.58]]) + ruban([cx + w * 0.2, b - h * 0.06], [cx + w * 0.44, b - h * 0.1], [cx + w * 0.38, b - h * 0.4], w * 0.06, w * 0.03, 8), lum: E(cx - w * 0.06, b - h * 0.47, w * 0.03, h * 0.02) + E(cx + w * 0.06, b - h * 0.47, w * 0.03, h * 0.02) }; },
+  fantome: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; let bord = ""; for (let k = 0; k < 4; k++) bord += `Q${f(cx - w * 0.3 + (k + 0.5) * w * 0.15)} ${f(b - h * (k % 2 ? 0.04 : 0.12))} ${f(cx - w * 0.3 + (k + 1) * w * 0.15)} ${f(b - h * 0.08)}`; return { noir: `M${f(cx - w * 0.3)} ${f(b - h * 0.08)}V${f(b - h * 0.6)}Q${f(cx)} ${f(b - h * 1.0)} ${f(cx + w * 0.3)} ${f(b - h * 0.6)}V${f(b - h * 0.08)}` + bord.replace(/^Q/, "Q") + "Z", lum: E(cx - w * 0.1, b - h * 0.6, w * 0.05, h * 0.06) + E(cx + w * 0.1, b - h * 0.6, w * 0.05, h * 0.06) + E(cx, b - h * 0.44, w * 0.06, h * 0.05) }; },
+  jumeaux: (x, y, w, h) => { const b = y + h; return { noir: buste(x + w * 0.3, b, w * 0.55, h * 0.9) + C(x + w * 0.3, b - h * 0.42, w * 0.11) + buste(x + w * 0.7, b, w * 0.55, h * 0.9) + C(x + w * 0.7, b - h * 0.42, w * 0.11) + R(x + w * 0.2, b - h * 0.56, w * 0.2, h * 0.04) + R(x + w * 0.6, b - h * 0.56, w * 0.2, h * 0.04), lum: "" }; },
+  plume: (x, y, w, h) => { const cx = x + w * 0.46, b = y + h; return { noir: buste(cx, b, w, h) + C(cx, b - h * 0.46, w * 0.15) + P([[cx - w * 0.28, b - h * 0.56], [cx, b - h * 0.72], [cx + w * 0.28, b - h * 0.56], [cx, b - h * 0.6]]) + ruban([cx + w * 0.14, b - h * 0.64], [cx + w * 0.4, b - h * 0.86], [cx + w * 0.2, b - h * 0.98], w * 0.1, w * 0.02, 10), lum: "" }; },
+  // Close · le Phénix à la Mucha : profils à auréole, chevelures en volutes, plumes, coupe, fume-cigarette
+  muchaProfil: (x, y, w, h, sens = 1) => { const cx = x + w * 0.5, b = y + h, s = sens; return { noir: anneau(cx, b - h * 0.6, w * 0.34, w * 0.3) + buste(cx, b, w * 0.9, h * 0.8) + E(cx, b - h * 0.6, w * 0.14, h * 0.13) + P([[cx + s * w * 0.12, b - h * 0.62], [cx + s * w * 0.2, b - h * 0.58], [cx + s * w * 0.13, b - h * 0.54]]) + ruban([cx - s * w * 0.1, b - h * 0.68], [cx - s * w * 0.42, b - h * 0.5], [cx - s * w * 0.28, b - h * 0.12], w * 0.14, w * 0.04, 12) + ruban([cx - s * w * 0.06, b - h * 0.62], [cx - s * w * 0.34, b - h * 0.32], [cx - s * w * 0.1, b - h * 0.04], w * 0.1, w * 0.03, 12) + C(cx - s * w * 0.04, b - h * 0.74, w * 0.05) + C(cx + s * w * 0.04, b - h * 0.76, w * 0.04), lum: "" }; },
+  muchaCoupe: (x, y, w, h) => { const cx = x + w * 0.42, b = y + h; return { noir: anneau(cx, b - h * 0.52, w * 0.3, w * 0.27) + buste(cx, b, w, h) + C(cx, b - h * 0.5, w * 0.14) + ruban([cx - w * 0.06, b - h * 0.6], [cx - w * 0.4, b - h * 0.4], [cx - w * 0.3, b - h * 0.1], w * 0.12, w * 0.03, 10) + ruban([cx + w * 0.22, b - h * 0.26], [cx + w * 0.34, b - h * 0.5], [cx + w * 0.36, b - h * 0.7], w * 0.07, w * 0.05, 8) + P([[cx + w * 0.26, b - h * 0.86], [cx + w * 0.48, b - h * 0.86], [cx + w * 0.38, b - h * 0.76]]) + R(cx + w * 0.37, b - h * 0.77, 1, h * 0.06), lum: "" }; },
+  fumeCigarette: (x, y, w, h) => { const cx = x + w * 0.4, b = y + h; return { noir: buste(cx, b, w, h) + E(cx, b - h * 0.5, w * 0.16, h * 0.13) + P([[cx - w * 0.2, b - h * 0.46], [cx - w * 0.18, b - h * 0.62], [cx + w * 0.16, b - h * 0.64], [cx + w * 0.2, b - h * 0.48], [cx + w * 0.1, b - h * 0.56], [cx - w * 0.08, b - h * 0.56]]) + R(cx + w * 0.1, b - h * 0.47, w * 0.42, 1.2) + spirale(cx + w * 0.54, b - h * 0.62, w * 0.1, 1.2, 0, 1.2, 0.5, 1, 12), lum: "" }; },
+  muchaPlumes: (x, y, w, h) => { const cx = x + w * 0.5, b = y + h; let d = buste(cx, b, w, h) + C(cx, b - h * 0.46, w * 0.15) + R(cx - w * 0.17, b - h * 0.56, w * 0.34, h * 0.03); [-1, 0, 1].forEach(k => d += ruban([cx + k * w * 0.06, b - h * 0.56], [cx + k * w * 0.2, b - h * 0.76], [cx + k * w * 0.3, b - h * 0.96], w * 0.08, w * 0.02, 10)); return { noir: d + anneau(cx, b - h * 0.46, w * 0.28, w * 0.25), lum: C(cx, b - h * 0.56, w * 0.035) }; },
+  couple: (x, y, w, h) => { const b = y + h; return { noir: buste(x + w * 0.32, b, w * 0.6, h) + E(x + w * 0.36, b - h * 0.46, w * 0.13, h * 0.11) + R(x + w * 0.2, b - h * 0.62, w * 0.3, h * 0.12) + R(x + w * 0.14, b - h * 0.54, w * 0.42, h * 0.03) + buste(x + w * 0.68, b, w * 0.6, h * 0.9) + E(x + w * 0.62, b - h * 0.44, w * 0.12, h * 0.1) + ruban([x + w * 0.66, b - h * 0.5], [x + w * 0.9, b - h * 0.36], [x + w * 0.8, b - h * 0.12], w * 0.1, w * 0.03, 10), lum: "" }; }
+};
+
 // Viva Barbessia · palace biscornu : façade qui penche, toit ondulé à bulbes, fenêtres de travers
 function palaceBiscornu(x0, x1, yb, haut) {
   const r = hasard(11), w = x1 - x0, glisse = 16;
@@ -212,13 +237,16 @@ function palaceBiscornu(x0, x1, yb, haut) {
   const masse = P([[x0, yb], [x0 + glisse * 0.5, haut + 70], [x0 + glisse * 0.8, haut + 20], ...toit, [x1 + glisse, haut + 26], [x1 + glisse * 0.5, haut + 80], [x1 + 2, yb]])
     + C(x0 + glisse + w * 0.18, haut - 6, 12) + P([[x0 + glisse + w * 0.18 - 3, haut - 14], [x0 + glisse + w * 0.18, haut - 34], [x0 + glisse + w * 0.18 + 3, haut - 14]])  // bulbe
     + C(x0 + glisse + w * 0.78, haut - 2, 10) + P([[x0 + glisse + w * 0.78 - 3, haut - 8], [x0 + glisse + w * 0.78 + 1, haut - 28], [x0 + glisse + w * 0.78 + 3, haut - 8]]);
-  let lum = "", noir = "";
-  for (let y = haut + 58; y < yb - 120; y += 52) {
+  let lum = "", noir = "", k = 0;
+  const galerie = ["hautDeForme", null, "chouette", "couronne", "main", "moustache", null, "chat", "longCou", "fantome", "cage", null, "jumeaux", "plume", null];
+  for (let y = haut + 56; y < yb - 120; y += 58) {
     const t = (y - haut) / (yb - haut), dx = glisse * (1 - t);
     for (let i = 0; i < 3; i++) {
-      const cx = x0 + 34 + i * (w - 68) / 2 + dx + (r() - 0.5) * 8, fw = 16 + r() * 10, fh = 26 + r() * 12, a = (r() - 0.5) * 0.2;
-      lum += quad(cx, y + fh / 2, fw, fh, a, (r() - 0.5) * 5);
-      noir += quad(cx, y + fh / 2, 2, fh, a) + quad(cx, y + fh * 0.45, fw, 2, a);   // croisillons
+      const cx = x0 + 34 + i * (w - 68) / 2 + dx + (r() - 0.5) * 8, fw = 22 + r() * 8, fh = 34 + r() * 10, a = (r() - 0.5) * 0.16;
+      lum += quad(cx, y + fh / 2, fw, fh, a, (r() - 0.5) * 4);
+      const qui = galerie[k++ % galerie.length];
+      if (qui) { const fz = FIG[qui](cx - fw * 0.42, y + 2, fw * 0.84, fh - 2); noir += fz.noir; if (fz.lum) lum += fz.lum; }
+      else noir += quad(cx, y + fh / 2, 2, fh, a) + quad(cx, y + fh * 0.45, fw, 2, a);   // fenêtre vide, croisillons
     }
   }
   return { masse, lum, noir };
@@ -228,8 +256,8 @@ function fenetreClose(x, y, w, h, type) {
   if (type === "coeur") return { lum: coeur(x + w / 2, y + h * 0.42, w * 0.22) + R(x + 3, y + h * 0.72, w - 6, 1.6) + R(x + 3, y + h * 0.82, w - 6, 1.6), noir: "" };
   const lum = R(x, y, w, h);
   let noir = R(x - 2, y, w + 4, 3) + fenetres(x, y + 3, Math.round(w / 6), 1, 6, 4, 0, 0, (xx, yy, ww, hh) => `M${f(xx)} ${f(yy)}a${f(ww / 2)} ${f(hh)} 0 0 0 ${f(ww)} 0Z`); // lambrequin festonné
-  // rideaux retenus par une embrasse : deux pans étroits, cintrés
-  noir += `M${f(x)} ${f(y + 3)}L${f(x + w * 0.24)} ${f(y + 3)}Q${f(x + w * 0.16)} ${f(y + h * 0.42)} ${f(x + w * 0.1)} ${f(y + h * 0.55)}Q${f(x + w * 0.16)} ${f(y + h * 0.8)} ${f(x + w * 0.12)} ${f(y + h)}L${f(x)} ${f(y + h)}Z`
+  // rideaux retenus par une embrasse : deux pans étroits, cintrés (seulement aux fenêtres sans personnage)
+  if (type === "rideau" || type === "dame") noir += `M${f(x)} ${f(y + 3)}L${f(x + w * 0.24)} ${f(y + 3)}Q${f(x + w * 0.16)} ${f(y + h * 0.42)} ${f(x + w * 0.1)} ${f(y + h * 0.55)}Q${f(x + w * 0.16)} ${f(y + h * 0.8)} ${f(x + w * 0.12)} ${f(y + h)}L${f(x)} ${f(y + h)}Z`
         + `M${f(x + w)} ${f(y + 3)}L${f(x + w * 0.76)} ${f(y + 3)}Q${f(x + w * 0.84)} ${f(y + h * 0.42)} ${f(x + w * 0.9)} ${f(y + h * 0.55)}Q${f(x + w * 0.84)} ${f(y + h * 0.8)} ${f(x + w * 0.88)} ${f(y + h)}L${f(x + w)} ${f(y + h)}Z`
         + C(x + w * 0.11, y + h * 0.55, 1.8) + C(x + w * 0.89, y + h * 0.55, 1.8);
   if (type === "dame") { // buste, chignon, éventail ouvert
@@ -237,7 +265,8 @@ function fenetreClose(x, y, w, h, type) {
     noir += C(cx, by - h * 0.56, w * 0.11) + C(cx - w * 0.06, by - h * 0.7, w * 0.08) + P([[cx - w * 0.22, by], [cx - w * 0.16, by - h * 0.3], [cx - w * 0.05, by - h * 0.42], [cx + w * 0.05, by - h * 0.42], [cx + w * 0.16, by - h * 0.3], [cx + w * 0.22, by]]);
     let ev = ""; for (let k = 0; k <= 6; k++) { const a = -Math.PI * 0.95 + k * Math.PI * 0.7 / 6; ev += ruban([cx + w * 0.16, by - h * 0.36], [cx + w * 0.16 + Math.cos(a) * w * 0.15, by - h * 0.36 + Math.sin(a) * w * 0.15], [cx + w * 0.16 + Math.cos(a) * w * 0.3, by - h * 0.36 + Math.sin(a) * w * 0.3], 1.4, 2.2, 4); }
     noir += ev;
-  }
+  } else if (FIG[type]) { const fz = FIG[type](x + w * 0.16, y + 4, w * 0.68, h - 4, type === "muchaProfil2" ? -1 : 1); noir += fz.noir; }
+  else if (type === "muchaProfil2") { const fz = FIG.muchaProfil(x + w * 0.16, y + 4, w * 0.68, h - 4, -1); noir += fz.noir; }
   return { lum, noir };
 }
 function lanterne(x, y, s, sens = 1) { // potence au mur (x, y = point d'accroche), lanterne pendue
@@ -333,20 +362,24 @@ const tabac = carotte(1040, 574, 15);
 // fenêtres du Phénix : 5 colonnes, 6 étages, un motif de maison close par fenêtre
 const closeF = { lum: "", noir: "" };
 {
-  const types = ["rideau", "coeur", "dame", "rideau", "coeur", "rideau", "rideau", "dame"];
+  // vingt fenêtres, aucune figure deux fois de suite : profils à auréole, plumes, coupe, fume-cigarette, couple, éventail, volets à cœur
+  const types = ["muchaProfil", "coeur", "muchaPlumes", "rideau",
+                 "couple", "muchaProfil2", "coeur", "fumeCigarette",
+                 "rideau", "muchaCoupe", "dame", "coeur",
+                 "muchaPlumes", "coeur", "muchaProfil", "couple",
+                 "coeur", "fumeCigarette", "rideau", "muchaProfil2"];
   let k = 0;
   for (let j = 0; j < 5; j++) for (let i = 0; i < 4; i++) {
-    const x = 380 + i * 58, y = 218 + j * 60, t = types[(k++ * 5 + j) % types.length];
+    const x = 380 + i * 58, y = 218 + j * 60, t = types[k++];
     const fz = fenetreClose(x, y, 34, 46, t); closeF.lum += fz.lum; closeF.noir += fz.noir;
   }
 }
 
 const rue = {
   decor: [
-    { d: R(0, 0, 1600, 900), fill: "jaune", plan: 0 },
-    { d: P([[0, 600], [400, 640], [800, 670], [1240, 720], [1600, 740], [1600, 900], [0, 900]]), fill: "noir", plan: 1 },
-    { d: zigzag([[0, 700], [240, 742], [460, 722], [700, 766], [940, 746], [1290, 798]], 10, 18), fill: "jaune", plan: 3 },
-    { d: ondes(1300, 756, 1600, 900, 12, 23, [[1320, 756, 1384, 900], [1392, 770, 1520, 820]]), fill: "lumiere", plan: 3 },
+    { d: R(-400, -400, 2400, 1700), fill: "jaune", plan: 0 },
+    { d: P([[-400, 560], [0, 600], [400, 640], [800, 670], [1240, 720], [1600, 740], [2000, 760], [2000, 1300], [-400, 1300]]), fill: "noir", plan: 1 }, // la rue, sans caniveau : la bande noire reçoit les titres au survol
+    { d: ondes(1300, 756, 1600, 900, 12, 23, [[1320, 756, 1384, 900], [1386, 768, 1524, 864]]), fill: "lumiere", plan: 3 },
     { d: refletLune(1352, 760, 896, 5), fill: "blanc", plan: 3, anim: "scintille" },
     { d: R(296, 560, 5, 82) + R(816, 590, 5, 82), fill: "noir", plan: 3 },
     { d: C(298.5, 556, 9) + C(818.5, 586, 9), fill: "lumiere", plan: 3 }
@@ -433,7 +466,9 @@ const rue = {
       { ...O(R(1430, 768, 14, 13) + R(1446, 768, 14, 13) + R(1438, 756, 14, 12)), anim: "flotte" },
       { ...B(R(1436.5, 768, 1.4, 13) + R(1452.5, 768, 1.4, 13) + R(1444.5, 756, 1.4, 12)), anim: "flotte" },
       { ...L(R(1480, 744, 2, 34)), anim: "flotte" }, { ...B(C(1481, 740, 4)), anim: "flotte" },
-      { ...L(fenetres(1414, 806, 4, 3, 16, 1.6, 6, 6, carre)), anim: "flotte" }                                        // reflet de la barque
+      { ...L(barque(1410, 786, 84)), transform: "matrix(1 0 0 -1 0 1612)", opacite: 0.22, anim: "flotte" },            // reflet de la barque, retourné sous la ligne d'eau
+      { ...O(R(1430, 768, 14, 13) + R(1446, 768, 14, 13) + R(1438, 756, 14, 12)), transform: "matrix(1 0 0 -1 0 1612)", opacite: 0.18, anim: "flotte" },
+      { ...L(R(1392, 806, 18, 1.6) + R(1500, 806, 22, 1.6) + R(1404, 812, 10, 1.4) + R(1490, 812, 12, 1.4)), anim: "flotte" } // ligne d'eau de part et d'autre de la coque
     ]
   }
 };
