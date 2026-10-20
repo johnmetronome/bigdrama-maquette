@@ -36,3 +36,7 @@ Sans l'outil `gh` : créer le dépôt vide sur github.com, puis `git remote add 
 - `lieux.js` : les créations, leurs résumés, infos, pièces et supports.
 - `logos/` : logos à l'encre, fond transparent.
 - `sons/` : ambiances par lieu, à fournir.
+
+## V2 du site
+
+La vitrine avec accueil cinéma et médias est disponible dans [v2/](v2/) et sur https://johnmetronome.github.io/bigdrama-maquette/v2/. La maquette historique ci-dessus reste inchangée.
