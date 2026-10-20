@@ -468,3 +468,32 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 @keyframes bd-bulle-sorciere{0%{opacity:0;transform:translate(0,0) scale(.6)}15%{opacity:.8}100%{opacity:0;transform:translate(8px,-72px) scale(1.4)}}
 .bd-lieu.actif .bd-berceau{transform:translateY(-4px);transition:transform 1s}
 @media(prefers-reduced-motion:reduce){.a-bulle-sorciere{animation:none}}
+
+/* V7.12 : poursuite, chaudron et fleur curieuse. */
+.bd-lieu[data-id="usine"].actif .bd-fumee path{fill:#07090b!important;transition:fill 1.3s}
+.bd-policier{opacity:0}
+.bd-lieu.actif .bd-policier{opacity:1}
+.bd-lieu.actif .a-poursuite-policier{animation:bd-fuite 6s 1.5s ease-in forwards;opacity:0}
+.bd-lieu.actif .bd-policier-1 .a-poursuite-policier{animation-delay:2.1s}
+.bd-gyro-rouge{fill:#e84042;animation:bd-gyro 1s steps(1) infinite}
+.bd-gyro-bleu{animation:bd-gyro 1s .5s steps(1) infinite}
+@keyframes bd-gyro{50%{opacity:.15}}
+.bd-chaudron{opacity:0;transition:opacity .7s}
+.bd-lieu[data-id="creche"].actif .bd-berceau{opacity:0}
+.bd-lieu[data-id="creche"].actif .bd-chaudron{opacity:1}
+.bd-fleur-surprise{transform-box:view-box;transform-origin:1453px 778px;transform:scaleY(0);opacity:0;transition:transform 1.8s cubic-bezier(.2,.7,.3,1),opacity 1s}
+.bd-lieu.actif .bd-fleur-surprise{transform:scaleY(1);opacity:1}
+@media(prefers-reduced-motion:reduce){.bd-gyro-rouge,.bd-gyro-bleu,.a-poursuite-policier{animation:none!important}}
+
+/* V7.13 : transformations lisibles et projection uniforme. */
+.bd-coco-signal{pointer-events:none}
+.bd-lieu[data-id="arbre"] .bd-construction{pointer-events:none}
+.bd-lieu[data-id="creche"].actif .bd-chaudron{opacity:1!important;transform:translate(0,-12px) scale(1.15);transform-box:fill-box;transform-origin:center bottom}
+.bd-lieu[data-id="creche"].actif .bd-bulles-sorcieres{opacity:1!important}
+.bd-fleur-surprise,.bd-lieu.actif .bd-fleur-surprise{transform:none!important;opacity:1;transition:none}
+.bd-fleur-tige{stroke-dasharray:60;stroke-dashoffset:60;transition:stroke-dashoffset 2s ease-out}
+.bd-lieu.actif .bd-fleur-tige{stroke-dashoffset:0}
+.bd-fleur-corolle,.bd-fleur-feuilles{opacity:0;transform-box:fill-box;transform-origin:center;transform:scale(.05);transition:transform 1.3s ease-out,opacity .6s}
+.bd-fleur-corolle{transition-delay:1.2s}
+.bd-fleur-feuilles{transition-delay:.7s}
+.bd-lieu.actif .bd-fleur-corolle,.bd-lieu.actif .bd-fleur-feuilles{opacity:1;transform:scale(1)}

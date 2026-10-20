@@ -108,6 +108,7 @@ function dessiner() {
     S.lieux[l.id].forEach(fm => forme(fm, pose));
     poses[l.id]=pose; zones[l.id]=pose.getBBox(); placer(l.id);
     const b = g.getBBox();
+    if(l.id==='arbre'){const c=config(l.id);b.x=c.x-48*c.s;b.y=solRue(c.x)+c.y-280*c.s;b.width=130*c.s;b.height=290*c.s;}
     const masqueId = 'revelation-' + l.id, gradientId = 'degrade-' + l.id;
     const grad = el('linearGradient', {id:gradientId,gradientUnits:'userSpaceOnUse',x1:0,x2:0,y1:b.y,y2:b.y+50},defs);
     el('stop',{offset:'0%','stop-color':'black'},grad); el('stop',{offset:'100%','stop-color':'white'},grad);

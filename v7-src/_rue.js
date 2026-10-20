@@ -220,11 +220,19 @@ function enfantsNorma(){return [0,1].map(i=>({classe:'bd-enfant-voleur bd-enfant
  {groupe:[N(R(94+i*7,586,3,12))],anim:'pas-droite',centre:[92+i*7,587]},
  {d:E(82+i*7,582,5,6),fill:'papier'},N(R(86+i*7,577,6,2))
  ],anim:'fuite-enfant',centre:[93,600]}]}));}
+function policiersNorma(){return [0,1].map(i=>({classe:'bd-policier bd-policier-'+i,groupe:[{groupe:[
+ {d:C(99,570,3.5)+P([[94,576],[103,576],[107,589],[93,589]]),fill:'plan'},
+ N(R(92,566,14,2)+R(95,562,8,5)),
+ {d:C(97,561,1),fill:'rouge',classe:'bd-gyro-rouge'},
+ {d:C(100,561,1),fill:'neonBleu',classe:'bd-gyro-bleu'},
+ {groupe:[N(R(95,588,3,12))],anim:'pas-gauche',centre:[97,588]},
+ {groupe:[N(R(102,588,3,12))],anim:'pas-droite',centre:[103,588]}
+ ],anim:'poursuite-policier'}]}));}
 function salonsPastels(){return [[208,307,'rose'],[264,365,'menthe'],[312,423,'lavande']].flatMap(([x,y,c],i)=>[
  {d:R(x,y,25,35),fill:c},N(C(x+12,y+10,3.5)+R(x+7,y+16,10,18)+R(x+5,y+3,14,2)),
  {d:R(x+11,y+17,2,14),fill:'papier'},N(R(x+7,y+34,3,2)+R(x+15,y+34,3,2)),
  {d:C(x+8,y+11,.5)+C(x+15,y+11,.5),fill:'papier'}]);}
-function rideauxClose(){return [[496,278]].map(([x,y])=>({d:'M'+x+' '+y+'h12q-8 20 -3 46h-9Z M'+(x+34)+' '+y+'h-11q7 20 3 46h8Z',fill:'papier',opacite:.22,anim:'rideau',centre:[x+17,y]}));}
+function rideauxClose(){return [[496,278],[380,338],[554,398]].map(([x,y])=>({d:'M'+x+' '+y+'h12q-8 20 -3 46h-9Z M'+(x+34)+' '+y+'h-11q7 20 3 46h8Z',fill:'papier',opacite:.8,anim:'rideau',centre:[x+17,y]}));}
 function closeFigures(){return closeF.figures.map((f,i)=>{const [x,y]=f.position;return {clip:R(x,y,34,46),groupe:[{groupe:[{d:f.noir,fill:'noir'},...(f.lum?[{d:f.lum,fill:'papier'}]:[]),...(i%3===0?[{d:Array.from({length:5},(_,k)=>C(x+10+k%2*6,y+23+k*4,.9)).join(''),fill:'papier'}]:[])],anim:i%2?'retrait-silhouette':'danse',centre:[x+17,y+46]}]};});}
 function tapisPaon(){return [
  {d:P([[466,641],[513,641],[529,659],[453,659]]),fill:'plan'},
@@ -264,21 +272,20 @@ const rue = {
       N(P([[44, 604], [48, 520], [40, 512], [144, 506], [140, 516], [146, 604]]) + P([[52, 512], [56, 474], [132, 468], [134, 508]])          // mausolée qui penche
         + "M58 474C54 418 118 400 134 470Z" + R(96, 412, 4, 16)),                                                                      // coupole de travers
       { d: croix(98, 412, 66, 5, 0.14), fill: "noir", stroke: "neonBleu", epaisseur: 1.3, classe:"bd-croix-norma" },                                              // la croix de Norma, néon bleu qui clignote
-      {texte:'N',x:93,y:512,taille:27,fill:'lumiere',police:'enseigne',espacement:0},
+      {clip:R(82,477,22,38),groupe:[{image:'logos/cimetiere.png',x:82,y:477,w:110,h:37.3}]},
       {...N(corbeau(110,366,15,1)),classe:"bd-corbeau-pose"},
       ...envolCorbeaux(),
       N(spirale(36, 494, 16, 1.4, 0, 4, 0.8, -1) + spirale(152, 488, 16, 1.4, Math.PI, 4, 0.8, 1)),                                     // volutes baroques
       { ...L(ogive(76, 532, 34, 72)), anim: "scintille" }, N(R(92, 534, 2, 70)),
       N(P([[173,610],[174,478],[171,412],[175,447],[177,482],[176,610]])),
       {d:'M174 610Q166 540 177 480Q185 429 171 398Q151 363 169 345Q184 328 196 343Q206 358 194 366Q181 373 180 360 M174 484Q154 472 143 442Q130 409 116 416Q102 421 110 434Q119 446 127 435 M177 435Q190 418 194 388Q195 367 204 360Q220 350 224 365Q226 379 214 378',fill:'none',stroke:'noir',epaisseur:1.7},
-      ...ciergesNorma(), ...enfantsNorma(),
+      ...ciergesNorma(), ...enfantsNorma(), ...policiersNorma(),
       {...N(corbeau(118,418,13,1)+corbeau(186,344,12,-1)),classe:"bd-corbeau-pose"},
       N(croix(18, 606, 48, 6, -0.22) + stele(150, 606, 16, 30, 0.24) + stele(4, 606, 12, 22, 0.2) + croix(170, 606, 30, 4, 0.3) + stele(28, 606, 10, 18, -0.3) + croix(190, 606, 26, 4, -0.18) + stele(160, 606, 9, 16, -0.12) + croix(-8, 606, 36, 5, 0.12)),
       N(R(8, 586, 24, 20) + P([[6, 586], [20, 572], [34, 586]]) + croix(20, 572, 16, 3, 0)), // une petite chapelle
     ],
     tour: [
       N(palace.masse),
-      {d:Array.from({length:24},(_,i)=>{const x=187+(i*37)%166,y=279+(i*53)%250;return P([[x,y],[x+3,y-5],[x+7,y-2],[x+5,y+7],[x+1,y+11]]);}).join(''),fill:'plan',opacite:.42},
       {d:'M211 274l-3 29 4 14-7 32 4 17 M328 310l-4 19 6 12-7 32 M250 478l3 11-5 15 3 23',fill:'lumiere',opacite:.12},
       L(palace.lum), N(palace.noir), ...danseurs(palace.figures, 3),
       {classe:"bd-coureur-vitres",clip:palace.lum,groupe:[{groupe:[N(C(206,323,4)+P([[202,329],[208,328],[214,343],[207,347],[198,337]])+P([[207,344],[213,343],[222,353],[217,356],[206,350]])+P([[204,344],[208,347],[198,360],[194,358]])+P([[202,331],[203,335],[192,341],[190,338]])+P([[208,330],[219,324],[221,327],[212,335]]))],anim:"course"}]},
@@ -290,6 +297,7 @@ const rue = {
       N("M322 95C318 64 344 50 360 92Z" + P([[340, 66], [354, 8], [356, 66]])),                                         // bulbe tordu, flèche
       N(R(353,-14,2.4,26)), {groupe:[N(P([[355,-12],[392,-2],[374,4],[392,12],[355,12]]))],anim:"drapeau",centre:[355,0]},
       ]},
+      L(C(335,86,5)),N(C(335,86,1.2)),
       L(quad(318, 200, 10, 16, 0.12) + quad(334, 198, 10, 18, -0.08) + quad(348, 202, 9, 15, 0.16) + quad(333, 128, 8, 13, -0.14) + quad(346, 126, 7, 12, 0.1)),
       L(P([[200, 552], [332, 546], [342, 572], [192, 578]])), N(fenetres(196, 576, 15, 1, 6, 6, 3.8, 0, (x, y, w, h) => `M${f(x)} ${f(y)}a${f(w / 2)} ${f(w / 2)} 0 0 0 ${f(w)} 0Z`)), // marquise festonnée
       { texte: "VIVA BARBESSIA", x: 267, y: 567, taille: 12.5, fill: "noir", police: "enseigne", rot: -1.8, espacement: 1.6 },          // le nom, en travers du store
@@ -297,7 +305,7 @@ const rue = {
     ],
     maison: [
       ...immeuble(360, 620, 170, 7, { eteint: true }),
-      L(closeF.lum), N(closeF.noir), ...danseurs(closeF.figures), ...rideauxClose(),
+      L(closeF.lum), N(closeF.noir), ...danseurs(closeF.figures.filter((_,i)=>i%2===0)), ...rideauxClose(),
       N(P([[430, 172], [490, 120], [550, 172]])), N(muchaRue.noir), L(muchaRue.lumiere),
       L(R(372, 532, 236, 58)), N(R(376, 536, 228, 50)), { image: "logos/maison.png", x: 410, y: 538, w: 160, h: 46, neon: "or", anim: "neon" }, // l'enseigne Close, néon doré qui clignote
       L(arche(470, 596, 40, 46)), N(R(489, 598, 2, 44)),
@@ -359,6 +367,7 @@ const rue = {
       {texte:'DE NOËLLE',x:1125,y:617,taille:13,fill:'noir',police:'enseigne',espacement:1},
       ...sorcieresMarionnettes(),
       {classe:'bd-berceau',groupe:[N('M1108 682Q1127 698 1146 682L1140 696H1114Z'+R(1116,694,2,7)+R(1136,694,2,7)),B(E(1127,683,11,4)),N(C(1120,681,2.3)),{d:E(1129,684,6,2),fill:'papier'}]},
+      {classe:'bd-chaudron',groupe:[N(E(1127,687,17,11)+R(1111,675,32,4)+R(1114,695,3,6)+R(1137,695,3,6)),{d:E(1127,676,13,3),fill:'menthe'},B(etoile(1127,687,3,1.5,0)+C(1118,686,1)+C(1136,687,1))]},
       {classe:'bd-bulles-sorcieres',groupe:Array.from({length:7},(_,i)=>({groupe:[{d:C(1115+i*4,677-(i%3)*5,1.7+i%3),fill:'none',stroke:'noir',epaisseur:.8}],anim:'bulle-sorciere',centre:[1127,684]}))},
       N(boeuf(1081,695,23)+ane(1172,695,23,1)),
       {...B(etoile(1125,546,8,5,-1.3)),anim:'scintille'},
@@ -371,10 +380,9 @@ const rue = {
     arbre: [
       {groupe:[N(cocoRue.tronc),L(cocoRue.anneaux),{groupe:[N(cocoRue.feuilles)],anim:"palmes",centre:[1268,488]},N(C(1260,500,7)+C(1276,502,7)),L(C(1268,510,7.5))],anim:"cocotier",centre:[1240,732]},
       {classe:'bd-coco-signal',groupe:[
-        {d:P([[1232,724],[1210,375],[1360,375],[1242,724]]),fill:'lumiere',opacite:.08},
-        {d:C(1285,352,75),fill:'lumiere',opacite:.19},
+        {d:'M1232 724L1210 352A75 75 0 1 1 1360 352L1242 724Z',fill:'lumiere',opacite:.16},
         {d:'M1235 340Q1250 316 1268 337L1278 324L1285 332L1292 324L1302 337Q1320 316 1335 340Q1318 333 1310 353Q1293 344 1285 368Q1277 344 1260 353Q1252 333 1235 340Z',fill:'noir'},
-        {texte:'LA PROPHÉTIE DEL COCO',x:1285,y:405,taille:11,fill:'lumiere',police:'enseigne',espacement:.6}
+        {texte:'LA PROPHÉTIE',x:1285,y:386,taille:12,fill:'lumiere',police:'enseigne',espacement:.5},{texte:'DEL COCO',x:1285,y:402,taille:12,fill:'lumiere',police:'enseigne',espacement:.5}
       ]},
       N(R(1228,721,17,11)+P([[1225,722],[1235,708],[1246,718],[1241,727]])),L(E(1236,714,6,2)),
 
@@ -396,6 +404,9 @@ const rue = {
         L("M1344 733Q1371 704 1404 733L1404 735Q1371 709 1344 735Z")
       ]},
       {classe:"bd-bateau-zoom",groupe:[{classe:"bd-bateau",anim:"flotte",groupe:[
+        {classe:'bd-fleur-surprise',groupe:[{d:'M1453 777Q1440 756 1457 729',fill:'none',stroke:'orange',epaisseur:2.5,classe:'bd-fleur-tige'},
+        {classe:'bd-fleur-feuilles',groupe:[{d:'M1451 758Q1430 746 1434 762Q1445 767 1451 758Z M1453 748Q1475 736 1470 751Q1462 757 1453 748Z',fill:'orange'}]},
+        {classe:'bd-fleur-corolle',groupe:[...[0,1,2,3,4,5].map(i=>({d:E(1457+Math.cos(i*Math.PI/3)*7,728+Math.sin(i*Math.PI/3)*6,5,3.5),fill:'orange'})),{d:E(1457,728,5,3),fill:'orange'}]}]},
         L(barque(1410,786,84)),
         O(R(1430,768,14,13)+R(1446,768,14,13)+R(1438,756,14,12)),
         B(R(1436.5,768,1.4,13)+R(1452.5,768,1.4,13)+R(1444.5,756,1.4,12)),
