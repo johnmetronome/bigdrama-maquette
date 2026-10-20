@@ -473,6 +473,29 @@ const rue = {
   }
 };
 
+/* ───────── LE PANNEAU D'AFFICHAGE · l'accueil ─────────
+   Une réclame sur les toits, portée par un échafaudage, éclairée par trois lampes. Le film de Big Drama y passe au ralenti.
+   ecran = rectangle où se pose la vidéo (16/9). */
+const PX0 = 908, PY0 = 112, PW = 272, PH = 153;
+function panneau() {
+  const x1 = PX0 + PW, y1 = PY0 + PH;
+  let pieds = "", lampes = "", cones = "";
+  [[934, 300], [1006, 300], [1102, 360], [1158, 360]].forEach(([x, yb]) => pieds += R(x - 2, y1 + 8, 4, yb - y1 - 8));
+  pieds += ruban([934, y1 + 10], [970, y1 + 20], [1006, 298], 2, 2, 6) + ruban([1006, y1 + 10], [970, y1 + 20], [934, 298], 2, 2, 6)
+         + ruban([1102, y1 + 10], [1130, y1 + 40], [1158, 358], 2, 2, 6) + ruban([1158, y1 + 10], [1130, y1 + 40], [1102, 358], 2, 2, 6)
+         + R(PX0 + 6, y1 + 8, PW - 12, 4);
+  [PX0 + PW * 0.18, PX0 + PW * 0.5, PX0 + PW * 0.82].forEach(x => {
+    lampes += ruban([x, PY0 - 10], [x + 2, PY0 - 34], [x + 20, PY0 - 34], 2.4, 2, 8) + P([[x + 12, PY0 - 34], [x + 28, PY0 - 34], [x + 24, PY0 - 26], [x + 16, PY0 - 26]]);
+    cones += P([[x + 16, PY0 - 26], [x + 24, PY0 - 26], [x + 46, PY0 + 6], [x - 6, PY0 + 6]]);
+  });
+  return [
+    N(R(PX0 - 10, PY0 - 10, PW + 20, PH + 20) + R(PX0 - 16, PY0 - 16, PW + 32, 8) + pieds + lampes),
+    { ...L(cones), opacite: 0.35 },
+    L(C(PX0 + PW * 0.18 + 20, PY0 - 25, 3) + C(PX0 + PW * 0.5 + 20, PY0 - 25, 3) + C(PX0 + PW * 0.82 + 20, PY0 - 25, 3))
+  ];
+}
+export const PANNEAU = { ecran: [PX0, PY0, PX0 + PW, PY0 + PH], formes: panneau() };
+
 export const SILHOUETTES = { rue };
 
 /* ───────── COUPES : le blueprint au clic ───────── */

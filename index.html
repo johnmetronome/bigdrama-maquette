@@ -43,7 +43,7 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 .lieu{cursor:pointer;transition:opacity 500ms ease-out,filter 500ms ease-out,transform 700ms var(--lent);transform-box:fill-box}
 .lieu:focus{outline:none}
 .scene.survol .lieu,.scene.survol .calque-decor{transition:opacity 900ms var(--lent),filter 900ms var(--lent),transform 900ms var(--lent)}
-.scene.survol .lieu:not(.actif){opacity:.84}
+/* les autres lieux ne bougent pas : seul le lieu survolé s'élève et s'éclaire */
 .lieu.actif{filter:drop-shadow(0 0 5px rgba(255,227,77,.3));transform:translateY(-2px)}
 .zone{fill:transparent}
 
@@ -59,13 +59,29 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 .reglage textarea{width:100%;height:84px;font:11px/1.4 ui-monospace,Menlo,monospace;background:#000;color:#9f9;border:1px solid #333}
 .reglage button{font:500 11px/1 var(--f-texte);padding:8px;cursor:pointer}
 
+/* le seuil : la clé de Big Drama, un clic ouvre la rue et libère le son */
+.seuil{position:fixed;inset:0;z-index:30;background:#070605;display:grid;place-items:center;transition:opacity 1.8s var(--lent),visibility 0s 1.8s}
+.seuil.ouvert{opacity:0;visibility:hidden}
+.seuil button{all:unset;cursor:pointer;display:grid;place-items:center;width:120px;height:120px;border-radius:50%}
+.seuil img{height:96px;width:auto;opacity:.9;animation:respire 3.2s ease-in-out infinite}
+.seuil button:focus-visible{outline:1px solid #c9a35b;outline-offset:8px}
+@keyframes respire{50%{transform:scale(1.08);opacity:.55}}
+/* le film d'accueil sur le panneau des toits, et les films verticaux à travers les fenêtres */
+.film-accueil{position:absolute;object-fit:cover;pointer-events:none;opacity:0;transition:opacity 2.4s var(--lent);filter:sepia(.25) contrast(1.05) brightness(.95)}
+.film-accueil.pret{opacity:1}
+.coupe .film-accueil{opacity:0}
+.vitre{position:absolute;pointer-events:none;opacity:0;transition:opacity 1.2s var(--lent);-webkit-mask:var(--masque) 0 0/100% 100% no-repeat;mask:var(--masque) 0 0/100% 100% no-repeat}
+.vitre.vu{opacity:1;transition:opacity 1.8s var(--lent)}
+.vitre video{width:100%;height:100%;object-fit:cover;filter:sepia(.35) saturate(1.1) brightness(1.08)}
+.coupe .vitre{opacity:0}
+.panneau{cursor:pointer}
 /* blueprint, épuré */
 .photo-piece{opacity:0;filter:grayscale(1) sepia(1) hue-rotate(178deg) saturate(2.4) brightness(.72) contrast(1.1);animation:developpe 1.6s var(--lent) forwards;animation-delay:var(--t,0s);transition:filter 1.4s var(--lent),opacity 1.4s var(--lent)}
 @keyframes developpe{to{opacity:.32}}
 .piece:hover .photo-piece,.piece:focus .photo-piece,.piece.vue .photo-piece{animation:none;opacity:1;filter:none}
 /* écran du support et salle de projection */
 .ouvrir-ecran{all:unset;cursor:zoom-in;display:block}
-.ecran{position:relative;margin:0;aspect-ratio:4/3;width:100%;-webkit-mask:var(--masque) center/100% 100% no-repeat;mask:var(--masque) center/100% 100% no-repeat;background:#000;overflow:hidden}
+.ecran{position:relative;margin:0;aspect-ratio:16/9;width:100%;-webkit-mask:var(--masque) center/100% 100% no-repeat;mask:var(--masque) center/100% 100% no-repeat;background:#000;overflow:hidden}
 .ecran .defile img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:scale(1.02);transform-origin:50% 40%;transition:opacity 1.8s var(--lent),transform 7s linear}
 .ecran .defile img.actif{opacity:1;transform:scale(1.12)}
 .ecran video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity 1.2s var(--lent)}
@@ -75,7 +91,7 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .salle{position:fixed;inset:0;z-index:20;background:rgba(5,4,3,.94);display:grid;place-items:center;align-content:center;gap:14px;opacity:0;transition:opacity 700ms var(--lent);cursor:zoom-out;padding:24px}
 .salle.vu{opacity:1}
-.salle .ecran{width:min(88vw,calc(78svh * 4 / 3));transform:scale(.92);transition:transform 1s var(--lent)}
+.salle .ecran{width:min(90vw,calc(80svh * 16 / 9));transform:scale(.94);transition:transform 1.2s var(--lent);-webkit-mask:none;mask:none;border-radius:6px;box-shadow:0 0 0 1px #2a241c,0 40px 120px rgba(0,0,0,.8)}
 .salle.vu .ecran{transform:none}
 .salle .legende{margin:0;font:400 12px/1.5 var(--f-texte);color:#a89c8b;max-width:70ch;text-align:center}
 .salle .fermer{position:absolute;right:18px;top:12px;background:none;border:0;color:#efe8dc;font:300 30px/1 var(--f-texte);cursor:pointer}
@@ -171,10 +187,13 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 </style>
 
 <header class="marque" aria-label="Big Drama"><img src="logos/big-drama-clef.png" alt=""><b>Big Drama</b></header>
-<button class="son" id="son" type="button" aria-pressed="false">Son</button>
+<button class="son" id="son" type="button" aria-pressed="true">Son</button>
+<div class="seuil" id="seuil"><button type="button" id="entrer" aria-label="Entrer chez Big Drama"><img src="logos/cle.png" alt=""></button></div>
 <main class="monde">
   <div class="scene" id="scene">
     <svg id="svg" viewBox="0 0 1600 900" role="img" aria-label="Une rue de Paris en 1918, chaque maison est une création de Big Drama"></svg>
+    <video class="film-accueil" id="film" muted loop playsinline preload="auto" src="videos/accueil.mp4" aria-hidden="true"></video>
+    <div class="vitre" id="vitre" aria-hidden="true"><video muted loop playsinline preload="none"></video></div>
     <div class="logo-survol" id="logo" aria-hidden="true"></div>
     <div class="bulle" id="bulle" aria-hidden="true"></div>
     <button class="retour" id="retour" type="button">← La rue</button>
@@ -183,7 +202,7 @@ button:focus-visible,.lieu:focus-visible,.piece:focus-visible,.fantome:focus-vis
 </main>
 
 <script type="module">
-import { SILHOUETTES, COULEURS, COUPES } from './silhouettes.js';
+import { SILHOUETTES, COULEURS, COUPES, PANNEAU } from './silhouettes.js';
 import { LIEUX, LOREM_LONG } from './lieux.js';
 
 const NS = 'http://www.w3.org/2000/svg', $ = s => document.querySelector(s);
@@ -207,7 +226,19 @@ const appliquer = () => {
   svg.setAttribute('viewBox', vb.map(n => n.toFixed(2)).join(' '));
   const z = largeurMax() / vb[2], cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2;
   svg.querySelectorAll(':scope > g[data-plan]').forEach(g => { const s = 1 - PROFONDEUR[g.dataset.plan] * (z - 1); g.setAttribute('transform', reduit ? '' : `translate(${cx.toFixed(1)} ${cy.toFixed(1)}) scale(${s.toFixed(4)}) translate(${(-cx).toFixed(1)} ${(-cy).toFixed(1)})`); });
+  placer();
 };
+// un point du dessin, sur l'écran, en tenant compte de la parallaxe de son calque
+function ecranDe(x, y, plan) {
+  const z = largeurMax() / vb[2], cx = vb[0] + vb[2] / 2, cy = vb[1] + vb[3] / 2, s = reduit ? 1 : 1 - PROFONDEUR[plan] * (z - 1);
+  return versEcran(cx + (x - cx) * s, cy + (y - cy) * s);
+}
+function poser(elt, [x0, y0, x1, y1], plan) { const [a, b] = ecranDe(x0, y0, plan), [c, d] = ecranDe(x1, y1, plan); Object.assign(elt.style, { left: a + 'px', top: b + 'px', width: (c - a) + 'px', height: (d - b) + 'px' }); }
+function placer() {
+  const film = document.getElementById('film'), vitre = document.getElementById('vitre');
+  if (film) poser(film, PANNEAU.ecran, 2);
+  if (vitre && vitre.dataset.id) poser(vitre, boites[vitre.dataset.id], parId[vitre.dataset.id].scene.plan);
+}
 function aller(v, duree = 1400) {
   v = borner(v); if (reduit || !duree) { vb = v; appliquer(); return Promise.resolve(); }
   const de = vb.slice(), t0 = performance.now(), jeton = anim = {};
@@ -236,6 +267,11 @@ function dessiner() {
     g.addEventListener('click', e => { e.stopPropagation(); if (bouge) return; if (e.pointerType === 'touch' && arme !== l.id) { arme = l.id; survoler(l.id); return; } ouvrir(l.id); });
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); ouvrir(l.id); } });
   }
+  const pan = el('g', { class: 'panneau', tabindex: 0, role: 'button', 'aria-label': 'Big Drama, le film' }, calque(2));
+  PANNEAU.formes.forEach(fm => forme(fm, pan));
+  const [px0, py0, px1, py1] = PANNEAU.ecran; el('rect', { x: px0, y: py0, width: px1 - px0, height: py1 - py0, fill: COULEURS.noir }, pan);
+  pan.addEventListener('click', e => { e.stopPropagation(); if (!bouge) projection(ACCUEIL); });
+  pan.addEventListener('keydown', e => { if (e.key === 'Enter') projection(ACCUEIL); });
   el('g', { class: 'bleu', id: 'bleu' }, svg);
 }
 let arme = null;
@@ -278,9 +314,20 @@ if (new URLSearchParams(location.search).has('reglage')) {
   q('#rg-zero').onclick = () => { reglage = JSON.parse(JSON.stringify(REGLAGE_LOGOS)); try { localStorage.removeItem('bd-reglage-logos'); } catch {} maj(); };
   setTimeout(maj, 300);
 }
+// au survol, le film vertical du spectacle joue à travers les fenêtres éclairées du bâtiment
+const masquesVitre = {};
+function montrerVitre(id) {
+  const vitre = document.getElementById('vitre'), v = vitre.querySelector('video'), l = id && parId[id];
+  if (!l || !l.video916) { vitre.classList.remove('vu'); setTimeout(() => { if (!vitre.classList.contains('vu')) v.pause(); }, 1300); return; }
+  const b = boites[id];
+  masquesVitre[id] ||= `url(data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="${b[0]} ${b[1]} ${b[2] - b[0]} ${b[3] - b[1]}" preserveAspectRatio="none"><path fill="#fff" d="${S.lieux[id].filter(fm => fm.fill === 'lumiere' && !fm.opacite).map(fm => fm.d).join('')}"/></svg>`).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29')})`;
+  if (vitre.dataset.id !== id) { vitre.dataset.id = id; vitre.style.setProperty('--masque', masquesVitre[id]); v.src = l.video916; }
+  placer(); v.play().catch(() => {}); vitre.classList.add('vu');
+}
 function survoler(id) {
   son(id || selection);
   if (selection) return;
+  if (!reduit) montrerVitre(id);
   scene.classList.toggle('survol', !!id);
   svg.querySelectorAll('.lieu').forEach(g => g.classList.toggle('actif', g.dataset.id === id));
   montrerLogo(id);
@@ -360,23 +407,23 @@ function blueprint(l, coupe, enchaine) {
   });
 }
 // l'écran de chaque histoire : le teaser (videos/<id>.mp4) vu à travers une forme propre au monde, sinon les photos qui défilent
-const FORMES = {
-  'carte-maison-close': '<circle cx="50" cy="24" r="17"/><path d="M41 34 L32 73 H68 L59 34 Z"/>',                        // trou de serrure : à quelle porte écouter
-  'dossier-enquete': '<circle cx="46" cy="34" r="30"/><path d="M66 56 L72 50 L96 72 L90 75 Z"/>',                           // loupe
-  'boite-orange': '<circle cx="50" cy="37.5" r="35"/>',                                                                     // hublot
-  'ardoise-bistrot': '<path d="M5 75 V16 Q5 3 18 3 H82 Q95 3 95 16 V75 Z"/>',                                               // vitrine du bistrot
-  'livre-enfant': '<circle cx="50" cy="33" r="31"/><path d="M28 60 H72 L78 75 H22 Z"/>',                                    // boule à neige
-  'faire-part': '<path d="M14 75 V36 Q14 6 50 2 Q86 6 86 36 V75 Z"/>',                                                      // porte de caveau
-  'affiche-tsigane': '<ellipse cx="50" cy="37.5" rx="47" ry="36"/>',                                                         // médaillon
-  'parchemin-balkans': '<path d="M50 2 C70 2 90 14 90 37.5 C90 61 70 73 50 73 C30 73 10 61 10 37.5 C10 14 30 2 50 2 Z M44 0 H56 V6 H44 Z"/>', // portrait royal ovale
-  'etiquette-cigare': '<path d="M12 3 H88 L97 13 V62 L88 72 H12 L3 62 V13 Z"/>',                                            // bague de cigare
-  'etiquette-brulee': '<path d="M8 75 V32 A42 28 0 0 1 92 32 V75 Z"/>'                                                       // porte du four
+const FORMES = { // dans un cadre 160 × 90 (16/9)
+  'carte-maison-close': '<circle cx="80" cy="30" r="24"/><path d="M68 46 L56 89 H104 L92 46 Z"/>',                                  // trou de serrure : à quelle porte écouter
+  'dossier-enquete': '<circle cx="72" cy="42" r="40"/><path d="M100 70 L108 62 L150 89 H134 Z"/>',                                 // loupe
+  'boite-orange': '<circle cx="80" cy="45" r="44"/>',                                                                              // hublot
+  'ardoise-bistrot': '<path d="M4 90 V18 Q4 3 20 3 H140 Q156 3 156 18 V90 Z"/>',                                                    // vitrine du bistrot
+  'livre-enfant': '<circle cx="80" cy="40" r="38"/><path d="M52 72 H108 L116 90 H44 Z"/>',                                          // boule à neige
+  'faire-part': '<path d="M26 90 V42 Q26 6 80 2 Q134 6 134 42 V90 Z"/>',                                                           // porte de caveau
+  'affiche-tsigane': '<ellipse cx="80" cy="45" rx="78" ry="44"/>',                                                                 // médaillon
+  'parchemin-balkans': '<ellipse cx="80" cy="47" rx="66" ry="42"/><path d="M72 0 H88 V8 H72 Z"/>',                                  // portrait royal ovale
+  'etiquette-cigare': '<path d="M14 3 H146 L157 15 V75 L146 87 H14 L3 75 V15 Z"/>',                                               // bague de cigare
+  'etiquette-brulee': '<path d="M12 90 V40 A68 38 0 0 1 148 40 V90 Z"/>'                                                           // porte du four
 };
-const masque = s => `url(data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 75" preserveAspectRatio="none">${FORMES[s]}</svg>`).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29')})`;
+const masque = s => `url(data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 90" preserveAspectRatio="none">${FORMES[s] || '<rect width="160" height="90"/>'}</svg>`).replace(/'/g, '%27').replace(/\(/g, '%28').replace(/\)/g, '%29')})`;
 function ecran(l, grand = false) {
   const photos = l.photos.map((p, i) => `<img src="${p}" alt="" style="--i:${i};--n:${l.photos.length}" loading="lazy">`).join('');
   return `<figure class="ecran${grand ? ' grand' : ''}" style="--masque:${masque(l.support)}"><div class="defile" style="--n:${l.photos.length}">${photos}</div>
-    <video muted loop playsinline preload="metadata" src="${l.video}"></video></figure>`;
+    ${l.video169 ? `<video muted loop playsinline preload="metadata" src="${l.video169}"></video>` : ''}</figure>`;
 }
 function brancherVideo(racine) {
   racine.querySelectorAll('.ecran video').forEach(v => {
@@ -411,12 +458,13 @@ function projection(l) {
   const s = document.createElement('div'); s.className = 'salle'; s.setAttribute('role', 'dialog'); s.setAttribute('aria-label', l.creation);
   s.innerHTML = `${ecran(l, true)}<p class="legende">${l.legende || ''}</p><button class="fermer" type="button" aria-label="Fermer">×</button>`;
   document.body.appendChild(s); brancherVideo(s); allumer(s);
-  const v = s.querySelector('video'); if (v) v.muted = !sonActif;
-  const quitter = () => { s.classList.remove('vu'); setTimeout(() => s.remove(), 700); removeEventListener('keydown', esc, true); };
+  const v = s.querySelector('video'); if (v) { v.muted = !sonActif || l === ACCUEIL; if (!v.muted) { v.volume = 0; son(null); const t0 = performance.now(); const monte = t => { v.volume = Math.min(1, (t - t0) / 1500); if (v.volume < 1) requestAnimationFrame(monte); }; requestAnimationFrame(monte); } }
+  const quitter = () => { s.classList.remove('vu'); setTimeout(() => s.remove(), 700); removeEventListener('keydown', esc, true); son(selection); };
   const esc = e => { if (e.key === 'Escape') { e.stopPropagation(); quitter(); } };
   addEventListener('keydown', esc, true); s.onclick = quitter;
   requestAnimationFrame(() => s.classList.add('vu'));
 }
+const ACCUEIL = { id: 'accueil', creation: 'Big Drama', video169: 'videos/accueil.mp4', photos: [], legende: 'Big Drama, le film, au ralenti.', support: null };
 function fermer() {
   selection = null; scene.classList.remove('coupe'); document.body.classList.remove('en-coupe'); bulle.classList.remove('vue'); logo.classList.remove('vu');
   support.className = 'support'; son(null); aller(vueRepos(), 1500);
@@ -436,20 +484,47 @@ scene.addEventListener('pointerdown', e => { if (e.target.closest('.support,.ret
 addEventListener('pointermove', e => { if (!glisse) return; const dx = e.clientX - glisse[0], dy = e.clientY - glisse[1]; if (Math.hypot(dx, dy) > 6) { bouge = true; scene.classList.add('glisse'); } if (!bouge) return; anim = null; const r = scene.getBoundingClientRect(); vb = borner([glisse[2][0] - dx / r.width * vb[2], glisse[2][1] - dy / r.height * vb[3], vb[2]]); appliquer(); });
 addEventListener('pointerup', () => { glisse = null; scene.classList.remove('glisse'); setTimeout(() => bouge = false, 0); });
 
-/* ── son : une ambiance par lieu, jamais avant un geste, fondu ── */
-let sonActif = false; const pistes = {}; let courante = null;
-function son(id) {
-  if (!sonActif) return; const l = id && parId[id];
-  const suivante = l ? (pistes[l.id] ||= Object.assign(new Audio(l.son), { loop: true, volume: 0 })) : null;
-  if (suivante === courante) return;
-  const fondu = (a, cible) => { if (!a) return; if (cible > 0) a.play().catch(() => {}); const t0 = performance.now(), v0 = a.volume; const pas = t => { const k = Math.min(1, (t - t0) / 900); a.volume = v0 + (cible - v0) * k; if (k < 1) requestAnimationFrame(pas); else if (!cible) a.pause(); }; requestAnimationFrame(pas); };
-  fondu(courante, 0); fondu(suivante, 0.8); courante = suivante;
+/* ── musique : chaque création a sa musique, elle entre en 4 s et s'éteint en 4 s ──
+   Les navigateurs exigent un premier geste avant tout son : c'est le clic sur la clé du seuil. */
+let sonActif = true, deverrouille = false, voulu = null; const pistes = {};
+const FONDU = 4000, VOLUME = 0.7, doux = k => 0.5 - Math.cos(Math.PI * k) / 2;
+function piste(id) {
+  const l = parId[id]; if (!l || !l.son) return null;
+  if (!pistes[id]) { const a = new Audio(l.son); a.loop = true; a.volume = 0; a.preload = 'auto'; a.addEventListener('error', () => pistes[id].mort = true); pistes[id] = { a, de: 0, vers: 0, t0: 0 }; }
+  return pistes[id].mort ? null : pistes[id];
 }
-$('#son').addEventListener('click', () => { sonActif = !sonActif; $('#son').setAttribute('aria-pressed', sonActif); if (!sonActif && courante) { courante.pause(); courante = null; } else son(selection); });
+function viser(p, cible) {
+  if (!p || p.vers === cible) return;
+  p.de = p.a.volume; p.vers = cible; p.t0 = performance.now();
+  if (cible > 0) p.a.play().catch(() => {});
+  const pas = t => { if (p.vers !== cible) return; const k = Math.min(1, (t - p.t0) / FONDU); p.a.volume = Math.max(0, Math.min(1, p.de + (cible - p.de) * doux(k))); if (k < 1) requestAnimationFrame(pas); else if (!cible) p.a.pause(); };
+  requestAnimationFrame(pas);
+}
+function son(id) {
+  voulu = id || null;
+  if (!deverrouille) return;
+  for (const [k, p] of Object.entries(pistes)) if (k !== voulu) viser(p, 0);
+  if (voulu && sonActif) viser(piste(voulu), VOLUME);
+}
+$('#son').addEventListener('click', () => { sonActif = !sonActif; $('#son').setAttribute('aria-pressed', sonActif); if (!sonActif) Object.values(pistes).forEach(p => viser(p, 0)); else son(voulu || selection); });
+// le seuil
+function entrer() {
+  deverrouille = true; $('#seuil').classList.add('ouvert');
+  LIEUX.forEach(l => piste(l.id));                                        // on prépare les musiques
+  const film = document.getElementById('film'); film.play().catch(() => {});
+  son(voulu);
+}
+$('#entrer').addEventListener('click', entrer);
+if (new URLSearchParams(location.search).has('direct')) { $('#seuil').classList.add('ouvert'); addEventListener('pointerdown', () => { if (!deverrouille) entrer(); }, { once: true }); }
+{ const film = document.getElementById('film');
+  const pret = () => { film.classList.add('pret'); film.play().catch(() => {}); };
+  if (film.readyState >= 2) pret(); else film.addEventListener('loadeddata', pret, { once: true });
+  film.addEventListener('error', () => film.remove(), { once: true });
+  if (new URLSearchParams(location.search).has('sans-film')) film.remove(); }
 
 /* ── démarrage et redimensionnement ── */
 dessiner(); vb = borner(vueRepos()); appliquer();
 let attente; addEventListener('resize', () => { clearTimeout(attente); attente = setTimeout(() => { if (selection) ouvrir(selection); else { vb = borner(vueRepos()); appliquer(); } }, 150); });
-window.__bd = { ouvrir, fermer, survoler, boites };
+window.__bd = { ouvrir, fermer, survoler, boites, entrer };
 </script>
 </html>
