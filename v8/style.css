@@ -635,6 +635,7 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 /* ───────── v8.1 · plus doux ───────── */
 /* pendant le glissé et la construction, les petites animations attendent : tout le calcul va au mouvement */
 .bd-glisse .bd-rue *,.bd-construit-en-cours .bd-rue *{animation-play-state:paused!important}
+.bd-construit-en-cours .bd-scene[data-apparition="plume"] .bd-pop :is(image,text){animation-play-state:running!important}
 .bd-construit-en-cours .bd-construction{will-change:transform}
 /* survol : un zoom plus lent et plus léger */
 .bd-lieu .bd-elev{transition:transform 2600ms cubic-bezier(.22,.1,.2,1)!important}
@@ -835,3 +836,23 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-scene.construite .bd-pop{transition:transform 2.4s cubic-bezier(.25,.46,.3,1)!important;transition-delay:0s!important}
 .bd-scene.construite .bd-pop.actif{transform:rotateX(-3deg) translateZ(4px)!important}
 @media(prefers-reduced-motion:reduce){.bd-scene .bd-pop,.bd-lumiere-fen{transition:none!important;opacity:1!important}.bd-scene .bd-pop path.bd-encre{transition:none!important;stroke-dashoffset:0!important;fill-opacity:var(--fo,1)!important;stroke-opacity:var(--so,0)!important}.bd-scene::before,.bd-scene::after{display:none!important}}
+
+/* ───────── v8.10 · PLUME (défaut) : le trait, l'encre éteinte, puis la lanterne qui allume la rue ───────── */
+.bd-scene[data-apparition="plume"]:not(.construite) .bd-pop path.bd-encre{stroke-dasharray:1 1;stroke-dashoffset:1;fill-opacity:0;stroke-opacity:.95;
+  transition:stroke-dashoffset 2.6s cubic-bezier(.45,.05,.35,1) calc(var(--rang,0) * 220ms),fill-opacity 1.3s ease calc(var(--rang,0) * 220ms + 1800ms),stroke-opacity 1.2s ease calc(var(--rang,0) * 220ms + 2500ms)}
+.bd-scene[data-apparition="plume"]:not(.construite) .bd-pop path.bd-encre:not(.bd-trait-propre){stroke:#efe1b4;stroke-width:1.15px;vector-effect:non-scaling-stroke}
+.bd-scene[data-apparition="plume"].deplie:not(.construite) .bd-pop path.bd-encre{stroke-dashoffset:0;fill-opacity:var(--fo,1);stroke-opacity:0}
+.bd-scene[data-apparition="plume"].deplie:not(.construite) .bd-pop path.bd-trait-propre{stroke-opacity:var(--so,1)}
+/* les lumières restent éteintes après l'encre : elles attendent la lanterne */
+.bd-scene[data-apparition="plume"]:not(.construite) .bd-pop path.bd-encre.bd-lumiere-fen{transition:stroke-dashoffset 2.6s cubic-bezier(.45,.05,.35,1) calc(var(--rang,0) * 220ms),fill-opacity .9s ease var(--dl,0ms),stroke-opacity 1.2s ease calc(var(--rang,0) * 220ms + 2500ms)}
+.bd-scene[data-apparition="plume"]:not(.construite) .bd-pop :is(image,text){opacity:0}
+.bd-scene[data-apparition="plume"].deplie:not(.construite) .bd-pop :is(image,text){animation:bd-allumage 1.1s ease-out var(--dl,0ms) both}
+@keyframes bd-allumage{0%{opacity:0}18%{opacity:.75}30%{opacity:.15}46%{opacity:.9}58%{opacity:.45}100%{opacity:1}}
+/* la lueur de la lanterne */
+.bd-scene[data-apparition="plume"]::before{content:"";position:absolute;top:-10%;bottom:-10%;width:46%;left:-46%;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 62%,rgba(255,214,140,.30) 0%,rgba(255,190,110,.11) 38%,transparent 70%);mix-blend-mode:screen;opacity:0}
+.bd-scene[data-apparition="plume"].deplie:not(.construite)::before{animation:bd-lanterne 4.6s linear 3s forwards}
+@media(prefers-reduced-motion:reduce){.bd-scene[data-apparition="plume"] .bd-pop :is(image,text){animation:none!important;opacity:1!important}}
+
+/* v8.10 · la rue hors de l'écran ne calcule plus ses animations */
+.bd-rue-cachee .bd-rue *{animation-play-state:paused!important}

@@ -1,0 +1,277 @@
+{
+ "v2/assets/original/wp-content/uploads/2018/11/BarbessiaA.jpg": {
+  "src": "bandeaux/BarbessiaA.webp",
+  "srcset": "bandeaux/BarbessiaA-900.webp 900w, bandeaux/BarbessiaA.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2018/11/ErosA-1.jpg": {
+  "src": "bandeaux/ErosA-1.webp",
+  "srcset": "bandeaux/ErosA-1-900.webp 900w, bandeaux/ErosA-1.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2018/11/ProphetieA.jpg": {
+  "src": "bandeaux/ProphetieA.webp",
+  "srcset": "bandeaux/ProphetieA-900.webp 900w, bandeaux/ProphetieA.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2020/03/CloseNew-1.jpg": {
+  "src": "bandeaux/CloseNew-1.webp",
+  "srcset": "bandeaux/CloseNew-1-900.webp 900w, bandeaux/CloseNew-1.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2020/04/GrimC.jpg": {
+  "src": "bandeaux/GrimC.webp",
+  "srcset": "bandeaux/GrimC-900.webp 900w, bandeaux/GrimC.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2021/09/PDF-Ad.jpg": {
+  "src": "bandeaux/PDF-Ad.webp",
+  "srcset": "bandeaux/PDF-Ad-900.webp 900w, bandeaux/PDF-Ad.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/BarbessiaC.png": {
+  "src": "bandeaux/BarbessiaC-titre.webp"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/BetterNew2.jpg": {
+  "src": "bandeaux/BetterNew2.webp",
+  "srcset": "bandeaux/BetterNew2-900.webp 900w, bandeaux/BetterNew2.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/BetterNew2.png": {
+  "src": "bandeaux/BetterNew2-titre.webp"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/ErosC.png": {
+  "src": "bandeaux/ErosC-titre.webp"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/GrimC.png": {
+  "src": "bandeaux/GrimC-titre.webp"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/NoelleNew.jpg": {
+  "src": "bandeaux/NoelleNew.webp",
+  "srcset": "bandeaux/NoelleNew-900.webp 900w, bandeaux/NoelleNew.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/ProphetieC.png": {
+  "src": "bandeaux/ProphetieC-titre.webp"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/ScatolinaHomeNew.jpg": {
+  "src": "bandeaux/ScatolinaHomeNew.webp",
+  "srcset": "bandeaux/ScatolinaHomeNew-900.webp 900w, bandeaux/ScatolinaHomeNew.webp 1600w"
+ },
+ "v2/assets/original/wp-content/uploads/2022/11/ScatolinaNew.png": {
+  "src": "bandeaux/ScatolinaNew-titre.webp"
+ },
+ "v7/assets/norma-alessandro-clemenza.jpg": {
+  "src": "bandeaux/norma-alessandro-clemenza.webp",
+  "srcset": "bandeaux/norma-alessandro-clemenza-900.webp 900w, bandeaux/norma-alessandro-clemenza.webp 2000w"
+ },
+ "v8/assets/la-veillee-bandeau.jpg": {
+  "src": "bandeaux/la-veillee-bandeau.webp",
+  "srcset": "bandeaux/la-veillee-bandeau-900.webp 900w, bandeaux/la-veillee-bandeau.webp 2000w"
+ },
+ "logos/arbre.png": {
+  "src": "logos/arbre.webp"
+ },
+ "logos/bar.png": {
+  "src": "logos/bar.webp"
+ },
+ "logos/big-drama-clef.png": {
+  "src": "logos/big-drama-clef.webp"
+ },
+ "logos/cimetiere.png": {
+  "src": "logos/cimetiere.webp"
+ },
+ "logos/cle.png": {
+  "src": "logos/cle.webp"
+ },
+ "logos/close.png": {
+  "src": "logos/close.webp"
+ },
+ "logos/creche.png": {
+  "src": "logos/creche.webp"
+ },
+ "logos/eros-en-russie.png": {
+  "src": "logos/eros-en-russie.webp"
+ },
+ "logos/lune.png": {
+  "src": "logos/lune.webp"
+ },
+ "logos/maison.png": {
+  "src": "logos/maison.webp"
+ },
+ "logos/norma.png": {
+  "src": "logos/norma.webp"
+ },
+ "logos/paon.png": {
+  "src": "logos/paon.webp"
+ },
+ "logos/parfum-de-famille.png": {
+  "src": "logos/parfum-de-famille.webp"
+ },
+ "logos/phenix.png": {
+  "src": "logos/phenix.webp"
+ },
+ "logos/scatolina.png": {
+  "src": "logos/scatolina.webp"
+ },
+ "logos/serre.png": {
+  "src": "logos/serre.webp"
+ },
+ "logos/tour.png": {
+  "src": "logos/tour.webp"
+ },
+ "logos/usine.png": {
+  "src": "logos/usine.webp"
+ },
+ "photos/better-show-01.jpg": {
+  "src": "photos/better-show-01.webp"
+ },
+ "photos/better-show-02.jpg": {
+  "src": "photos/better-show-02.webp"
+ },
+ "photos/better-show-03.jpg": {
+  "src": "photos/better-show-03.webp"
+ },
+ "photos/better-show-04.jpg": {
+  "src": "photos/better-show-04.webp"
+ },
+ "photos/better-show-05.jpg": {
+  "src": "photos/better-show-05.webp"
+ },
+ "photos/better-show-06.jpg": {
+  "src": "photos/better-show-06.webp"
+ },
+ "photos/better-together-01.jpg": {
+  "src": "photos/better-together-01.webp"
+ },
+ "photos/better-together-02.jpg": {
+  "src": "photos/better-together-02.webp"
+ },
+ "photos/close-04.jpg": {
+  "src": "photos/close-04.webp"
+ },
+ "photos/close-09.jpg": {
+  "src": "photos/close-09.webp"
+ },
+ "photos/close-12.jpg": {
+  "src": "photos/close-12.webp"
+ },
+ "photos/close-14.jpg": {
+  "src": "photos/close-14.webp"
+ },
+ "photos/close-16.jpg": {
+  "src": "photos/close-16.webp"
+ },
+ "photos/close-20.jpg": {
+  "src": "photos/close-20.webp"
+ },
+ "photos/close-studio-01.jpg": {
+  "src": "photos/close-studio-01.webp"
+ },
+ "photos/close-studio-02.jpg": {
+  "src": "photos/close-studio-02.webp"
+ },
+ "photos/close-studio-03.jpg": {
+  "src": "photos/close-studio-03.webp"
+ },
+ "photos/close-studio-04.jpg": {
+  "src": "photos/close-studio-04.webp"
+ },
+ "photos/close-studio-05.jpg": {
+  "src": "photos/close-studio-05.webp"
+ },
+ "photos/close-studio-06.jpg": {
+  "src": "photos/close-studio-06.webp"
+ },
+ "photos/close-studio-07.jpg": {
+  "src": "photos/close-studio-07.webp"
+ },
+ "photos/close-teaser-01.jpg": {
+  "src": "photos/close-teaser-01.webp"
+ },
+ "photos/close-teaser-02.jpg": {
+  "src": "photos/close-teaser-02.webp"
+ },
+ "photos/close-teaser-03.jpg": {
+  "src": "photos/close-teaser-03.webp"
+ },
+ "photos/close-teaser-04.jpg": {
+  "src": "photos/close-teaser-04.webp"
+ },
+ "photos/close-teaser-05.jpg": {
+  "src": "photos/close-teaser-05.webp"
+ },
+ "photos/close-teaser-06.jpg": {
+  "src": "photos/close-teaser-06.webp"
+ },
+ "photos/close-teaser-07.jpg": {
+  "src": "photos/close-teaser-07.webp"
+ },
+ "photos/coco-01.jpg": {
+  "src": "photos/coco-01.webp"
+ },
+ "photos/coco-02.jpg": {
+  "src": "photos/coco-02.webp"
+ },
+ "photos/coco-03.jpg": {
+  "src": "photos/coco-03.webp"
+ },
+ "photos/eros-01.jpg": {
+  "src": "photos/eros-01.webp"
+ },
+ "photos/eros-02.jpg": {
+  "src": "photos/eros-02.webp"
+ },
+ "photos/grimbergen-01.jpg": {
+  "src": "photos/grimbergen-01.webp"
+ },
+ "photos/hermes-01.jpg": {
+  "src": "photos/hermes-01.webp"
+ },
+ "photos/hermes-02.jpg": {
+  "src": "photos/hermes-02.webp"
+ },
+ "photos/hermes-03.jpg": {
+  "src": "photos/hermes-03.webp"
+ },
+ "photos/norma-02.jpg": {
+  "src": "photos/norma-02.webp"
+ },
+ "photos/norma-04.jpg": {
+  "src": "photos/norma-04.webp"
+ },
+ "photos/norma-06.jpg": {
+  "src": "photos/norma-06.webp"
+ },
+ "photos/norma-08.jpg": {
+  "src": "photos/norma-08.webp"
+ },
+ "photos/norma-10.jpg": {
+  "src": "photos/norma-10.webp"
+ },
+ "photos/parfum-de-famille-01.jpg": {
+  "src": "photos/parfum-de-famille-01.webp"
+ },
+ "photos/parfum-de-famille-05.jpg": {
+  "src": "photos/parfum-de-famille-05.webp"
+ },
+ "photos/prophetie-del-coco-01.jpg": {
+  "src": "photos/prophetie-del-coco-01.webp"
+ },
+ "photos/prophetie-del-coco-04.jpg": {
+  "src": "photos/prophetie-del-coco-04.webp"
+ },
+ "photos/scatolina-02.jpg": {
+  "src": "photos/scatolina-02.webp"
+ },
+ "photos/scatolina-04.jpg": {
+  "src": "photos/scatolina-04.webp"
+ },
+ "photos/un-conte-de-noelle-01.jpg": {
+  "src": "photos/un-conte-de-noelle-01.webp"
+ },
+ "photos/un-conte-de-noelle-03.jpg": {
+  "src": "photos/un-conte-de-noelle-03.webp"
+ },
+ "photos/un-conte-de-noelle-07.jpg": {
+  "src": "photos/un-conte-de-noelle-07.webp"
+ },
+ "photos/viva-barbessia-01.jpg": {
+  "src": "photos/viva-barbessia-01.webp"
+ },
+ "photos/viva-barbessia-02.jpg": {
+  "src": "photos/viva-barbessia-02.webp"
+ }
+}

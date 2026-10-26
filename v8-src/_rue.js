@@ -205,7 +205,7 @@ function facadeCommune() {
 }
 function ciergesNorma(){
  const hasard=n=>{const v=Math.sin(n*127.1+311.7)*43758.5453;return v-Math.floor(v);};
- return Array.from({length:145},(_,i)=>{const x=-10+hasard(i+1)*210,y=614+hasard(i+241)*78,r=.45+hasard(i+491)*.75;return {classe:'bd-cierge',groupe:[{d:E(x,y,r*3,r*2),fill:'lumiere',opacite:.07},{d:'M'+x+' '+(y-2.5)+'Q'+(x-1.9)+' '+(y+.4)+' '+x+' '+(y+1.2)+'Q'+(x+1.4)+' '+y+' '+x+' '+(y-2.5)+'Z',fill:'lumiere',anim:'bougie',delai:i},{d:R(x-.65,y+1,1.3,3.5+(i%3)),fill:'papier',opacite:.95},N(R(x-.2,y,.4,1.4))]};});
+ return Array.from({length:190},(_,i)=>{const k=hasard(i+241),x=-14+hasard(i+1)*(230+k*80),y=612+k*122,r=(.45+hasard(i+491)*.75)*(.85+k*.55);return {classe:'bd-cierge',groupe:[{d:E(x,y,r*3,r*2),fill:'lumiere',opacite:.07},{d:'M'+x+' '+(y-2.5)+'Q'+(x-1.9)+' '+(y+.4)+' '+x+' '+(y+1.2)+'Q'+(x+1.4)+' '+y+' '+x+' '+(y-2.5)+'Z',fill:'lumiere',anim:'bougie',delai:i},{d:R(x-.65,y+1,1.3,3.5+(i%3)),fill:'papier',opacite:.95},N(R(x-.2,y,.4,1.4))]};});
 }
 function militaireClose(){return {classe:'bd-visite-militaire',groupe:[{groupe:[
  N(C(478,610,3.6)+R(472,605,12,2)+R(474,601,8,5)+P([[473,615],[482,615],[485,632],[471,632]])+R(473,631,3,14)+R(480,631,3,14)),
@@ -479,8 +479,9 @@ const rue = {
     ...Array.from({length: 62}, (_, i) => ({d: C(18 + (i*137.23)%1560, 20 + (i*53.71)%285, i%8===0 ? 1.7 : 0.8), fill: "blanc", plan:0, opacite: .25 + (i%5)*.1})),
 
     { d: P([[-400, 560], [0, 600], [400, 640], [800, 670], [1240, 720], [1600, 740], [2000, 760], [2000, 1300], [-400, 1300]]), fill: "noir", plan: 1 }, // la rue, sans caniveau : la bande noire reçoit les titres au survol
-    {d:P([[1300,746],[2100,790],[2100,1400],[1300,1400]]),fill:'mer',plan:3},
-    {d:ondes(1300,756,2100,1250,18,23,[[1400,756,1500,815]]),fill:'lumiere',plan:3,opacite:.65},
+    // v8.10 · l'eau s'étale vers la gauche, rive en courbe douce
+    {d:'M1300 746L2100 790L2100 1400L960 1400Q1040 880 1300 746Z',fill:'mer',plan:3},
+    {groupe:[{d:ondes(960,756,2100,1250,18,23,[[1400,756,1500,815]]),fill:'lumiere',opacite:.65}],clip:'M1300 746L2100 790L2100 1400L960 1400Q1040 880 1300 746Z',plan:3},
     { d: refletLune(1352, 760, 896, 5), fill: "blanc", plan: 3, anim: "scintille" },
     { d: R(296, 560, 5, 82), fill: "noir", plan: 3 },
     { d: C(298.5, 556, 9), fill: "lumiere", plan: 3 }

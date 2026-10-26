@@ -8,10 +8,13 @@ En ligne après push : https://johnmetronome.github.io/bigdrama-maquette/v8/
 
 ```
 cd bigdrama-maquette/v8-src
-python3 rebuild.py
+python3 optimiser.py   # seulement quand une image, une police ou un film change (Pillow, fonttools, ffmpeg)
+python3 rebuild.py     # à chaque modification des sources
 ```
 
-`rebuild.py` refait `silhouettes.js` (à partir de `_outils.js` et `_rue.js`) et copie tout dans `../v8/`. Les films sont dans `v8/assets/films/`.
+- `optimiser.py` fabrique des copies légères dans `v8/assets/opt/` (WebP, films 540p pour téléphone) et `v8/fonts/v2/` (WOFF2). Les originaux ne bougent pas.
+- `rebuild.py` refait `silhouettes.js`, copie les sources dans `../v8/`, fait pointer v8 vers les copies légères, assemble les huit feuilles de style en `site.css` et le JavaScript en un seul `app.js`. Avec esbuild installé (`npm i -g esbuild`), il compresse aussi. Sans esbuild, tout marche, en plus lourd.
+- Si une feuille de `v2/` change, relancer `rebuild.py` : `site.css` en contient une copie.
 
 ## Ce qui change par rapport à la V7
 
@@ -111,6 +114,19 @@ python3 rebuild.py
   - `?apparition=pop` : le livre animé de la V8.8, toujours disponible.
 - Paramètres de test : `?rue` arrive directement sur la rue, `?boucle` rejoue l'apparition en boucle.
 - Le filet de sécurité attend la fin de l'apparition choisie (durée + 1,5 s).
+
+## V8.10 · 26.10.2026 · plume, rue étalée, chargement allégé
+
+- Apparition par défaut `plume` : la rue se dessine à la plume, l'encre la remplit éteinte, puis une lanterne la traverse et allume les fenêtres une à une. Les néons (Norma, Close) clignotent en s'allumant. Environ 9 s. Les autres restent dans l'adresse (`?apparition=encre`, `lanterne`, `rideau`, `ville`, `pop`). Planche : `v8/apparitions.html`.
+- Bougies de Norma étalées en éventail jusqu'au bas de la rue (190 au lieu de 145). L'eau de Scatolina s'étale vers la gauche avec une rive courbe.
+- La Veillée : titre réduit à 75 % dans l'image, au même endroit.
+- Chargement, mesuré sur la page d'accueil hors films : 10,1 Mo et 45 requêtes avant, 1,3 Mo et 37 requêtes après.
+  - Images en WebP : bandeau Norma 6,9 Mo -> 150 Ko, autres bandeaux 140-480 Ko -> 20-80 Ko, en deux tailles selon l'écran.
+  - Logos et photos des pages création en WebP.
+  - Polices Open Sans du site d'origine en WOFF2 latin (122 Ko -> 19 Ko chacune).
+  - Une seule feuille de style, un seul fichier JavaScript, compressés.
+  - Téléphone : les images de la rue (masquée) ne se chargent plus. Films des pages création en 540p muet.
+  - La rue met ses animations en pause quand elle sort de l'écran.
 
 ## Fichiers à fournir
 

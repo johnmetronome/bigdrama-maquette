@@ -71,7 +71,9 @@ function forme(fm, parent) {
     return t;
   }
   if (fm.image) {
-    const im = el('image', { href: A + fm.image, x: fm.x, y: fm.y, width: fm.w, height: fm.h, preserveAspectRatio: 'xMidYMid meet', filter: fm.brut ? 'none' : `url(#neon-${fm.neon || 'or'})` }, parent);
+    // v8.10 · sur téléphone la rue est masquée : ses images ne se chargent que si elle apparaît
+    const im = el('image', { x: fm.x, y: fm.y, width: fm.w, height: fm.h, preserveAspectRatio: 'xMidYMid meet', filter: fm.brut ? 'none' : `url(#neon-${fm.neon || 'or'})` }, parent);
+    if (sansRue()) im.dataset.href = A + fm.image; else im.setAttribute('href', A + fm.image);
     if (fm.classe) im.setAttribute('class', fm.classe);
     if (fm.anim && !reduit) im.classList.add('a-' + fm.anim);
     return im;
@@ -175,11 +177,13 @@ let debutConstruction = null, construite = false;
 const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }; // v8.6 : le pli du papier qui se redresse et se pose
 // v8.8 · trois façons d'apparaître, au choix dans l'adresse : ?apparition=pop (défaut), ?apparition=livre, ?apparition=coulisses
 const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'pop').replace(/[^a-z]/g, '');
-// v8.9 · quatre nouvelles apparitions : encre (défaut), lanterne, rideau, ville. ?apparition=pop garde le livre animé de la V8.7.
-const MODES = ['encre', 'lanterne', 'rideau', 'ville', 'pop'];
-scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'encre';
-if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'encre';
-const DUREE_DEPLI = { encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+// v8.9 · encre, lanterne, rideau, ville. ?apparition=pop garde le livre animé de la V8.7.
+// v8.10 · plume (défaut) : la rue se dessine à la plume, l'encre la remplit éteinte, puis une lanterne la traverse et allume les fenêtres
+const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
+scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
+if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
+const DUREE_DEPLI = { plume: 8800, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+const LANTERNE = { debut: 3000, duree: 4600 };   // plume : départ et durée de la traversée de la lueur (ms)
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -188,10 +192,16 @@ function preparerApparition() {
   scene.classList.add('bd-sans-transition');
   for (const id in pops) {
     const p = pops[id], rang = +p.div.style.getPropertyValue('--rang') || 0;
-    if (mode === 'encre') p.g.querySelectorAll('path:not(.bd-zone):not(.bd-fleur-tige)').forEach(e => {
+    if (mode === 'encre' || mode === 'plume') p.g.querySelectorAll('path:not(.bd-zone):not(.bd-fleur-tige)').forEach(e => {
       e.setAttribute('pathLength', '1'); e.classList.add('bd-encre');
       e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1);
       if (e.getAttribute('stroke')) { e.classList.add('bd-trait-propre'); e.style.setProperty('--so', e.getAttribute('stroke-opacity') || 1); }
+    });
+    // plume : la lueur passe au-dessus de la maison, ses fenêtres s'allument une à une dans la seconde qui suit
+    const f = p.b ? (p.b.x + p.b.width / 2 - vb[0]) / vb[2] : rang / 10;
+    if (mode === 'plume') p.g.querySelectorAll('path, image, text').forEach(e => {
+      const c = (e.getAttribute('fill') || '').toUpperCase();
+      if (e.tagName !== 'path' || ALLUMES.includes(c)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (LANTERNE.debut + LANTERNE.duree * (f + .23) / 1.46 - 250 + des(++n) * 1100).toFixed(0) + 'ms'); }
     });
     if (mode === 'ville' || mode === 'rideau') p.g.querySelectorAll('path, image, text').forEach(e => {
       const f = (e.getAttribute('fill') || '').toUpperCase();
@@ -297,7 +307,7 @@ function ouvrirProjet(id, depuisHash = false) {
   if (!depuisHash) history.pushState(null, '', '#projet-' + id);
   survoler(null);
   const i = LIEUX.findIndex(x => x.id === id), prec = LIEUX[(i + LIEUX.length - 1) % LIEUX.length], suiv = LIEUX[(i + 1) % LIEUX.length];
-  const tete = l.video169 ? `<video autoplay muted loop playsinline src="${A + l.video169}"></video>` : `<div class="p-diapo">${l.photos.map((p, k) => `<img src="${A + p}" alt="" ${k ? 'loading="lazy"' : 'class="actif"'}>`).join('')}</div>`;
+  const tete = l.video169 ? `<video autoplay muted loop playsinline><source media="(max-width:900px)" src="${A}v8/assets/opt/videos/${l.video169.split('/').pop().replace('.mp4', '-540.mp4')}" type="video/mp4"><source src="${A + l.video169}" type="video/mp4"></video>` : `<div class="p-diapo">${l.photos.map((p, k) => `<img src="${A + p}" alt="" ${k ? 'loading="lazy"' : 'class="actif"'}>`).join('')}</div>`;
   projet.dataset.humeur = l.support;
   projet.innerHTML = `<button class="retour" type="button">← Home</button>
     <header class="p-tete">${tete}<h1 class="p-logo"><span class="bd-encre" style="--masque:url('${A + l.logo}');--ratio:${ratios[id] || 2}"></span><span class="cinema-sr">${l.creation}</span></h1></header>
@@ -347,7 +357,10 @@ preparerApparition();
   if (q.has('boucle')) setInterval(rejouerApparition, DUREE_DEPLI + 3500); }
 if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es.some(e => e.isIntersecting && e.intersectionRatio > .5)) lancerConstruction(); }, { threshold: [.5, .8] }).observe(rue);
 const secours = setInterval(() => { if (construite) { clearInterval(secours); return; } if (debutConstruction !== null && performance.now() - debutConstruction > DUREE_DEPLI + 1500) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
-addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); });
+addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); if (!sansRue()) chargerImagesRue(); });
+// v8.10 · économies : images de la rue au premier affichage, animations de la rue en pause quand elle est hors de l'écran
+function chargerImagesRue() { scene.querySelectorAll('image[data-href]').forEach(i => { i.setAttribute('href', i.dataset.href); i.removeAttribute('data-href'); }); }
+if ('IntersectionObserver' in window) new IntersectionObserver(es => document.documentElement.classList.toggle('bd-rue-cachee', !es[es.length - 1].isIntersecting), { rootMargin: '80px' }).observe(rue);
 document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href=new URL('../v7/la-veillee/',location.href).href; });
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();
 initialiserEditeur();
@@ -495,4 +508,4 @@ function chanter(k) {
   son('close-' + k);
 }
 // v8 · le Phénix d'Ariane remplacera le dessin dès que logos/phenix.png existe
-{ const t = new Image(); t.onload = () => scene.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none'); t.onerror = () => scene.querySelectorAll('.bd-phenix-image').forEach(e => e.remove()); t.src = A + 'logos/paon.png'; }
+scene.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none');   // v8.10 · le paon est fourni : plus de test réseau
