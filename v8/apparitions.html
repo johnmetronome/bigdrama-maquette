@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Big Drama · quatre apparitions de la rue</title>
+<link rel="stylesheet" href="fonts/fonts.css">
+<style>
+  :root{color-scheme:dark}
+  *{box-sizing:border-box}
+  body{margin:0;background:#0b0907;color:#efe8dc;font:300 15px/1.5 Montserrat,"Helvetica Neue",Arial,sans-serif}
+  header{padding:28px clamp(16px,3vw,48px) 8px;display:flex;justify-content:space-between;align-items:baseline;gap:20px;flex-wrap:wrap}
+  h1{margin:0;font:400 clamp(22px,2.4vw,32px)/1.2 "Bodoni Moda",Georgia,serif}
+  header p{margin:0;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#c9a35b}
+  main{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:18px clamp(16px,3vw,48px) 48px}
+  figure{margin:0;background:#000;border:1px solid #2a241c}
+  .cadre{position:relative;width:100%;aspect-ratio:16/9;overflow:hidden;background:#101e2b}
+  iframe{position:absolute;left:0;top:0;width:1600px;height:900px;border:0;transform-origin:0 0;transform:scale(var(--k,.4))}
+  figcaption{padding:14px 16px 16px;display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+  figcaption strong{font:400 20px/1.2 "Bodoni Moda",Georgia,serif;color:#f3dfa6}
+  figcaption span{font-size:13px;color:#d8cfbd}
+  figcaption a{color:#c9a35b;font-size:11px;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}
+  @media (max-width:900px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><h1>Quatre apparitions de la rue</h1><p>Chaque vignette rejoue en boucle</p></header>
+<main>
+  <figure><div class="cadre"><iframe src="./?direct&amp;rue&amp;boucle&amp;apparition=encre" title="Apparition à l'encre" loading="lazy"></iframe></div>
+    <figcaption><div><strong>1 · Encre</strong><br><span>Chaque maison se trace à la plume, puis l'encre remplit le dessin et les fenêtres s'allument.</span></div><a href="./?apparition=encre">Ouvrir</a></figcaption></figure>
+  <figure><div class="cadre"><iframe src="./?direct&amp;rue&amp;boucle&amp;apparition=lanterne" title="Apparition à la lanterne" loading="lazy"></iframe></div>
+    <figcaption><div><strong>2 · Lanterne</strong><br><span>Une lueur chaude traverse la rue. Chaque maison apparaît quand la lumière la touche.</span></div><a href="./?apparition=lanterne">Ouvrir</a></figcaption></figure>
+  <figure><div class="cadre"><iframe src="./?direct&amp;rue&amp;boucle&amp;apparition=rideau" title="Apparition au rideau" loading="lazy"></iframe></div>
+    <figcaption><div><strong>3 · Rideau</strong><br><span>Le rideau de velours s'ouvre sur la rue, puis les fenêtres s'allument une à une.</span></div><a href="./?apparition=rideau">Ouvrir</a></figcaption></figure>
+  <figure><div class="cadre"><iframe src="./?direct&amp;rue&amp;boucle&amp;apparition=ville" title="La ville s'éveille" loading="lazy"></iframe></div>
+    <figcaption><div><strong>4 · La ville s'éveille</strong><br><span>La nuit d'abord. Les silhouettes sortent de l'ombre, les fenêtres s'allument au hasard.</span></div><a href="./?apparition=ville">Ouvrir</a></figcaption></figure>
+</main>
+<script>
+  const ajuster = () => document.querySelectorAll('.cadre').forEach(c => c.style.setProperty('--k', c.clientWidth / 1600));
+  addEventListener('resize', ajuster); ajuster();
+</script>
+</body>
+</html>

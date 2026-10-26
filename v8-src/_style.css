@@ -784,3 +784,54 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-scene[data-apparition="coulisses"].deplie .bd-pop{transform:none;filter:none}
 .bd-scene[data-apparition="coulisses"].deplie .bd-pop-devant{transform:translateZ(7px)}
 @media(prefers-reduced-motion:reduce){.bd-grain::before{animation:none}.bd-scene .bd-livre,.bd-scene #bd-svg [data-plan="0"]{transition:none!important;transform:none!important;opacity:1!important}}
+
+/* ───────── v8.9 · plus de grain, quatre nouvelles apparitions ───────── */
+.bd-grain{display:none!important}
+.bd-scene .bd-livre>svg{filter:none}
+/* hors du mode « pop », les feuillets sont debout dès le départ : chaque mode a sa propre entrée */
+.bd-scene:not([data-apparition="pop"]) .bd-pop,.bd-scene:not([data-apparition="pop"]) .bd-pop-devant{transform:none;opacity:1;filter:none;transition:none}
+.bd-scene:not([data-apparition="pop"]) .bd-livre{transform:none!important;opacity:1!important}
+
+/* 1 · ENCRE (défaut) : chaque maison se trace à la plume, trait crème, de gauche à droite, puis l'encre remplit le dessin et les fenêtres s'allument */
+.bd-scene[data-apparition="encre"]:not(.construite) .bd-pop path.bd-encre{stroke-dasharray:1 1;stroke-dashoffset:1;fill-opacity:0;stroke-opacity:.95;
+  transition:stroke-dashoffset 2.8s cubic-bezier(.45,.05,.35,1) calc(var(--rang,0) * 280ms),fill-opacity 1.4s ease calc(var(--rang,0) * 280ms + 2100ms),stroke-opacity 1.2s ease calc(var(--rang,0) * 280ms + 2900ms)}
+.bd-scene[data-apparition="encre"]:not(.construite) .bd-pop path.bd-encre:not(.bd-trait-propre){stroke:#efe1b4;stroke-width:1.15px;vector-effect:non-scaling-stroke}
+.bd-scene[data-apparition="encre"]:not(.construite) .bd-pop :is(image,text){opacity:0;transition:opacity 1.4s ease calc(var(--rang,0) * 280ms + 2600ms)}
+.bd-scene[data-apparition="encre"].deplie:not(.construite) .bd-pop path.bd-encre{stroke-dashoffset:0;fill-opacity:var(--fo,1);stroke-opacity:0}
+.bd-scene[data-apparition="encre"].deplie:not(.construite) .bd-pop path.bd-trait-propre{stroke-opacity:var(--so,1)}
+.bd-scene[data-apparition="encre"].deplie:not(.construite) .bd-pop :is(image,text){opacity:1}
+
+/* 2 · LANTERNE : une lueur chaude traverse la rue de gauche à droite, chaque maison apparaît quand la lumière l'atteint */
+.bd-scene[data-apparition="lanterne"]::before{content:"";position:absolute;top:-10%;bottom:-10%;width:46%;left:-46%;z-index:3;pointer-events:none;
+  background:radial-gradient(ellipse at 50% 60%,rgba(255,214,140,.32) 0%,rgba(255,190,110,.12) 38%,transparent 70%);mix-blend-mode:screen;opacity:0}
+.bd-scene[data-apparition="lanterne"].deplie:not(.construite)::before{animation:bd-lanterne 4.4s cubic-bezier(.45,.05,.4,1) forwards}
+@keyframes bd-lanterne{0%{left:-46%;opacity:0}12%{opacity:1}85%{opacity:1}100%{left:100%;opacity:0}}
+.bd-scene[data-apparition="lanterne"]:not(.construite) .bd-pop{opacity:0;filter:brightness(1.6) blur(3px);transition:opacity 1.3s ease calc(var(--rang,0) * 330ms + 400ms),filter 1.8s ease calc(var(--rang,0) * 330ms + 400ms)}
+.bd-scene[data-apparition="lanterne"].deplie:not(.construite) .bd-pop{opacity:1;filter:none}
+
+/* 3 · RIDEAU : un rideau de velours rouge s'ouvre sur la rue déjà là, puis les fenêtres s'allument une à une */
+.bd-scene[data-apparition="rideau"]::before,.bd-scene[data-apparition="rideau"]::after{content:"";position:absolute;top:0;bottom:0;width:51%;z-index:6;pointer-events:none;
+  background:linear-gradient(180deg,rgba(0,0,0,.35),transparent 18%),repeating-linear-gradient(90deg,#4a0b10 0px,#7d1520 26px,#a32232 42px,#6a1119 64px,#3c070c 86px);
+  box-shadow:inset 0 -14px 0 #b8913e,inset 0 -18px 0 #5a3e12;transition:transform 2.6s cubic-bezier(.65,0,.25,1) .3s}
+.bd-scene[data-apparition="rideau"]::before{left:0;transform-origin:0 50%}
+.bd-scene[data-apparition="rideau"]::after{right:0;transform-origin:100% 50%}
+.bd-scene[data-apparition="rideau"].deplie::before{transform:translateX(-82%) scaleX(.35)}
+.bd-scene[data-apparition="rideau"].deplie::after{transform:translateX(82%) scaleX(.35)}
+.bd-scene[data-apparition="rideau"].construite::before,.bd-scene[data-apparition="rideau"].construite::after{transform:translateX(-101%)}
+.bd-scene[data-apparition="rideau"].construite::after{transform:translateX(101%)}
+
+/* 4 · VILLE : la nuit d'abord, les silhouettes sortent de l'ombre, et les fenêtres s'allument au hasard, comme une ville qui s'éveille */
+.bd-scene[data-apparition="ville"]:not(.construite) .bd-pop{opacity:0;transition:opacity 2.4s ease calc(var(--rang,0) * 120ms)}
+.bd-scene[data-apparition="ville"].deplie:not(.construite) .bd-pop{opacity:1}
+
+/* fenêtres, néons et enseignes qui s'allument (ville, rideau) */
+.bd-scene:is([data-apparition="ville"],[data-apparition="rideau"]):not(.construite) .bd-lumiere-fen{opacity:0;transition:opacity .5s ease calc(var(--dl,0ms) + 900ms)}
+.bd-scene:is([data-apparition="ville"],[data-apparition="rideau"]).deplie:not(.construite) .bd-lumiere-fen{opacity:1}
+
+/* préparation et rejeu : aucune transition */
+.bd-scene.bd-sans-transition,.bd-scene.bd-sans-transition *,.bd-scene.bd-sans-transition::before,.bd-scene.bd-sans-transition::after{transition:none!important;animation:none!important}
+
+/* survol, tous modes : à peine un souffle */
+.bd-scene.construite .bd-pop{transition:transform 2.4s cubic-bezier(.25,.46,.3,1)!important;transition-delay:0s!important}
+.bd-scene.construite .bd-pop.actif{transform:rotateX(-3deg) translateZ(4px)!important}
+@media(prefers-reduced-motion:reduce){.bd-scene .bd-pop,.bd-lumiere-fen{transition:none!important;opacity:1!important}.bd-scene .bd-pop path.bd-encre{transition:none!important;stroke-dashoffset:0!important;fill-opacity:var(--fo,1)!important;stroke-opacity:var(--so,0)!important}.bd-scene::before,.bd-scene::after{display:none!important}}

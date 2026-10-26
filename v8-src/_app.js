@@ -175,8 +175,37 @@ let debutConstruction = null, construite = false;
 const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }; // v8.6 : le pli du papier qui se redresse et se pose
 // v8.8 · trois façons d'apparaître, au choix dans l'adresse : ?apparition=pop (défaut), ?apparition=livre, ?apparition=coulisses
 const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'pop').replace(/[^a-z]/g, '');
-scene.dataset.apparition = ['pop', 'livre', 'coulisses'].includes(APPARITION) ? APPARITION : 'pop';
-const DUREE_DEPLI = { pop: 4400, livre: 5600, coulisses: 4600 }[scene.dataset.apparition];
+// v8.9 · quatre nouvelles apparitions : encre (défaut), lanterne, rideau, ville. ?apparition=pop garde le livre animé de la V8.7.
+const MODES = ['encre', 'lanterne', 'rideau', 'ville', 'pop'];
+scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'encre';
+if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'encre';
+const DUREE_DEPLI = { encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+// préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
+const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
+function preparerApparition() {
+  const mode = scene.dataset.apparition, des = s => { let x = Math.sin(s * 91.7) * 43758.5; return x - Math.floor(x); };
+  let n = 0;
+  scene.classList.add('bd-sans-transition');
+  for (const id in pops) {
+    const p = pops[id], rang = +p.div.style.getPropertyValue('--rang') || 0;
+    if (mode === 'encre') p.g.querySelectorAll('path:not(.bd-zone):not(.bd-fleur-tige)').forEach(e => {
+      e.setAttribute('pathLength', '1'); e.classList.add('bd-encre');
+      e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1);
+      if (e.getAttribute('stroke')) { e.classList.add('bd-trait-propre'); e.style.setProperty('--so', e.getAttribute('stroke-opacity') || 1); }
+    });
+    if (mode === 'ville' || mode === 'rideau') p.g.querySelectorAll('path, image, text').forEach(e => {
+      const f = (e.getAttribute('fill') || '').toUpperCase();
+      if (e.tagName !== 'path' || ALLUMES.includes(f)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', mode === 'ville' ? (des(++n) * 2600).toFixed(0) + 'ms' : (rang * 230 + des(++n) * 500 + 1700).toFixed(0) + 'ms'); }
+    });
+  }
+  void scene.offsetWidth; scene.classList.remove('bd-sans-transition');
+}
+function rejouerApparition() {
+  scene.classList.add('bd-sans-transition');
+  scene.classList.remove('deplie', 'construite', 'vivante'); construite = false; debutConstruction = null; vivante = false;
+  void scene.offsetWidth; scene.classList.remove('bd-sans-transition');
+  requestAnimationFrame(() => requestAnimationFrame(() => lancerConstruction()));
+}
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); scene.classList.add('deplie'); document.documentElement.classList.add('bd-construit-en-cours'); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
@@ -312,8 +341,12 @@ document.querySelectorAll('a[data-projet]').forEach(a => a.addEventListener('cli
 document.querySelector('#site-navigation').prepend($('#bd-son'));
 /* ── démarrage ── */
 dessiner(); dessinerFil(); cadrer(); construire(); suivreDefilement(); selonHash();
+preparerApparition();
+{ const q = new URLSearchParams(location.search);
+  if (q.has('rue')) { if (hero) { hero.pause(); hero.querySelectorAll('source').forEach(x => x.removeAttribute('src')); hero.removeAttribute('src'); hero.load(); } scrollTo({ top: rue.offsetTop, behavior: 'instant' }); setTimeout(lancerConstruction, 600); }
+  if (q.has('boucle')) setInterval(rejouerApparition, DUREE_DEPLI + 3500); }
 if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es.some(e => e.isIntersecting && e.intersectionRatio > .5)) lancerConstruction(); }, { threshold: [.5, .8] }).observe(rue);
-const secours = setInterval(() => { if (construite) { clearInterval(secours); return; } if (debutConstruction !== null && performance.now() - debutConstruction > 6000) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
+const secours = setInterval(() => { if (construite) { clearInterval(secours); return; } if (debutConstruction !== null && performance.now() - debutConstruction > DUREE_DEPLI + 1500) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
 addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); });
 document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href=new URL('../v7/la-veillee/',location.href).href; });
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();

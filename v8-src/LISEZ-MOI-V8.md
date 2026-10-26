@@ -99,6 +99,19 @@ python3 rebuild.py
   - `?apparition=livre` : la rue entière est une page qu'on tourne, puis les maisons se relèvent.
   - `?apparition=coulisses` : théâtre de papier, le ciel descend des cintres, chaque décor glisse depuis la coulisse la plus proche, les enseignes tombent des cintres.
 
+## V8.9 · 26.10.2026 · plus de grain, quatre nouvelles apparitions
+
+- Grain, fibres et sépia retirés.
+- Survol : 3° d'inclinaison, 2,4 s, sans oscillation (inchangé depuis V8.8).
+- Quatre apparitions, au choix dans l'adresse. Planche de comparaison en boucle : `v8/apparitions.html`.
+  - `?apparition=encre` (défaut) : chaque maison se trace à la plume, trait crème, de gauche à droite, puis l'encre remplit le dessin et les lumières s'allument. Environ 7 s.
+  - `?apparition=lanterne` : une lueur chaude traverse la rue, chaque maison sort du flou quand la lumière la touche.
+  - `?apparition=rideau` : un rideau de velours rouge à frange dorée s'ouvre sur la rue éteinte, puis les fenêtres s'allument maison après maison.
+  - `?apparition=ville` : la nuit d'abord, les silhouettes sortent de l'ombre, les fenêtres s'allument au hasard.
+  - `?apparition=pop` : le livre animé de la V8.8, toujours disponible.
+- Paramètres de test : `?rue` arrive directement sur la rue, `?boucle` rejoue l'apparition en boucle.
+- Le filet de sécurité attend la fin de l'apparition choisie (durée + 1,5 s).
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
