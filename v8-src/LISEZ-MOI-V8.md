@@ -41,6 +41,17 @@ python3 rebuild.py
 - Sous-titres au survol : Burning Bar « Création privée avec Grimbergen », Eros en Russie « Première création immersive pour The Family », La Prophétie del Coco « Création immersive pour Bacardi ».
 - Zoom au survol plus lent (2,6 s) et plus léger.
 
+## V8.2 · 26.10.2026
+
+- Apparition de la rue : les silhouettes se posent en fondu, de gauche à droite, puis les fenêtres s'allument une maison après l'autre.
+- Film d'accueil toujours muet.
+- Close : seul le paon reste sur la plaque du toit (`logos/paon.png`), une seule fenêtre rose.
+- Scatolina décalée vers la droite, séparée de La Prophétie del Coco.
+- Pages projet : Norma sans sa dernière photo, Close réduit à six photos (sans les noir et blanc), plus de second film en bas quand le teaser tourne en tête, vidéos muettes.
+- Un Conte de Noëlle : titre en clair sur la photo, repères plus foncés.
+- Son : réglage par Web Audio, pour que le plafond de 15 % tienne aussi sur iPhone (Safari ignore le volume d'un élément audio).
+- Responsive vérifié : iPhone portrait et paysage, iPad, portable, grand écran, très large. Le bouton « Modifier » est masqué sur les écrans tactiles.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

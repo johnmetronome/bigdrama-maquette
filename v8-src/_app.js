@@ -47,7 +47,7 @@ const promenadeMobile=()=>false; // v8 : plus de promenade au défilement, on gl
 const portrait=()=>aspect()<1;
 let chapitreMobile=null,hauteurMobile=1080,decalageMobile=0;
 const ETAPES_MOBILE=[['cimetiere',122],['tour',374],['maison',627],['serre',846],['usine',973],['bar',1106],['creche',1250],['arbre',1380],['scatolina',1452]];
-function cadrer(x) { const a = aspect(); if(portrait()){const h=1000,w=h*a;const x0=Math.max(-110,Math.min(1720-w,x??-60));vb=[x0,900-h,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,900-h,w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
+function cadrer(x) { const a = aspect(); if(portrait()){const h=950,w=h*a;const x0=Math.max(-110,Math.min(1760-w,x??-60));vb=[x0,-90,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,Math.min(900-h,-105),w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
 const versEcran = (x, y) => { const r = scene.getBoundingClientRect(); return [(x - vb[0]) / vb[2] * r.width, (y - vb[1]) / vb[3] * r.height]; };
 
 /* ── dessin ── */
@@ -120,7 +120,6 @@ function dessiner() {
     el('stop',{offset:'0%','stop-color':'black'},grad); el('stop',{offset:'100%','stop-color':'white'},grad);
     const masque = el('clipPath',{id:masqueId,clipPathUnits:'userSpaceOnUse'},defs);
     el('rect',{x:b.x-400,y:b.y-1200,width:b.width+800,height:b.height+1201.5},masque);
-    elev.setAttribute('clip-path',`url(#${masqueId})`);
     if(l.id==='cimetiere')g.setAttribute('aria-label','Norma, mausolée et cierges');
     let hit=b;
     if(l.id==='scatolina'){
@@ -146,19 +145,20 @@ let arme = null;
 const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.PI * borne(k)) / 2;
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
-const rebond = k => 1 - Math.pow(1 - k, 3); // v8.1 : sortie douce, sans rebond
+const rebond = k => 1 - Math.pow(1 - k, 4); // v8.2 : fondu qui se pose, puis les fenêtres s'allument
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
   let fini = T !== -1;
   for (const c of constructions) {
-    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 150) / 1400);
-    if (k < 1) fini = false;
-    const e = k === 0 ? 0 : rebond(k);
-    c.g.style.opacity = k === 0 ? 0 : 1;
-    if (c.lune) c.g.style.transform = `translateY(${(-(1 - e) * 120).toFixed(1)}px)`;
-    else c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((1 - e) * (c.boite.height + 30)).toFixed(1)}px,0)`;
-    if (k >= 1 || c.lune) c.elev.removeAttribute('clip-path'); else c.elev.setAttribute('clip-path', `url(#revelation-${c.id})`);
+    const t = T === -1 ? -1 : T === Infinity ? 1e9 : T - 200 - c.rang * 170;
+    const k = t < 0 ? 0 : borne(t / 1500), kl = t < 0 ? 0 : doux((t - 950) / 1000);
+    if (k < 1 || kl < 1) fini = false;
+    const e = rebond(k);
+    c.g.style.opacity = doux(k).toFixed(3);
+    c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((c.lune ? -1 : 1) * (1 - e) * 26).toFixed(1)}px,0)`;
+    c.g.style.setProperty('--lum', kl.toFixed(3));
+    c.elev.removeAttribute('clip-path');
   }
   if (fini) construite = true;
   ciel.style.opacity = 1; details.forEach(d => d.style.opacity = 1); $('#bd-voile').style.opacity = 0;
@@ -207,16 +207,20 @@ let sonActif = true, deverrouille = false, voulu = null; const pistes = {};
 const FONDU = 4000, VOLUME = 0.15; // v8.1 : les musiques restent très discrètes, 15 % au maximum
 const NB_CHANSONS_CLOSE = 8; // sons/close/chanson-01.mp3 … 08 : une chanson du spectacle par fenêtre (les 20 fenêtres se partagent les 8)
 const srcPiste = id => { const m = /^close-(\d+)$/.exec(id); if (m) return `sons/close/chanson-${String(+m[1] % NB_CHANSONS_CLOSE + 1).padStart(2, '0')}.mp3`; return parId[id]?.son; };
+let ctxAudio = null;
+function audioCtx() { try { if (!ctxAudio) { const C = window.AudioContext || window.webkitAudioContext; if (C) ctxAudio = new C(); } if (ctxAudio && ctxAudio.state === 'suspended') ctxAudio.resume(); } catch { ctxAudio = null; } return ctxAudio; }
+const niveau = (p, v) => { p.niveau = v; if (p.g) p.g.gain.value = v; else p.a.volume = v; };
 function piste(id) {
   const src = srcPiste(id); if (!src) return null;
-  if (!pistes[id]) { const a = new Audio(A + src); a.loop = true; a.volume = 0; a.preload = 'auto'; const p = { a, de: 0, vers: 0, t0: 0 }; a.addEventListener('error', () => { p.mort = true; if (voulu === id) son(id); }); pistes[id] = p; }
+  if (!pistes[id]) { const a = new Audio(A + src); a.loop = true; a.volume = 0; a.preload = 'auto'; const p = { a, de: 0, vers: 0, t0: 0, niveau: 0 };
+    const c = deverrouille && audioCtx(); if (c) { try { const s = c.createMediaElementSource(a), g = c.createGain(); g.gain.value = 0; s.connect(g); g.connect(c.destination); p.g = g; a.volume = 1; } catch {} } a.addEventListener('error', () => { p.mort = true; if (voulu === id) son(id); }); pistes[id] = p; }
   return pistes[id].mort ? null : pistes[id];
 }
 function viser(p, cible) {
   if (!p || p.vers === cible) return;
-  p.de = p.a.volume; p.vers = cible; p.t0 = performance.now();
+  p.de = p.niveau; p.vers = cible; p.t0 = performance.now();
   if (cible > 0) p.a.play().catch(() => {});
-  const pas = t => { if (p.vers !== cible) return; const k = Math.min(1, (t - p.t0) / FONDU); p.a.volume = Math.max(0, Math.min(1, p.de + (cible - p.de) * doux(k))); if (k < 1) requestAnimationFrame(pas); else if (!cible) p.a.pause(); };
+  const pas = t => { if (p.vers !== cible) return; const k = Math.min(1, (t - p.t0) / FONDU); niveau(p, Math.max(0, Math.min(1, p.de + (cible - p.de) * doux(k)))); if (k < 1) requestAnimationFrame(pas); else if (!cible) p.a.pause(); };
   requestAnimationFrame(pas);
 }
 function son(id) {
@@ -225,13 +229,13 @@ function son(id) {
   for (const [k, p] of Object.entries(pistes)) if (k !== cle) viser(p, 0);
   if (cle && sonActif) viser(piste(cle), VOLUME);
 }
-$('#bd-son').addEventListener('click', () => { sonActif = !sonActif; if (hero) hero.muted = !sonActif; $('#bd-son').setAttribute('aria-pressed', sonActif); if (!sonActif) Object.values(pistes).forEach(p => viser(p, 0)); else son(voulu); });
+$('#bd-son').addEventListener('click', () => { sonActif = !sonActif; $('#bd-son').setAttribute('aria-pressed', sonActif); if (!sonActif) Object.values(pistes).forEach(p => viser(p, 0)); else son(voulu); });
 
 /* ── le seuil : la clé, « Cliquer pour entrer » ── */
 function entrer() {
-  deverrouille = true; $('#bd-seuil').classList.add('ouvert');
+  deverrouille = true; audioCtx(); $('#bd-seuil').classList.add('ouvert');
   LIEUX.forEach(l => piste(l.id));
-  if (hero) { hero.muted = !sonActif; heroLance = true; hero.play().catch(() => {}); }
+  if (hero) { hero.muted = true; heroLance = true; hero.play().catch(() => {}); } // v8.2 : le film d'accueil reste muet
   son(voulu);
 }
 $('#bd-entrer').addEventListener('click', entrer);
@@ -257,7 +261,7 @@ function ouvrirProjet(id, depuisHash = false) {
         <dl class="p-infos">${l.infos.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
       </div>
       <div class="p-galerie">${l.photos.map(p => `<button type="button" aria-label="Agrandir la photo"><img src="${A + p}" alt="" loading="lazy"></button>`).join('')}</div>
-      ${l.video169 ? `<div class="p-film"><video controls playsinline preload="metadata" src="${A + l.video169}"></video></div>` : ''}
+      
       ${l.legende ? `<p class="p-legende">${l.legende}</p>` : ''}
       <nav class="p-suite"><button type="button" data-id="${prec.id}"><span>Précédent</span>${prec.creation}</button><button type="button" data-id="${suiv.id}" style="text-align:right"><span>Suivant</span>${suiv.creation}</button></nav>
     </div>`;
@@ -430,4 +434,4 @@ function chanter(k) {
   son('close-' + k);
 }
 // v8 · le Phénix d'Ariane remplacera le dessin dès que logos/phenix.png existe
-{ const t = new Image(); t.onload = () => svg.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none'); t.onerror = () => svg.querySelectorAll('.bd-phenix-image').forEach(e => e.remove()); t.src = A + 'logos/phenix.png'; }
+{ const t = new Image(); t.onload = () => svg.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none'); t.onerror = () => svg.querySelectorAll('.bd-phenix-image').forEach(e => e.remove()); t.src = A + 'logos/paon.png'; }

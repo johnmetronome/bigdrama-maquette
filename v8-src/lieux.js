@@ -25,7 +25,7 @@ export const LIEUX = [
     logo: "logos/maison.png", titreCarton: "Close", son: "sons/maison.mp3", video169: "videos/maison-169.mp4", video916: "videos/maison-916.mp4", url: "/creations/close/",
     resume: "Paris, 1918. Au Phénix, cabaret décadent, ce sont les hommes qui se maquillent et les femmes qui commandent. Ici, la guerre n'existe pas.",
     infos: [["Lieu", "Un lieu tenu secret, Paris 11e"], ["Public", "15 000 spectateurs"], ["Décor", "600 m²"]],
-    photos: ["photos/close-teaser-01.jpg", "photos/close-teaser-03.jpg", "photos/close-teaser-05.jpg", "photos/close-studio-04.jpg", "photos/close-teaser-07.jpg", "photos/close-12.jpg", "photos/close-09.jpg", "photos/close-16.jpg", "photos/close-04.jpg", "photos/close-14.jpg", "photos/close-20.jpg"], legende: "",
+    photos: ["photos/close-teaser-07.jpg", "photos/close-teaser-01.jpg", "photos/close-12.jpg", "photos/close-16.jpg", "photos/close-04.jpg", "photos/close-14.jpg"], legende: "",
     placement: { x: 650, s: 1.3 },
     scene: { boite: [330, 109, 620, 657], plan: 2 },
     pieces: [p("couloir", "Le couloir des cinq portes"), p("chambre", "La chambre de Blanche"), p("salon", "Le salon des Heures Joyeuses"), p("vestiaire", "Le vestiaire des masques"), p("bar", "Le bar des Heures Joyeuses"), p("entree", "L'entrée du Phénix")]
@@ -46,7 +46,7 @@ export const LIEUX = [
     resume: "Une fois par an, sur une petite île de la lagune de Venise, c'est la récolte des boîtes, dont la culture est restée secrète.",
     infos: [["Lieu", "Île de Mazzorbo, lagune de Venise"], ["Date", "Juillet 2022"]],
     photos: ["photos/hermes-03.jpg", "photos/hermes-01.jpg", "photos/hermes-02.jpg"], legende: "Photos : © Hermès",
-    placement: { s: 1 },
+    placement: { x: 45, s: 1 },
     scene: { boite: [1300, 650, 1600, 823], plan: 3 },
     pieces: [p("jardin", "Le jardin des boîtes"), p("atelier", "L'atelier du Grand Jardinier")]
   },
@@ -75,7 +75,7 @@ export const LIEUX = [
     logo: "logos/norma.png", titreCarton: "Norma", son: "sons/cimetiere.mp3", video169: "videos/cimetiere-169.mp4", video916: "videos/cimetiere-916.mp4", url: "/creations/norma/",
     resume: "Ce soir, tous les orphelins enterrent Norma. Elle ne leur laisse que des dettes, et quinze minutes pour monter sa plus grande arnaque.",
     infos: [["Lieu", "2 rue des Mathurins, Paris 9e"], ["Décor", "1 000 m² sur 3 étages"], ["Public", "Plus de 14 000 spectateurs"]],
-    photos: ["photos/norma-08.jpg", "photos/norma-02.jpg", "photos/norma-04.jpg", "photos/norma-10.jpg", "photos/norma-06.jpg"], legende: "Photos : Alessandro Clemenza",
+    photos: ["photos/norma-08.jpg", "photos/norma-02.jpg", "photos/norma-04.jpg", "photos/norma-10.jpg"], legende: "Photos : Alessandro Clemenza",
     placement: { x: 128, s: 1.85 },
     scene: { boite: [-4, 339, 206, 608], plan: 2 },
     pieces: [p("coupole", "La coupole du mausolée"), p("chapelle", "La chapelle des orphelins"), p("caveau", "Le caveau de Norma")]

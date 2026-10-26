@@ -643,3 +643,13 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-lieu[data-id="scatolina"].actif .bd-elev{transform:none}
 .bd-bateau-zoom{transition:transform 2600ms cubic-bezier(.22,.1,.2,1)!important}
 .bd-lieu[data-id="scatolina"].actif .bd-bateau-zoom{transform:scale(1.07)}
+
+/* ───────── v8.2 · Claude ───────── */
+/* les maisons se posent en fondu, puis leurs fenêtres s'allument */
+.bd-construction [fill="#FFE34D"],.bd-construction [fill="#D6AEB6"],.bd-construction [fill="#F5F3EE"],.bd-construction image{opacity:var(--lum,1)}
+/* Un Conte de Noëlle : le titre en clair sur la photo, des repères plus foncés */
+.bd-projet[data-humeur="livre-enfant"]{--p-titre:#fff6e0;--p-accent:#8a5a00}
+/* le mode « Modifier » reste un outil d'ordinateur */
+@media (max-width:900px),(pointer:coarse){#bd-edit-ouvrir{display:none!important}}
+/* téléphone à l'horizontale : la rue tient dans la hauteur de l'écran */
+@media (max-height:560px){.bd-rue,.bd-collant{min-height:0!important}.cinema-entry{min-height:0!important;height:100svh!important}}
