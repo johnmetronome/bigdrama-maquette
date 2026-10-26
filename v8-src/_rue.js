@@ -328,6 +328,11 @@ function closeFenetresV8() {
     FENETRES_CLOSE.push([x, y, w, h]);
     const rose = t === "rose", fond = rose ? "rose" : "lumiere";
     formes.push({ d: R(x, y, w, h), fill: fond, classe: "bd-vitre" });
+    if (rose) { // rideaux fermés : deux pans qui se rejoignent au milieu, plis sombres
+      let plis = ""; for (let i = 1; i < 8; i++) plis += R(x + i * w / 8 - .5, y + 4, 1, h - 4);
+      formes.push({ d: `M${f(x)} ${f(y + 3)}H${f(x + w / 2 + .6)}V${f(y + h)}Q${f(x + w * .3)} ${f(y + h - 3)} ${f(x)} ${f(y + h)}Z` + `M${f(x + w)} ${f(y + 3)}H${f(x + w / 2 - .6)}V${f(y + h)}Q${f(x + w * .7)} ${f(y + h - 3)} ${f(x + w)} ${f(y + h)}Z`, fill: "rose" },
+                  { d: plis, fill: "noir", opacite: .28 }, { d: R(x + w / 2 - .5, y + 3, 1, h - 3), fill: "noir", opacite: .55 });
+    }
     const fig = []; let anim = "danse";
     if (t === "vide" || t === "rose") {
       anim = null;

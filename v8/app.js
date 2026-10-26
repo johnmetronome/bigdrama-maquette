@@ -145,19 +145,20 @@ let arme = null;
 const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.PI * borne(k)) / 2;
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
-const rebond = k => 1 - Math.pow(1 - k, 3); // v8.3 : retour à la sortie de terre, plus élégante
+const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }; // v8.6 : le pli du papier qui se redresse et se pose
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
   let fini = T !== -1;
   for (const c of constructions) {
-    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 150) / 1400);
+    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 190) / 1250);
     if (k < 1) fini = false;
     const e = k === 0 ? 0 : rebond(k);
     c.g.style.opacity = k === 0 ? 0 : 1;
-    if (c.lune) c.g.style.transform = `translateY(${(-(1 - e) * 120).toFixed(1)}px)`;
-    else c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((1 - e) * (c.boite.height + 30)).toFixed(1)}px,0)`;
-    if (k >= 1 || c.lune) c.elev.removeAttribute('clip-path'); else c.elev.setAttribute('clip-path', `url(#revelation-${c.id})`);
+    // château de papier : la maison est couchée à plat sur la page, elle se relève sur sa charnière (le pied), d'abord sombre, puis éclairée
+    c.g.style.transform = k >= 1 ? '' : `scaleY(${Math.max(.02, e).toFixed(3)}) skewX(${((1 - k) * -14).toFixed(2)}deg)`;
+    c.g.style.filter = k >= 1 ? '' : `brightness(${(.35 + .65 * doux(k)).toFixed(3)})`;
+    c.elev.removeAttribute('clip-path');
   }
   if (fini) construite = true;
   ciel.style.opacity = 1; details.forEach(d => d.style.opacity = 1); $('#bd-voile').style.opacity = 0;

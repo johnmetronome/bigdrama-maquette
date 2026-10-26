@@ -664,7 +664,6 @@ html,body{overflow:visible!important;overflow-x:clip!important}
   .strip-marque{height:clamp(46px,14vw,78px)}
   /* les logos des créations privées sont dessinés dans le tiers gauche d'une image large : on recentre ce tiers */
   .bd-strip.b2b .strip-logo{inset:auto!important;top:12%!important;left:50%!important;height:76%!important;width:auto!important;max-width:none!important;transform:translateX(-20.6%);object-fit:fill!important}
-  .bd-strips .bd-strip.veillee{height:auto!important;aspect-ratio:2171/420}
   .bd-strip.veillee{justify-content:center!important;padding:0!important}
   .bd-projet .p-corps,.bd-projet .p-recit p,.bd-projet .p-infos,.bd-projet .p-infos dt,.bd-projet .p-infos dd,.bd-projet .p-legende{text-align:center!important}
   .bd-projet .p-infos{justify-content:center!important;margin-inline:auto}
@@ -712,3 +711,23 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .entry-bottom .entry-controls{display:flex!important;position:absolute;left:0;bottom:0}
 @media (max-width:600px){.entry-bottom .entry-controls{bottom:52px}}
 .bd-projet:focus{outline:none}
+
+/* ───────── v8.6 · Claude ───────── */
+/* l'en-tête et le bas du film touchent les bords de la fenêtre, quelle que soit sa largeur */
+#masthead .tg-container.archive-nav,.media-home #masthead .archive-nav{max-width:none!important;width:100%!important;margin:0!important;padding-left:clamp(16px,3vw,48px)!important;padding-right:clamp(16px,3vw,48px)!important;box-sizing:border-box!important}
+.media-home #masthead .archive-nav{display:flex!important;justify-content:space-between!important;align-items:center!important}
+.cinema-entry .entry-bottom{left:clamp(16px,3vw,48px)!important;right:clamp(16px,3vw,48px)!important}
+/* le film d'accueil garde sa pause, sans le bouton vers d'autres films */
+.entry-controls [data-media="video"]{display:none!important}
+/* survol : plus de zoom, le pli de papier de la maison oscille, comme une page de livre animé qu'on effleure */
+.bd-lieu .bd-elev{transition:none!important}
+.bd-lieu .bd-elev{transform-box:fill-box;transform-origin:50% 100%}
+.bd-lieu.actif .bd-elev{animation:bd-papier 2.2s cubic-bezier(.3,0,.25,1) 1 both}
+@keyframes bd-papier{0%{transform:none}22%{transform:skewX(-2.6deg) scaleY(.982)}48%{transform:skewX(1.6deg) scaleY(1.008)}72%{transform:skewX(-.7deg) scaleY(.997)}100%{transform:none}}
+.bd-lieu[data-id="scatolina"].actif .bd-bateau-zoom{transform:none!important}
+.bd-construction{will-change:auto}
+/* toutes les bannières ont la même hauteur, La Veillée comprise */
+.bd-strip.veillee{background:#9b9488!important}
+.bd-strip.veillee>img{object-position:50% 50%!important;z-index:0!important}
+@media (max-width:900px),(pointer:coarse) and (max-height:520px){.bd-strips .bd-strip.veillee{aspect-ratio:auto!important;height:clamp(180px,54vw,280px)!important}}
+@media(prefers-reduced-motion:reduce){.bd-lieu.actif .bd-elev{animation:none!important}}

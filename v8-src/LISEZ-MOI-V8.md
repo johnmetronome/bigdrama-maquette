@@ -73,6 +73,14 @@ python3 rebuild.py
 - Outils de test (`window.__bd`) exposés seulement avec `?edit` ou `?debug`.
 - README sans chemin interne.
 
+## V8.6 · 26.10.2026
+
+- La rue se déplie comme un livre animé : de gauche à droite, chaque maison se relève sur son pied, d'abord sombre, puis éclairée, avec un léger rebond du papier.
+- Survol : plus de zoom. La maison oscille sur son pli, comme une page de pop-up qu'on effleure.
+- Close : la fenêtre rose a ses rideaux fermés.
+- En-tête et bas du film calés sur les bords de la fenêtre, quelle que soit sa largeur. Le bouton pause reste, le bouton vers les autres films disparaît.
+- La Veillée : nouveau bandeau (`v8/assets/la-veillee-bandeau.jpg`), même hauteur que les autres bannières sur ordinateur et sur téléphone.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
