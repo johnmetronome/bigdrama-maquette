@@ -99,7 +99,7 @@ function dessiner() {
   svg.innerHTML = ''; defs = el('defs', {}, svg);
   neon('neon-bleu', COULEURS.neonBleu, 1.6); neon('neon-or', COULEURS.neonOr, 1.2); neon('neon-jaune', COULEURS.lumiere, 1.5);
   const phareFondu=el('linearGradient',{id:'bd-phare-fondu',gradientUnits:'userSpaceOnUse',x1:1523,y1:661,x2:1080,y2:661},defs);
- [['0%','.22'],['45%','.13'],['80%','.04'],['100%','0']].forEach(([offset,opacity])=>el('stop',{offset,'stop-color':COULEURS.lumiere,'stop-opacity':opacity},phareFondu));
+ [['0%','.62'],['30%','.36'],['70%','.12'],['100%','0']].forEach(([offset,opacity])=>el('stop',{offset,'stop-color':COULEURS.lumiere,'stop-opacity':opacity},phareFondu));   // v8.16 · faisceau du phare plus lisible
   const nuit = el('linearGradient', {id:'bd-nuit', x1:'0%', y1:'0%', x2:'0%', y2:'100%'}, defs); [['0%','#101e2b'],['60%','#203a47'],['100%','#53615e']].forEach(([offset,color]) => el('stop',{offset,'stop-color':color},nuit));
   [0, 1, 2, 3].forEach(n => calques[n] = el('g', { 'data-plan': n }, svg));
   // le ciel, le sol, les pavés
@@ -151,7 +151,8 @@ function dessiner() {
     const c = constructions.find(c => c.id === id), rang = c?.rang ?? 0;
     div.className = 'bd-pop' + (devant ? ' bd-pop-devant' : ''); div.dataset.id = id; div.style.setProperty('--rang', rang);
     if (devant) feuille.setAttribute('aria-hidden', 'true');
-    div.append(feuille); feuille.append(g); livre.append(div);
+    const revele = document.createElement('div'); revele.className = 'bd-revele';   // v8.16 · fenêtre qui monte du sol (apparition plume)
+    revele.append(feuille); div.append(revele); feuille.append(g); livre.append(div);
     pops[id + (devant ? '~devant' : '')] = { div, feuille, g, b: null, devant };
   }
 }
@@ -182,7 +183,7 @@ const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'p
 const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
 scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
 if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
-const DUREE_DEPLI = { plume: 4200, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+const DUREE_DEPLI = { plume: 4400, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -203,9 +204,22 @@ function preparerApparition() {
   }
   // plume : chaque feuillet se révèle du sol vers le haut, tout ensemble (noirs, lumières, enseignes), souligné d'un trait crème qui reste
   if (mode === 'plume') {
+    // contour extérieur continu de chaque maison (bouche les trous là où une forme noire recouvre le trait d'une autre)
+    if (!document.getElementById('bd-contour')) {
+      const f = el('filter', { id: 'bd-contour', x: '-2%', y: '-2%', width: '104%', height: '104%', 'color-interpolation-filters': 'sRGB' }, defs);
+      el('feMorphology', { in: 'SourceAlpha', operator: 'dilate', radius: '.9', result: 'gros' }, f);
+      el('feComposite', { in: 'gros', in2: 'SourceAlpha', operator: 'out', result: 'bord' }, f);
+      el('feFlood', { 'flood-color': '#efe1b4', 'flood-opacity': '.8', result: 'creme' }, f);
+      el('feComposite', { in: 'creme', in2: 'bord', operator: 'in', result: 'trait' }, f);
+      const m = el('feMerge', {}, f); el('feMergeNode', { in: 'SourceGraphic' }, m); el('feMergeNode', { in: 'trait' }, m);
+    }
+    for (const id in pops) if (!pops[id].devant) pops[id].g.classList.add('bd-contour');
     for (const id in pops) pops[id].g.querySelectorAll('path').forEach(e => {
       const c = (e.getAttribute('fill') || '').toUpperCase();
-      if (ALLUMES.includes(c) || e.getAttribute('stroke') || e.matches('.bd-zone, .bd-fleur-tige') || c === 'NONE') return;
+      if (ALLUMES.includes(c) || e.matches('.bd-zone, .bd-fleur-tige')) return;
+      const st = (e.getAttribute('stroke') || '').toUpperCase();
+      if (st) { if (['#0A0A0A', '#000', '#000000', '#101315'].includes(st)) e.classList.add('bd-ligne-creme'); return; }   // les lignes noires (branches, grilles) deviennent crème
+      if (c === 'NONE') return;
       e.classList.add('bd-trait-creme');
     });
     // les enseignes et néons (feuillets « devant ») attendent que le trait de leur maison arrive à leur hauteur
@@ -214,8 +228,11 @@ function preparerApparition() {
       const m = pops[id.replace('~devant', '')]; if (!m) continue;
       const a = m.div.getBoundingClientRect(), b = p.div.getBoundingClientRect(); if (!a.height) continue;
       const rang = +m.div.style.getPropertyValue('--rang') || 0, bas = Math.max(0, (a.bottom - b.bottom) / a.height), haut = Math.min(1, (a.bottom - b.top) / a.height);
-      p.div.style.setProperty('--m-delai', (rang * 110 + bas * 2400).toFixed(0) + 'ms');
-      p.div.style.setProperty('--m-duree', Math.max(250, (haut - bas) * 2400).toFixed(0) + 'ms');
+      // instant où le bord de la fenêtre de la maison (courbe .45,.05,.25,1 sur 2,6 s) atteint telle hauteur
+      const instant = h => { for (let t = 0; t <= 1; t += .002) { const u = 1 - t, y = 3 * u * u * t * .05 + 3 * u * t * t + t * t * t; if (y >= h) return 3 * u * u * t * .45 + 3 * u * t * t * .25 + t * t * t; } return 1; };
+      const d0 = instant(bas) * 2600, d1 = instant(haut) * 2600;
+      p.div.style.setProperty('--m-delai', (rang * 120 + d0).toFixed(0) + 'ms');
+      p.div.style.setProperty('--m-duree', Math.max(250, d1 - d0).toFixed(0) + 'ms');
     }
   }
   void scene.offsetWidth; scene.classList.remove('bd-sans-transition');
@@ -252,7 +269,7 @@ const ratios = {}; LIEUX.forEach(l => { const im = new Image(); im.onload = () =
 function survoler(id) {
   if (id && !vivante) return;
   survole = id; son(id);
-  scene.querySelectorAll('.bd-lieu,.bd-pop').forEach(g => g.classList.toggle('actif', g.dataset.id === proprietaire(id)));
+  scene.querySelectorAll('.bd-lieu,.bd-devant,.bd-pop').forEach(g => g.classList.toggle('actif', g.dataset.id === proprietaire(id)));   // v8.16 · les éléments posés devant (barque, fleur, terrasse…) s'animent aussi
   if (!id) { logo.classList.remove('vu'); $('#bd-indice').style.opacity = vivante ? 0.8 : 0; return; }
   $('#bd-indice').style.opacity = 0;
   const c = config(id);

@@ -154,6 +154,14 @@ python3 rebuild.py     # à chaque modification des sources
 - Le trait crème souligne désormais toute la rue en permanence (`.bd-trait-creme`, posé sur les formes noires, pas sur les lumières).
 - La copie au trait de la V8.14 est supprimée : la page est plus légère.
 
+## V8.16 · 26.10.2026 · montée plus fluide, contour crème complet, fleur, phare, chaudron
+
+- Apparition `plume` plus fluide : chaque maison est dans une fenêtre (`.bd-revele`) qui monte du sol pendant que le dessin redescend d'autant. Deux translations calculées par la carte graphique, plus de masque animé. Courbe douce, 2,6 s par maison, 120 ms d'écart.
+- Trait crème permanent et sans trous : un filtre (`#bd-contour`) trace le contour extérieur continu de chaque maison, en plus des traits intérieurs. Les branches et grilles noires passent en crème.
+- Survol : les éléments posés devant leur maison (barque de Scatolina et sa fleur, terrasse, signal du cocotier…) s'animent de nouveau. La fleur qui pousse sur la barque revient.
+- Phare de Scatolina : faisceau trois fois plus lumineux.
+- Un Conte de Noëlle : au survol, le chaudron prend exactement la place du landau, sans monter ni grossir.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
