@@ -47,7 +47,7 @@ const promenadeMobile=()=>false; // v8 : plus de promenade au défilement, on gl
 const portrait=()=>aspect()<1;
 let chapitreMobile=null,hauteurMobile=1080,decalageMobile=0;
 const ETAPES_MOBILE=[['cimetiere',122],['tour',374],['maison',627],['serre',846],['usine',973],['bar',1106],['creche',1250],['arbre',1380],['scatolina',1452]];
-function cadrer(x) { const a = aspect(); if(portrait()){const h=950,w=h*a;const x0=Math.max(-110,Math.min(1760-w,x??-60));vb=[x0,-90,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,Math.min(900-h,-105),w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
+function cadrer(x) { if (!scene.getBoundingClientRect().width) return; const a = aspect(); if(portrait()){const h=950,w=h*a;const x0=Math.max(-110,Math.min(1760-w,x??-60));vb=[x0,-90,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,Math.min(900-h,-105),w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
 const versEcran = (x, y) => { const r = scene.getBoundingClientRect(); return [(x - vb[0]) / vb[2] * r.width, (y - vb[1]) / vb[3] * r.height]; };
 
 /* ── dessin ── */
@@ -145,20 +145,19 @@ let arme = null;
 const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.PI * borne(k)) / 2;
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
-const rebond = k => 1 - Math.pow(1 - k, 4); // v8.2 : fondu qui se pose, puis les fenêtres s'allument
+const rebond = k => 1 - Math.pow(1 - k, 3); // v8.3 : retour à la sortie de terre, plus élégante
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
   let fini = T !== -1;
   for (const c of constructions) {
-    const t = T === -1 ? -1 : T === Infinity ? 1e9 : T - 200 - c.rang * 170;
-    const k = t < 0 ? 0 : borne(t / 1500), kl = t < 0 ? 0 : doux((t - 950) / 1000);
-    if (k < 1 || kl < 1) fini = false;
-    const e = rebond(k);
-    c.g.style.opacity = doux(k).toFixed(3);
-    c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((c.lune ? -1 : 1) * (1 - e) * 26).toFixed(1)}px,0)`;
-    c.g.style.setProperty('--lum', kl.toFixed(3));
-    c.elev.removeAttribute('clip-path');
+    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 150) / 1400);
+    if (k < 1) fini = false;
+    const e = k === 0 ? 0 : rebond(k);
+    c.g.style.opacity = k === 0 ? 0 : 1;
+    if (c.lune) c.g.style.transform = `translateY(${(-(1 - e) * 120).toFixed(1)}px)`;
+    else c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((1 - e) * (c.boite.height + 30)).toFixed(1)}px,0)`;
+    if (k >= 1 || c.lune) c.elev.removeAttribute('clip-path'); else c.elev.setAttribute('clip-path', `url(#revelation-${c.id})`);
   }
   if (fini) construite = true;
   ciel.style.opacity = 1; details.forEach(d => d.style.opacity = 1); $('#bd-voile').style.opacity = 0;
@@ -171,8 +170,8 @@ let heroLance = true, attenteCadre = 0;
 const entreeBas = document.querySelector('.entry-bottom'), masthead = document.querySelector('#masthead');
 addEventListener('scroll', () => { if (!attenteCadre) attenteCadre = requestAnimationFrame(() => { attenteCadre = 0; suivreDefilement(); }); }, { passive: true });
 function suivreDefilement() {
-  const r = rue.getBoundingClientRect();
-  if (r.top < innerHeight * .2 && !glisseEnCours) lancerConstruction();
+  const r = (sansRue() ? $('#content') : rue).getBoundingClientRect();
+  if (!sansRue() && r.top < innerHeight * .2 && !glisseEnCours) lancerConstruction();
   const kd = 1 - doux(scrollY / (innerHeight * .25)); if (entreeBas) { entreeBas.style.opacity = kd; entreeBas.style.visibility = kd < 0.02 ? 'hidden' : ''; }
   if (hero) { const couvert = r.top <= 1; if (couvert && !hero.paused) hero.pause(); else if (!couvert && hero.paused && heroLance && deverrouille) hero.play().catch(() => {}); }
 }
@@ -288,7 +287,9 @@ document.querySelectorAll('a[data-projet]').forEach(a => a.addEventListener('cli
 
 document.querySelector('#site-navigation').prepend($('#bd-son'));
 /* ── démarrage ── */
-dessiner(); dessinerFil(); cadrer(); construire(); suivreDefilement(); selonHash(); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
+dessiner(); dessinerFil(); cadrer(); construire(); suivreDefilement(); selonHash();
+if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es.some(e => e.isIntersecting && e.intersectionRatio > .5)) lancerConstruction(); }, { threshold: [.5, .8] }).observe(rue);
+setInterval(() => { if (debutConstruction !== null && !construite && performance.now() - debutConstruction > 6000) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
 addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); });
 document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href=new URL('../v7/la-veillee/',location.href).href; });
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();
@@ -351,7 +352,7 @@ function defilerVers(top,hash) {
  window.scrollTo({top,behavior:reduit?'auto':'smooth'});
 }
 document.querySelectorAll('.entry-enter').forEach(lien=>lien.addEventListener('click',e=>{
- e.preventDefault();if(!deverrouille)entrer();history.replaceState(null,'','#rue');glisserVers(rue.offsetTop);
+ e.preventDefault();if(!deverrouille)entrer();history.replaceState(null,'',sansRue()?'#histoire':'#rue');glisserVers(etape2());
 }));
 document.querySelectorAll('#site-navigation a[href="#contact"]').forEach(lien=>lien.addEventListener('click',e=>{
  e.preventDefault();defilerVers($('#contact').getBoundingClientRect().top+scrollY-32,'#contact');
@@ -386,17 +387,19 @@ function mettreAJourFil(){
 let glisseEnCours = false, verrou = 0;
 function glisserVers(cible) {
   const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 1600, t0 = performance.now();
-  if (cible > depart) setTimeout(lancerConstruction, reduit ? 0 : duree * .8);
+  if (cible > depart && !sansRue()) setTimeout(lancerConstruction, reduit ? 0 : duree * .42);
   document.documentElement.classList.add('bd-glisse'); setTimeout(() => document.documentElement.classList.remove('bd-glisse'), duree + 60);
   glisseEnCours = true; verrou = performance.now() + duree + 450;
   if (!duree) { scrollTo({ top: cible, behavior: 'instant' }); glisseEnCours = false; return; }
   const pas = t => { const k = Math.min(1, (t - t0) / duree), e = .5 - Math.cos(Math.PI * k) / 2; scrollTo({ top: depart + dist * e, behavior: 'instant' }); if (k < 1) requestAnimationFrame(pas); else glisseEnCours = false; };
   requestAnimationFrame(pas);
 }
+function sansRue() { return getComputedStyle(rue).display === 'none'; }
+function etape2() { return sansRue() ? $('#content').getBoundingClientRect().top + scrollY : rue.offsetTop; }
 const dansLeSas = () => !edition && !projet.classList.contains('ouvert') && !document.querySelector('dialog[open]');
 function decider(sens, e) {
   if (!dansLeSas()) return false;
-  const haut = rue.offsetTop, y = scrollY;
+  const haut = etape2(), y = scrollY;
   if (glisseEnCours || performance.now() < verrou) { if (y < haut + 4) { e?.preventDefault(); return true; } return false; }
   if (sens > 0 && y < haut - 4) { e?.preventDefault(); glisserVers(haut); return true; }
   if (sens < 0 && y > 4 && y <= haut + 4) { e?.preventDefault(); glisserVers(0); return true; }
@@ -407,7 +410,7 @@ let toucheY = null, toucheX = 0;
 addEventListener('touchstart', e => { toucheY = e.touches[0]?.clientY ?? null; toucheX = e.touches[0]?.clientX ?? 0; }, { passive: true });
 addEventListener('touchmove', e => {
   if (toucheY == null || !dansLeSas()) return;
-  const dy = toucheY - (e.touches[0]?.clientY ?? toucheY), dx = toucheX - (e.touches[0]?.clientX ?? toucheX), y = scrollY, haut = rue.offsetTop;
+  const dy = toucheY - (e.touches[0]?.clientY ?? toucheY), dx = toucheX - (e.touches[0]?.clientX ?? toucheX), y = scrollY, haut = etape2();
   if (Math.abs(dx) > Math.abs(dy) * 1.2) return; // geste horizontal : c'est la rue qui glisse
   if ((y < haut - 4) || (dy < 0 && y <= haut + 4 && y > 4) || glisseEnCours) e.preventDefault();
   if (Math.abs(dy) > 28 && !glisseEnCours) { if (decider(Math.sign(dy), null)) toucheY = null; }

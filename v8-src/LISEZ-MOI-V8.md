@@ -52,6 +52,15 @@ python3 rebuild.py
 - Son : réglage par Web Audio, pour que le plafond de 15 % tienne aussi sur iPhone (Safari ignore le volume d'un élément audio).
 - Responsive vérifié : iPhone portrait et paysage, iPad, portable, grand écran, très large. Le bouton « Modifier » est masqué sur les écrans tactiles.
 
+## V8.3 et V8.4 · 26.10.2026
+
+- Retour à la sortie de terre des maisons, déclenchée pendant le glissé : on voit la rue se dessiner pendant la transition.
+- Close : le paon seul, petit, sans cadre, en enseigne sur le fronton.
+- Téléphone et tablette en portrait (moins de 900 px) : pas de rue. Le film, puis les créations. Tout est centré.
+- Bannières : tous les titres sur le même axe et à la même hauteur visible, sur ordinateur comme sur téléphone. Les logos des créations privées sont recalés sur leur silhouette réelle mesurée dans l'image.
+- Filet de sécurité : la rue se construit dès qu'elle est à l'écran, et elle est entière au bout de 6 s quoi qu'il arrive.
+- Prompts d'audit pour Google, Codex et Mistral : `AUDIT_PROMPTS_V8.md`.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

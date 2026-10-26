@@ -722,8 +722,7 @@ const rue = {
       ...immeuble(360, 620, 170, 7, { eteint: true }),
       ...closeFenetresV8(),
       N(P([[430, 172], [490, 120], [550, 172]])), { ...N(muchaRue.noir), classe: 'bd-phenix-dessin' }, { ...L(muchaRue.lumiere), classe: 'bd-phenix-dessin' },
-      { ...N(P([[440, 174], [452, 160], [452, 54], [528, 54], [528, 160], [540, 174]])), classe: 'bd-phenix-image' }, { d: R(457, 59, 66, 1.3) + R(457, 164, 66, 1.3) + R(457, 59, 1.3, 106) + R(521.7, 59, 1.3, 106), fill: 'lumiere', opacite: .65, classe: 'bd-phenix-image' },
-      { image: 'logos/paon.png', x: 465, y: 62, w: 50, h: 100, brut: true, classe: 'bd-phenix-image' },
+      { image: 'logos/paon.png', x: 476, y: 66, w: 28, h: 56, brut: true, classe: 'bd-phenix-image' }, // l'enseigne : le paon seul, sans cadre, posé sur le fronton
       L(R(372, 532, 236, 58)), N(R(376, 536, 228, 50)), { image: "logos/maison.png", x: 410, y: 538, w: 160, h: 46, neon: "or", anim: "neon" }, // l'enseigne Close, néon doré qui clignote
       L(arche(470, 596, 40, 46)), N(R(489, 598, 2, 44)),
       L(lampadaireGuimard(458, 640, 50, -1) + lampadaireGuimard(522, 640, 50, 1)),
