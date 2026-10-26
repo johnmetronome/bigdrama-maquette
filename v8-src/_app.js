@@ -178,12 +178,12 @@ const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + 
 // v8.8 · trois façons d'apparaître, au choix dans l'adresse : ?apparition=pop (défaut), ?apparition=livre, ?apparition=coulisses
 const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'pop').replace(/[^a-z]/g, '');
 // v8.9 · encre, lanterne, rideau, ville. ?apparition=pop garde le livre animé de la V8.7.
-// v8.10 · plume (défaut) : la rue se dessine à la plume, l'encre la remplit éteinte, puis une lanterne la traverse et allume les fenêtres
+// v8.10 · plume (défaut) : la rue se dessine en lignes, d'en bas à gauche vers en haut à droite, l'encre la remplit, puis les fenêtres s'allument au fur et à mesure
 const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
 scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
 if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
-const DUREE_DEPLI = { plume: 8800, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
-const LANTERNE = { debut: 3000, duree: 4600 };   // plume : départ et durée de la traversée de la lueur (ms)
+const DUREE_DEPLI = { plume: 8400, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+const PLUME = { trait: 3400, lumieres: 3700, vague: 2600 };   // plume (ms) : étalement du dessin, début et étalement de l'allumage
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -197,16 +197,24 @@ function preparerApparition() {
       e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1);
       if (e.getAttribute('stroke')) { e.classList.add('bd-trait-propre'); e.style.setProperty('--so', e.getAttribute('stroke-opacity') || 1); }
     });
-    // plume : la lueur passe au-dessus de la maison, ses fenêtres s'allument une à une dans la seconde qui suit
-    const f = p.b ? (p.b.x + p.b.width / 2 - vb[0]) / vb[2] : rang / 10;
-    if (mode === 'plume') p.g.querySelectorAll('path, image, text').forEach(e => {
-      const c = (e.getAttribute('fill') || '').toUpperCase();
-      if (e.tagName !== 'path' || ALLUMES.includes(c)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (LANTERNE.debut + LANTERNE.duree * (f + .23) / 1.46 - 250 + des(++n) * 1100).toFixed(0) + 'ms'); }
-    });
     if (mode === 'ville' || mode === 'rideau') p.g.querySelectorAll('path, image, text').forEach(e => {
       const f = (e.getAttribute('fill') || '').toUpperCase();
       if (e.tagName !== 'path' || ALLUMES.includes(f)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', mode === 'ville' ? (des(++n) * 2600).toFixed(0) + 'ms' : (rang * 230 + des(++n) * 500 + 1700).toFixed(0) + 'ms'); }
     });
+  }
+  // plume : chaque trait et chaque lumière reçoit son instant selon sa place, d'en bas à gauche vers en haut à droite
+  if (mode === 'plume') {
+    const sr = scene.getBoundingClientRect(), W = sr.width || 1600, H = sr.height || 900, mesures = [];
+    for (const id in pops) pops[id].g.querySelectorAll('path, image, text').forEach(e => {
+      const r = e.getBoundingClientRect();
+      const k = sr.width ? Math.max(0, Math.min(1, ((r.left + r.width / 2 - sr.left) + (sr.bottom - r.top - r.height / 2)) / (W + H))) : .5;
+      mesures.push([e, k]);
+    });
+    for (const [e, k] of mesures) {
+      e.style.setProperty('--t', (k * PLUME.trait).toFixed(0) + 'ms');
+      const c = (e.getAttribute('fill') || '').toUpperCase();
+      if (e.tagName !== 'path' || ALLUMES.includes(c)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (PLUME.lumieres + k * PLUME.vague + des(++n) * 700).toFixed(0) + 'ms'); }
+    }
   }
   void scene.offsetWidth; scene.classList.remove('bd-sans-transition');
 }

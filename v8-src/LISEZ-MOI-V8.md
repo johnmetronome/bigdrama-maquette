@@ -128,6 +128,11 @@ python3 rebuild.py     # à chaque modification des sources
   - Téléphone : les images de la rue (masquée) ne se chargent plus. Films des pages création en 540p muet.
   - La rue met ses animations en pause quand elle sort de l'écran.
 
+## V8.11 · 26.10.2026 · dessin simplifié, enseignes au survol
+
+- Apparition `plume` (défaut) simplifiée, sans lanterne : la rue se dessine en lignes d'en bas à gauche vers en haut à droite (chaque trait part selon sa place), l'encre la remplit, puis les fenêtres, néons et enseignes s'allument au fur et à mesure dans le même sens. Environ 8 s. Réglages : `PLUME` dans `_app.js`.
+- Survol : les enseignes (Viva Barbessia, Close, Parfum de Famille, Better Together…) ne disparaissent plus. La scène reste à plat hors du mode `pop`, la maison et ses enseignes montent ensemble de 4 px.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
