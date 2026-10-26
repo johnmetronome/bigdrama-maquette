@@ -133,6 +133,12 @@ python3 rebuild.py     # à chaque modification des sources
 - Apparition `plume` (défaut) simplifiée, sans lanterne : la rue se dessine en lignes d'en bas à gauche vers en haut à droite (chaque trait part selon sa place), l'encre la remplit, puis les fenêtres, néons et enseignes s'allument au fur et à mesure dans le même sens. Environ 8 s. Réglages : `PLUME` dans `_app.js`.
 - Survol : les enseignes (Viva Barbessia, Close, Parfum de Famille, Better Together…) ne disparaissent plus. La scène reste à plat hors du mode `pop`, la maison et ses enseignes montent ensemble de 4 px.
 
+## V8.12 · 26.10.2026 · dessin qui monte du sol, clé qui flotte
+
+- Apparition `plume` (défaut) : les immeubles sont là tout de suite, noirs, fenêtres éteintes. Pendant le glissé, un dessin au trait crème monte du sol sur chaque immeuble (de gauche à droite, 110 ms d'écart), puis s'efface. Les fenêtres, néons et enseignes s'allument ensuite au fur et à mesure, d'en bas à gauche vers en haut à droite. Environ 7 s.
+- Le trait est une copie de chaque feuillet (`.bd-trait-calque`), révélée par un masque qui monte. Elle disparaît une fois la rue construite.
+- Écran d'entrée : la clé flotte très légèrement (5 px, ±0,8°, 5,6 s).
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
