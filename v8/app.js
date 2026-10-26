@@ -34,8 +34,8 @@ function rafraichirPlacement(id) {
  const owner = proprietaire(id); placer(owner);
  const pose = poses[owner], g=pose.closest('.bd-lieu');
  const b=owner==='scatolina'?{x:1359,y:709,width:195,height:123}:pose.getBBox(), m=pose.transform.baseVal.consolidate()?.matrix;
- if(m){ const p1=new DOMPoint(b.x,b.y).matrixTransform(m), p2=new DOMPoint(b.x+b.width,b.y+b.height).matrixTransform(m); const z=g.querySelector(':scope > .bd-zone'); z.setAttribute('x',p1.x-4); z.setAttribute('y',p1.y-4); z.setAttribute('width',p2.x-p1.x+8); z.setAttribute('height',p2.y-p1.y+8); boites[owner]=[p1.x,p1.y,p2.x,p2.y]; const cons=constructions.find(c=>c.id===owner); if(cons){cons.boite={x:p1.x,y:p1.y,width:p2.x-p1.x,height:p2.y-p1.y};cons.gradient.setAttribute('y1',p2.y+1.5);cons.gradient.setAttribute('y2',p2.y-.5);const masque=svg.querySelector('#revelation-'+owner);masque.setAttribute('x',p1.x-300);masque.setAttribute('y',p1.y-500);masque.setAttribute('width',p2.x-p1.x+600);masque.setAttribute('height',p2.y-p1.y+1000);const rect=masque.querySelector('rect');for(const k of ['x','y','width','height'])rect.setAttribute(k,masque.getAttribute(k));} }
- construire();
+ if(m){ const p1=new DOMPoint(b.x,b.y).matrixTransform(m), p2=new DOMPoint(b.x+b.width,b.y+b.height).matrixTransform(m); const z=g.querySelector(':scope > .bd-zone'); z.setAttribute('x',p1.x-4); z.setAttribute('y',p1.y-4); z.setAttribute('width',p2.x-p1.x+8); z.setAttribute('height',p2.y-p1.y+8); boites[owner]=[p1.x,p1.y,p2.x,p2.y]; const cons=constructions.find(c=>c.id===owner); if(cons){cons.boite={x:p1.x,y:p1.y,width:p2.x-p1.x,height:p2.y-p1.y};cons.gradient.setAttribute('y1',p2.y+1.5);cons.gradient.setAttribute('y2',p2.y-.5);const masque=scene.querySelector('#revelation-'+owner);masque.setAttribute('x',p1.x-300);masque.setAttribute('y',p1.y-500);masque.setAttribute('width',p2.x-p1.x+600);masque.setAttribute('height',p2.y-p1.y+1000);const rect=masque.querySelector('rect');for(const k of ['x','y','width','height'])rect.setAttribute(k,masque.getAttribute(k));} }
+ construire(); placerPops();
 }
 
 const scene = $('#bd-scene'), svg = $('#bd-svg'), logo = $('#bd-logo'), rue = $('#rue'), hero = $('#entry-film');
@@ -47,7 +47,7 @@ const promenadeMobile=()=>false; // v8 : plus de promenade au défilement, on gl
 const portrait=()=>aspect()<1;
 let chapitreMobile=null,hauteurMobile=1080,decalageMobile=0;
 const ETAPES_MOBILE=[['cimetiere',122],['tour',374],['maison',627],['serre',846],['usine',973],['bar',1106],['creche',1250],['arbre',1380],['scatolina',1452]];
-function cadrer(x) { if (!scene.getBoundingClientRect().width) return; const a = aspect(); if(portrait()){const h=950,w=h*a;const x0=Math.max(-110,Math.min(1760-w,x??-60));vb=[x0,-90,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,Math.min(900-h,-105),w,h]; svg.setAttribute('viewBox',vb.join(' ')); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
+function cadrer(x) { if (!scene.getBoundingClientRect().width) return; const a = aspect(); if(portrait()){const h=950,w=h*a;const x0=Math.max(-110,Math.min(1760-w,x??-60));vb=[x0,-90,w,h];svg.setAttribute('viewBox',vb.join(' '));placerPops();return;} if(promenadeMobile()&&!edition){const h=hauteurMobile,w=h*a;vb=[x??-80,900-h+decalageMobile,w,h];svg.setAttribute('viewBox',vb.join(' '));return;} if (a >= 1.3) { const h = Math.max(980,1780/a), w = h*a; vb = [(1600-w)/2,Math.min(900-h,-105),w,h]; svg.setAttribute('viewBox',vb.join(' ')); placerPops(); return; } const w = Math.min(1600, 900 * a), h = w / a; vb = [Math.min(1600 - w, Math.max(0, x ?? (a < 1 ? 627 - w / 2 : (1600 - w) / 2))), 900 - h, w, h]; svg.setAttribute('viewBox', vb.join(' ')); }
 const versEcran = (x, y) => { const r = scene.getBoundingClientRect(); return [(x - vb[0]) / vb[2] * r.width, (y - vb[1]) / vb[3] * r.height]; };
 
 /* ── dessin ── */
@@ -138,6 +138,25 @@ function dessiner() {
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if(edition) choisir(l.id); else allerVersBanniere(l.id); } });
   });
   tmp.remove();
+  // v8.7 · livre animé : chaque maison devient un feuillet (un SVG à elle), posé sur la scène en 3D et plié sur sa charnière au sol
+  for (const g of [...scene.querySelectorAll('svg#bd-svg .bd-lieu')]) {
+    const id = g.dataset.id, div = document.createElement('div'), feuille = el('svg', { class: 'bd-pop-svg', preserveAspectRatio: 'none', 'aria-hidden': 'false' });
+    div.className = 'bd-pop'; div.dataset.id = id; div.style.setProperty('--rang', constructions.find(c => c.id === id)?.rang ?? 0);
+    div.append(feuille); feuille.append(g); scene.insertBefore(div, $('#bd-voile'));
+    pops[id] = { div, feuille, g, b: null };
+  }
+}
+const pops = {};
+function placerPops() {
+  const marge = 40;
+  for (const id in pops) {
+    const p = pops[id]; let b = null;
+    try { const m = p.g.getBBox(); if (m.width) b = { x: m.x, y: m.y, width: m.width, height: m.height }; } catch {}
+    b = b || p.b; if (!b) continue; p.b = b;
+    const x = b.x - marge, y = b.y - marge, w = b.width + 2 * marge, h = b.height + 2 * marge;
+    p.feuille.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
+    Object.assign(p.div.style, { left: (x - vb[0]) / vb[2] * 100 + '%', top: (y - vb[1]) / vb[3] * 100 + '%', width: w / vb[2] * 100 + '%', height: h / vb[3] * 100 + '%', transformOrigin: `50% ${((h - marge) / h * 100).toFixed(2)}%` });
+  }
 }
 let arme = null;
 
@@ -146,23 +165,13 @@ const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
 const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }; // v8.6 : le pli du papier qui se redresse et se pose
-function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
+const DUREE_DEPLI = 150 + 10 * 190 + 2100;
+function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); scene.classList.add('deplie'); document.documentElement.classList.add('bd-construit-en-cours'); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
-  let fini = T !== -1;
-  for (const c of constructions) {
-    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 190) / 1250);
-    if (k < 1) fini = false;
-    const e = k === 0 ? 0 : rebond(k);
-    c.g.style.opacity = k === 0 ? 0 : 1;
-    // château de papier : la maison est couchée à plat sur la page, elle se relève sur sa charnière (le pied), d'abord sombre, puis éclairée
-    c.g.style.transform = k >= 1 ? '' : `scaleY(${Math.max(.02, e).toFixed(3)}) skewX(${((1 - k) * -14).toFixed(2)}deg)`;
-    c.g.style.filter = k >= 1 ? '' : `brightness(${(.35 + .65 * doux(k)).toFixed(3)})`;
-    c.elev.removeAttribute('clip-path');
-  }
-  if (fini) construite = true;
+  if (T >= DUREE_DEPLI && !construite) { construite = true; scene.classList.add('deplie', 'construite'); }
   ciel.style.opacity = 1; details.forEach(d => d.style.opacity = 1); $('#bd-voile').style.opacity = 0;
-  if (construite) document.documentElement.classList.remove('bd-construit-en-cours'); else if (T >= 0) document.documentElement.classList.add('bd-construit-en-cours');
+  if (construite) document.documentElement.classList.remove('bd-construit-en-cours');
   const etaitVivante = vivante; vivante = edition || construite || T > 1800; scene.classList.toggle('vivante', vivante);
   $('#bd-indice').style.opacity = vivante && !survole ? 0.8 : 0;
   if (!vivante && etaitVivante) survoler(null);
@@ -183,7 +192,7 @@ const ratios = {}; LIEUX.forEach(l => { const im = new Image(); im.onload = () =
 function survoler(id) {
   if (id && !vivante) return;
   survole = id; son(id);
-  svg.querySelectorAll('.bd-lieu').forEach(g => g.classList.toggle('actif', g.dataset.id === proprietaire(id)));
+  scene.querySelectorAll('.bd-lieu,.bd-pop').forEach(g => g.classList.toggle('actif', g.dataset.id === proprietaire(id)));
   if (!id) { logo.classList.remove('vu'); $('#bd-indice').style.opacity = vivante ? 0.8 : 0; return; }
   $('#bd-indice').style.opacity = 0;
   const c = config(id);
@@ -306,7 +315,7 @@ function choisir(id) {
  for(const [nom,valeur] of Object.entries({x:pose.x||0,y:pose.y,s:pose.s,titre:c.titre,phrase:c.phrase})) $('#bd-edit-'+nom).value=valeur;
  $('#bd-edit-lien').textContent='';
  scene.classList.add('en-edition');
- svg.querySelectorAll('.bd-lieu').forEach(g=>g.classList.toggle('selectionne',g.dataset.id===proprietaire(id)));
+ scene.querySelectorAll('.bd-lieu').forEach(g=>g.classList.toggle('selectionne',g.dataset.id===proprietaire(id)));
  survoler(id);
 }
 function initialiserEditeur() {
@@ -325,7 +334,7 @@ function initialiserEditeur() {
  <p id="bd-edit-status" role="status">Clique sur un décor pour le sélectionner.</p>`;
  document.body.append(panneau);
  const ouvrir=document.createElement('button'); ouvrir.id='bd-edit-ouvrir';ouvrir.type='button';ouvrir.textContent='Modifier';ouvrir.setAttribute('aria-label','Modifier la maquette');document.body.append(ouvrir);
- const afficher=actif=>{edition=actif;document.body.classList.toggle('bd-edition',actif);scene.classList.toggle('en-edition',actif);if(actif){construire();choisir(selection);const cible=rue.offsetTop+(rue.offsetHeight-innerHeight)*.78;window.scrollTo({top:cible,behavior:'auto'});}else{svg.querySelectorAll('.selectionne').forEach(g=>g.classList.remove('selectionne'));survoler(null);construire();}};
+ const afficher=actif=>{edition=actif;document.body.classList.toggle('bd-edition',actif);scene.classList.toggle('en-edition',actif);if(actif){construire();choisir(selection);const cible=rue.offsetTop+(rue.offsetHeight-innerHeight)*.78;window.scrollTo({top:cible,behavior:'auto'});}else{scene.querySelectorAll('.selectionne').forEach(g=>g.classList.remove('selectionne'));survoler(null);construire();}};
  ouvrir.onclick=()=>afficher(true); $('#bd-edit-fermer').onclick=()=>afficher(false);
  $('#bd-edit-select').onchange=e=>choisir(e.target.value);
  const statut=message=>$('#bd-edit-status').textContent=message;
@@ -435,11 +444,11 @@ function allerVersBanniere(id) {
 let fenetreChante = null;
 function chanter(k) {
   if (!vivante) return;
-  svg.querySelectorAll('.bd-fen.chante').forEach(g => g.classList.remove('chante'));
+  scene.querySelectorAll('.bd-fen.chante').forEach(g => g.classList.remove('chante'));
   fenetreChante = k;
   if (k == null) { if (survole === 'maison') son('maison'); return; }
-  svg.querySelector('.bd-fen-' + k)?.classList.add('chante');
+  scene.querySelector('.bd-fen-' + k)?.classList.add('chante');
   son('close-' + k);
 }
 // v8 · le Phénix d'Ariane remplacera le dessin dès que logos/phenix.png existe
-{ const t = new Image(); t.onload = () => svg.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none'); t.onerror = () => svg.querySelectorAll('.bd-phenix-image').forEach(e => e.remove()); t.src = A + 'logos/paon.png'; }
+{ const t = new Image(); t.onload = () => scene.querySelectorAll('.bd-phenix-dessin').forEach(e => e.style.display = 'none'); t.onerror = () => scene.querySelectorAll('.bd-phenix-image').forEach(e => e.remove()); t.src = A + 'logos/paon.png'; }

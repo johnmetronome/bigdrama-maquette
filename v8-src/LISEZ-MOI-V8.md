@@ -81,6 +81,13 @@ python3 rebuild.py
 - En-tête et bas du film calés sur les bords de la fenêtre, quelle que soit sa largeur. Le bouton pause reste, le bouton vers les autres films disparaît.
 - La Veillée : nouveau bandeau (`v8/assets/la-veillee-bandeau.jpg`), même hauteur que les autres bannières sur ordinateur et sur téléphone.
 
+## V8.7 · 26.10.2026 · la rue en livre animé
+
+- Inspiration : le générique du Petit Nicolas (Kuntzel + Deygas). Chaque maison est un feuillet : un SVG à elle, posé sur la scène en vraie perspective CSS.
+- Dépliage : le feuillet part couché sur la page, se relève sur sa charnière au sol (2,1 s), dépasse à peine la verticale et se pose. Les maisons suivent de gauche à droite toutes les 190 ms. Elles sont sombres en se relevant et s'éclairent quand elles sont debout.
+- Survol : le feuillet se penche doucement vers vous (9°) puis revient. Plus de zoom ni d'oscillation.
+- Nouveau bandeau La Veillée (bord blanc retiré). Sur téléphone, le cadrage garde le titre.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
