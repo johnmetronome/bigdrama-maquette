@@ -18,7 +18,7 @@ const ANCRES = {cimetiere:[98,606],tour:[278,640],maison:[490,640],serre:[690,67
 const EDIT_KEY = 'bigdrama-v8-reglages-1';
 let reglages = {};
 try { reglages = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}'); } catch {}
-const poses = {}, zones = {}, bases = {};
+const poses = {}, zones = {}, bases = {}, posesDevant = {};
 let edition = new URLSearchParams(location.search).has('edit'), selection = 'maison';
 for (const l of LIEUX) bases[l.id] = {...l.placement};
 const config = id => ({...bases[id], y:10, titre:parId[id].creation, phrase:ACCROCHES[id], ...reglages[id]});
@@ -29,7 +29,9 @@ function placer(id) {
  if(id==='cimetiere'){const elev=pose.parentElement.parentElement;elev.style.transformBox='view-box';elev.style.transformOrigin=`${c.x}px ${solRue(c.x)+c.y}px`;}
  if (ancre) pose.setAttribute('transform',`translate(${c.x} ${solRue(c.x)+c.y}) scale(${c.s}) translate(${-ancre[0]} ${-ancre[1]})`);
  else { const b = zones[id]; pose.setAttribute('transform',`translate(${c.x || 0} ${c.y-10}) translate(${b.x+b.width/2} ${b.y+b.height}) scale(${c.s}) translate(${-b.x-b.width/2} ${-b.y-b.height})`); }
+ copierDevant(id);
 }
+function copierDevant(id) { const p = poses[id], d = posesDevant[id]; if (p && d) d.setAttribute('transform', p.getAttribute('transform') || ''); }
 function rafraichirPlacement(id) {
  const owner = proprietaire(id); placer(owner);
  const pose = poses[owner], g=pose.closest('.bd-lieu');
@@ -93,7 +95,7 @@ function neon(id, couleur, force) {
 }
 function dessiner() {
   svg.innerHTML = ''; defs = el('defs', {}, svg);
-  neon('neon-bleu', COULEURS.neonBleu, 1.6); neon('neon-or', COULEURS.neonOr, 1.2);
+  neon('neon-bleu', COULEURS.neonBleu, 1.6); neon('neon-or', COULEURS.neonOr, 1.2); neon('neon-jaune', COULEURS.lumiere, 1.5);
   const phareFondu=el('linearGradient',{id:'bd-phare-fondu',gradientUnits:'userSpaceOnUse',x1:1523,y1:661,x2:1080,y2:661},defs);
  [['0%','.22'],['45%','.13'],['80%','.04'],['100%','0']].forEach(([offset,opacity])=>el('stop',{offset,'stop-color':COULEURS.lumiere,'stop-opacity':opacity},phareFondu));
   const nuit = el('linearGradient', {id:'bd-nuit', x1:'0%', y1:'0%', x2:'0%', y2:'100%'}, defs); [['0%','#101e2b'],['60%','#203a47'],['100%','#53615e']].forEach(([offset,color]) => el('stop',{offset,'stop-color':color},nuit));
@@ -110,8 +112,9 @@ function dessiner() {
   ordre.forEach((l, rangLieu) => {
     const g = el('g', { class: 'bd-lieu', 'data-id': l.id, tabindex: 0, role: 'button', 'aria-label': l.creation }, calques[l.scene.plan]);
     const elev = el('g', { class: 'bd-elev' }, g), cons = el('g', { class: 'bd-construction' }, elev), pose = el('g', {}, cons);
-    S.lieux[l.id].forEach(fm => forme(fm, pose));
-    poses[l.id]=pose; zones[l.id]=pose.getBBox(); placer(l.id);
+    const gDevant = el('g', { class: 'bd-devant', 'data-id': l.id }, calques[l.scene.plan]), poseDevant = el('g', {}, gDevant); posesDevant[l.id] = poseDevant;
+    S.lieux[l.id].forEach(fm => forme(fm, fm.devant ? poseDevant : pose));
+    poses[l.id]=pose; zones[l.id]=pose.getBBox(); placer(l.id); copierDevant(l.id);
     const b = g.getBBox();
     if(l.id==='arbre'){const c=config(l.id);b.x=c.x-48*c.s;b.y=solRue(c.x)+c.y-280*c.s;b.width=130*c.s;b.height=290*c.s;}
     const masqueId = 'revelation-' + l.id, gradientId = 'degrade-' + l.id;
@@ -139,11 +142,15 @@ function dessiner() {
   });
   tmp.remove();
   // v8.7 · livre animé : chaque maison devient un feuillet (un SVG à elle), posé sur la scène en 3D et plié sur sa charnière au sol
-  for (const g of [...scene.querySelectorAll('svg#bd-svg .bd-lieu')]) {
-    const id = g.dataset.id, div = document.createElement('div'), feuille = el('svg', { class: 'bd-pop-svg', preserveAspectRatio: 'none', 'aria-hidden': 'false' });
-    div.className = 'bd-pop'; div.dataset.id = id; div.style.setProperty('--rang', constructions.find(c => c.id === id)?.rang ?? 0);
-    div.append(feuille); feuille.append(g); scene.insertBefore(div, $('#bd-voile'));
-    pops[id] = { div, feuille, g, b: null };
+  const livre = $('#bd-livre') || scene;
+  for (const g of [...scene.querySelectorAll('svg#bd-svg .bd-lieu, svg#bd-svg .bd-devant')]) {
+    const devant = g.classList.contains('bd-devant'); if (devant && !g.querySelector('*:not(g)')) { g.remove(); continue; }
+    const id = g.dataset.id, div = document.createElement('div'), feuille = el('svg', { class: 'bd-pop-svg', preserveAspectRatio: 'none' });
+    const c = constructions.find(c => c.id === id), rang = c?.rang ?? 0;
+    div.className = 'bd-pop' + (devant ? ' bd-pop-devant' : ''); div.dataset.id = id; div.style.setProperty('--rang', rang);
+    if (devant) feuille.setAttribute('aria-hidden', 'true');
+    div.append(feuille); feuille.append(g); livre.append(div);
+    pops[id + (devant ? '~devant' : '')] = { div, feuille, g, b: null, devant };
   }
 }
 const pops = {};
@@ -153,6 +160,7 @@ function placerPops() {
     const p = pops[id]; let b = null;
     try { const m = p.g.getBBox(); if (m.width) b = { x: m.x, y: m.y, width: m.width, height: m.height }; } catch {}
     b = b || p.b; if (!b) continue; p.b = b;
+    p.div.style.setProperty('--entree', (b.x + b.width / 2 < 760 ? -1 : 1) * 115 + 'vw');
     const x = b.x - marge, y = b.y - marge, w = b.width + 2 * marge, h = b.height + 2 * marge;
     p.feuille.setAttribute('viewBox', `${x} ${y} ${w} ${h}`);
     Object.assign(p.div.style, { left: (x - vb[0]) / vb[2] * 100 + '%', top: (y - vb[1]) / vb[3] * 100 + '%', width: w / vb[2] * 100 + '%', height: h / vb[3] * 100 + '%', transformOrigin: `50% ${((h - marge) / h * 100).toFixed(2)}%` });
@@ -165,7 +173,10 @@ const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
 const rebond = k => { const c = 1.15; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); }; // v8.6 : le pli du papier qui se redresse et se pose
-const DUREE_DEPLI = 150 + 10 * 190 + 2100;
+// v8.8 · trois façons d'apparaître, au choix dans l'adresse : ?apparition=pop (défaut), ?apparition=livre, ?apparition=coulisses
+const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'pop').replace(/[^a-z]/g, '');
+scene.dataset.apparition = ['pop', 'livre', 'coulisses'].includes(APPARITION) ? APPARITION : 'pop';
+const DUREE_DEPLI = { pop: 4400, livre: 5600, coulisses: 4600 }[scene.dataset.apparition];
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); scene.classList.add('deplie'); document.documentElement.classList.add('bd-construit-en-cours'); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;

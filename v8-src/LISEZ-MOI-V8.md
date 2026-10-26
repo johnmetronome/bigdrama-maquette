@@ -88,6 +88,17 @@ python3 rebuild.py
 - Survol : le feuillet se penche doucement vers vous (9°) puis revient. Plus de zoom ni d'oscillation.
 - Nouveau bandeau La Veillée (bord blanc retiré). Sur téléphone, le cadrage garde le titre.
 
+## V8.8 · 26.10.2026 · livre animé poussé, trois apparitions au choix
+
+- Languettes : enseignes, marquises, néons, terrasses, signal du cocotier et barque se déplient après leur maison, un cran devant elle (marquées `D(...)` ou `devant:true` dans `_rue.js`).
+- Survol très doux : 3° d'inclinaison, 2,4 s, sans oscillation.
+- Néon Norma en jaune (filtre `neon-jaune`). La croix reste bleue.
+- Patine : grain de film animé, fibres de papier, vignettage chaud, légère teinte sépia sur la rue (`.bd-grain`).
+- Trois apparitions, au choix dans l'adresse :
+  - `?apparition=pop` (défaut) : les maisons se relèvent de gauche à droite, puis leurs languettes.
+  - `?apparition=livre` : la rue entière est une page qu'on tourne, puis les maisons se relèvent.
+  - `?apparition=coulisses` : théâtre de papier, le ciel descend des cintres, chaque décor glisse depuis la coulisse la plus proche, les enseignes tombent des cintres.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

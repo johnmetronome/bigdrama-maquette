@@ -262,6 +262,8 @@ function sorcieresMarionnettes(){return [1094,1160].flatMap((x,i)=>[
    Better Together : des passants derrière les fenêtres. Burning Bar : terrasse, fumée en volutes, braises. */
 
 // une femme en buste, taille de guêpe, la main sur la hanche (cx = centre, b = appui de fenêtre, u = hauteur)
+// une languette de livre animé : se déplie après la maison, un peu devant elle
+const D = fm => ({ ...fm, devant: true });
 const femme = (cx, b, u, s = 1, akimbo = true) => {
   const corps = P([[cx - .17 * u, b], [cx - .15 * u, b - .2 * u], [cx - .065 * u, b - .4 * u], [cx - .115 * u, b - .55 * u], [cx - .135 * u, b - .65 * u], [cx - .05 * u, b - .7 * u], [cx - .028 * u, b - .76 * u], [cx + .028 * u, b - .76 * u], [cx + .05 * u, b - .7 * u], [cx + .135 * u, b - .65 * u], [cx + .115 * u, b - .55 * u], [cx + .065 * u, b - .4 * u], [cx + .15 * u, b - .2 * u], [cx + .17 * u, b]]);
   const tete = E(cx + s * .012 * u, b - .83 * u, .062 * u, .075 * u) + C(cx - s * .05 * u, b - .89 * u, .045 * u);
@@ -489,7 +491,7 @@ const rue = {
       N(P([[44, 604], [48, 520], [40, 512], [144, 506], [140, 516], [146, 604]]) + P([[52, 512], [56, 474], [132, 468], [134, 508]])          // mausolée qui penche
         + "M58 474C54 418 118 400 134 470Z" + R(96, 412, 4, 16)),                                                                      // coupole de travers
       { d: croix(98, 412, 66, 5, 0.14), fill: "noir", stroke: "neonBleu", epaisseur: 1.3, classe:"bd-croix-norma" },                                              // la croix de Norma, néon bleu qui clignote
-      { image: 'logos/norma.png', x: 50, y: 474, w: 92, h: 32, neon: 'bleu', anim: 'neon-norma', classe: 'bd-norma-neon' },
+      D({ image: 'logos/norma.png', x: 50, y: 474, w: 92, h: 32, neon: 'jaune', anim: 'neon-norma', classe: 'bd-norma-neon' }),
       {...N(corbeau(110,366,15,1)),classe:"bd-corbeau-pose"},
       ...envolCorbeaux(),
       N(spirale(36, 494, 16, 1.4, 0, 4, 0.8, -1) + spirale(152, 488, 16, 1.4, Math.PI, 4, 0.8, 1)),                                     // volutes baroques
@@ -516,16 +518,16 @@ const rue = {
       ]},
       L(C(335,86,5)),N(C(335,86,1.2)),
       L(quad(318, 200, 10, 16, 0.12) + quad(334, 198, 10, 18, -0.08) + quad(348, 202, 9, 15, 0.16) + quad(333, 128, 8, 13, -0.14) + quad(346, 126, 7, 12, 0.1)),
-      L(P([[200, 552], [332, 546], [342, 572], [192, 578]])), N(fenetres(196, 576, 15, 1, 6, 6, 3.8, 0, (x, y, w, h) => `M${f(x)} ${f(y)}a${f(w / 2)} ${f(w / 2)} 0 0 0 ${f(w)} 0Z`)), // marquise festonnée
-      { texte: "VIVA BARBESSIA", x: 267, y: 567, taille: 12.5, fill: "noir", police: "enseigne", rot: -1.8, espacement: 1.6 },          // le nom, en travers du store
+      D(L(P([[200, 552], [332, 546], [342, 572], [192, 578]]))), D(N(fenetres(196, 576, 15, 1, 6, 6, 3.8, 0, (x, y, w, h) => `M${f(x)} ${f(y)}a${f(w / 2)} ${f(w / 2)} 0 0 0 ${f(w)} 0Z`))), // marquise festonnée
+      D({ texte: "VIVA BARBESSIA", x: 267, y: 567, taille: 12.5, fill: "noir", police: "enseigne", rot: -1.8, espacement: 1.6 }),          // le nom, en travers du store
       L(quad(268, 604, 40, 50, 0.04)), N(R(267, 580, 2, 50)), N(R(306, 592, 10, 40) + C(311, 585, 6) + R(304, 576, 14, 4)) // porte de travers, le groom
     ],
     maison: [
       ...immeuble(360, 620, 170, 7, { eteint: true }),
       ...closeFenetresV8(),
       N(P([[430, 172], [490, 120], [550, 172]])), { ...N(muchaRue.noir), classe: 'bd-phenix-dessin' }, { ...L(muchaRue.lumiere), classe: 'bd-phenix-dessin' },
-      { image: 'logos/paon.png', x: 476, y: 66, w: 28, h: 56, brut: true, classe: 'bd-phenix-image' }, // l'enseigne : le paon seul, sans cadre, posé sur le fronton
-      L(R(372, 532, 236, 58)), N(R(376, 536, 228, 50)), { image: "logos/maison.png", x: 410, y: 538, w: 160, h: 46, neon: "or", anim: "neon" }, // l'enseigne Close, néon doré qui clignote
+      D({ image: 'logos/paon.png', x: 476, y: 66, w: 28, h: 56, brut: true, classe: 'bd-phenix-image' }), // l'enseigne : le paon seul, sans cadre, posé sur le fronton
+      D(L(R(372, 532, 236, 58))), D(N(R(376, 536, 228, 50))), D({ image: "logos/maison.png", x: 410, y: 538, w: 160, h: 46, neon: "or", anim: "neon" }), // l'enseigne Close, néon doré qui clignote
       L(arche(470, 596, 40, 46)), N(R(489, 598, 2, 44)),
       L(lampadaireGuimard(458, 640, 50, -1) + lampadaireGuimard(522, 640, 50, 1)),
       N(lant.noir), { ...L(lant.lum), anim: "scintille" }, N(lant.coeur), capitaineClose()                                                 // la lanterne au cœur, sur rue
@@ -537,19 +539,19 @@ const rue = {
       { ...N(parfum.noir), anim: "danse", delai: 1 }, L(parfum.lum),                                                                                    // le flacon à poire, en ombre dans la verrière
       N(R(718, 214, 32, 14) + P([[715, 214], [734, 200], [753, 214]]) + R(722, 228, 2.4, 20) + R(744, 228, 2.4, 36) + R(722, 240, 24, 1.6)), // château d'eau, pieds posés sur la verrière
       L(R(634, 566, 112, 70)), N(R(634, 600, 112, 3) + R(634, 632, 112, 4) + bouteilles(640, 600, 8, 24, 3) + bouteilles(642, 632, 8, 22, 9)), // la vitrine du parfumeur
-      L(R(616,518,148,47)),N(R(620,522,140,1)+R(620,561,140,1)),
+      D(L(R(616,518,148,47))),D(N(R(620,522,140,1)+R(620,561,140,1))),
       guetteurArme(), ...meurtreParfum(),
-      L(R(612,518,156,50)),N(R(616,522,148,1)+R(616,564,148,1)),
-      {texte:'PARFUM',x:690,y:540,taille:20,gras:600,fill:'noir',police:'enseigne',espacement:1},
-      {texte:'DE FAMILLE',x:690,y:559,taille:17,gras:600,fill:'noir',police:'enseigne',espacement:.4},
+      D(L(R(612,518,156,50))),D(N(R(616,522,148,1)+R(616,564,148,1))),
+      D({texte:'PARFUM',x:690,y:540,taille:20,gras:600,fill:'noir',police:'enseigne',espacement:1}),
+      D({texte:'DE FAMILLE',x:690,y:559,taille:17,gras:600,fill:'noir',police:'enseigne',espacement:.4}),
 
 
     ],
     usine: [
       ...fumeePoetique(),
       N(fabrique.masse), L(fabrique.ateliers), N(fabrique.meneaux), L(fabrique.bagues), L(fabrique.briques), L(fabrique.porte),
-      N(R(766, 590, 10, 80) + R(864, 590, 10, 80) + "M770 600 Q820 560 870 600 L870 612 Q820 574 770 612 Z"), // portail : deux piliers, arc de fer
-      { texte: "BURNING BAR", arc: "M774 604 Q820 566 866 604", taille: 10, fill: "lumiere", police: "enseigne", espacement: 2 },
+      D(N(R(766, 590, 10, 80) + R(864, 590, 10, 80) + "M770 600 Q820 560 870 600 L870 612 Q820 574 770 612 Z")), // portail : deux piliers, arc de fer
+      D({ texte: "BURNING BAR", arc: "M774 604 Q820 566 866 604", taille: 10, fill: "lumiere", police: "enseigne", espacement: 2 }),
       { ...L(fabrique.flamme), anim: "flamme",classe:"bd-cheminee-flamme" },
       {classe:'bd-incendie',clip:fabrique.ateliers,groupe:flammesAteliers()},
       {classe:'bd-moine-porte',groupe:[{groupe:[
@@ -559,7 +561,7 @@ const rue = {
         L(R(811,649,19,1.4)),N(R(816,664,5,4)+R(825,664,5,4)),
         {...N(R(811,647,5,10)),anim:'pas-gauche',centre:[818,641]}
       ],anim:'moine'}]},
-      ...terrasseBrasserie(),
+      ...terrasseBrasserie().map(D),
     ],
     bar: [
       N(R(880,330,180,372)+R(875,323,190,8)),
@@ -572,24 +574,24 @@ const rue = {
       N(fenetres(894, 662, 15, 1, 8, 26, 2, 0, (x, y, w, h) => R(x, y + 5, w, h - 5) + `M${f(x)} ${f(y + 5)}a${f(w / 2)} ${f(w / 2)} 0 0 1 ${f(w)} 0Z`)), // brise-bise festonné
       L(C(918, 612, 4) + C(970, 612, 4) + C(1022, 612, 4)),                                                              // globes
       N(R(1040, 546, 20, 2.4) + R(1039.2, 546, 1.6, 14)), L(tabac.cadre), N(tabac.bande),                                  // la carotte du tabac
-      L(gueridon2(912, 724, 30) + chaiseCannee(884, 724, 30, 1) + chaiseCannee(940, 724, 30, -1) + gueridon2(1018, 728, 30) + chaiseCannee(990, 728, 30, 1) + chaiseCannee(1046, 728, 30, -1)), // terrasse
-      L(R(878,540,184,35)), N(R(882,544,176,27)),
-      {texte:"BETTER TOGETHER",x:970,y:561,taille:13,fill:"lumiere",police:"enseigne",espacement:.8},
-      {texte:"RESTAURANT",x:970,y:572,taille:5.5,fill:"lumiere",police:"enseigne",espacement:2},
+      D(L(gueridon2(912, 724, 30) + chaiseCannee(884, 724, 30, 1) + chaiseCannee(940, 724, 30, -1) + gueridon2(1018, 728, 30) + chaiseCannee(990, 728, 30, 1) + chaiseCannee(1046, 728, 30, -1))), // terrasse
+      D(L(R(878,540,184,35))), D(N(R(882,544,176,27))),
+      D({texte:"BETTER TOGETHER",x:970,y:561,taille:13,fill:"lumiere",police:"enseigne",espacement:.8}),
+      D({texte:"RESTAURANT",x:970,y:572,taille:5.5,fill:"lumiere",police:"enseigne",espacement:2}),
     ],
     creche: [
       N(P([[1055,583],[1125,541],[1195,583],[1190,594],[1125,554],[1060,594]])),
       L(P([[1064,593],[1125,558],[1186,593],[1184,698],[1066,698]])),
       N(P([[1064,593],[1085,578],[1075,698],[1064,698]])+P([[1186,593],[1167,578],[1177,698],[1186,698]])+R(1060,588,5,113)+R(1186,588,5,113)),
       L(R(1057,698,136,3)),N(R(1058,701,134,5)),
-      {texte:'UN CONTE',x:1125,y:602,taille:13,fill:'noir',police:'enseigne',espacement:1},
-      {texte:'DE NOËLLE',x:1125,y:617,taille:13,fill:'noir',police:'enseigne',espacement:1},
+      D({texte:'UN CONTE',x:1125,y:602,taille:13,fill:'noir',police:'enseigne',espacement:1}),
+      D({texte:'DE NOËLLE',x:1125,y:617,taille:13,fill:'noir',police:'enseigne',espacement:1}),
       ...sorcieresMarionnettes(),
       {classe:'bd-berceau',groupe:[N('M1108 682Q1127 698 1146 682L1140 696H1114Z'+R(1116,694,2,7)+R(1136,694,2,7)),B(E(1127,683,11,4)),N(C(1120,681,2.3)),{d:E(1129,684,6,2),fill:'papier'}]},
       {classe:'bd-chaudron',groupe:[N(E(1127,687,17,11)+R(1111,675,32,4)+R(1114,695,3,6)+R(1137,695,3,6)),{d:E(1127,676,13,3),fill:'menthe'},B(etoile(1127,687,3,1.5,0)+C(1118,686,1)+C(1136,687,1))]},
       {classe:'bd-bulles-sorcieres',groupe:Array.from({length:7},(_,i)=>({groupe:[{d:C(1115+i*4,677-(i%3)*5,1.7+i%3),fill:'none',stroke:'noir',epaisseur:.8}],anim:'bulle-sorciere',centre:[1127,684]}))},
       N(boeuf(1081,695,23)+ane(1172,695,23,1)),
-      {...B(etoile(1125,546,8,5,-1.3)),anim:'scintille'},
+      D({...B(etoile(1125,546,8,5,-1.3)),anim:'scintille'}),
       N('M1058 587L1047 705H1050L1062 590Z'+'M1190 590L1204 707H1207L1194 587Z')
     ],
     lune: [
@@ -598,7 +600,7 @@ const rue = {
     ],
     arbre: [
       {groupe:[N(cocoRue.tronc),L(cocoRue.anneaux),{groupe:[N(cocoRue.feuilles)],anim:"palmes",centre:[1268,488]},N(C(1259,499,7.2)+C(1277,501,7.2)+C(1268,511,7.6))],anim:"cocotier",centre:[1240,732]},
-      {classe:'bd-coco-signal',groupe:[
+      {devant:true,classe:'bd-coco-signal',groupe:[
         {d:'M1232 724L1210 352A75 75 0 1 1 1360 352L1242 724Z',fill:'lumiere',opacite:.16},
         {d:'M1235 340Q1250 316 1268 337L1278 324L1285 332L1292 324L1302 337Q1320 316 1335 340Q1318 333 1310 353Q1293 344 1285 368Q1277 344 1260 353Q1252 333 1235 340Z',fill:'noir'},
         {texte:'LA PROPHÉTIE',x:1285,y:386,taille:12,fill:'lumiere',police:'enseigne',espacement:.5},{texte:'DEL COCO',x:1285,y:402,taille:12,fill:'lumiere',police:'enseigne',espacement:.5}
@@ -622,7 +624,7 @@ const rue = {
         N("M1339 735Q1369 692 1409 735L1409 742Q1369 713 1339 742Z"),
         L("M1344 733Q1371 704 1404 733L1404 735Q1371 709 1344 735Z")
       ]},
-      {transform:"translate(1452 786) scale(1.5) translate(-1452 -786)",groupe:[{classe:"bd-bateau-zoom",groupe:[{classe:"bd-bateau",anim:"flotte",groupe:[
+      {devant:true,transform:"translate(1452 786) scale(1.5) translate(-1452 -786)",groupe:[{classe:"bd-bateau-zoom",groupe:[{classe:"bd-bateau",anim:"flotte",groupe:[
         {classe:'bd-fleur-surprise',groupe:[{d:'M1453 777Q1440 756 1457 729',fill:'none',stroke:'orange',epaisseur:2.5,classe:'bd-fleur-tige'},
         {classe:'bd-fleur-feuilles',groupe:[{d:'M1451 758Q1430 746 1434 762Q1445 767 1451 758Z M1453 748Q1475 736 1470 751Q1462 757 1453 748Z',fill:'orange'}]},
         {classe:'bd-fleur-corolle',groupe:[...[0,1,2,3,4,5].map(i=>({d:E(1457+Math.cos(i*Math.PI/3)*7,728+Math.sin(i*Math.PI/3)*6,5,3.5),fill:'orange'})),{d:E(1457,728,5,3),fill:'orange'}]}]},
