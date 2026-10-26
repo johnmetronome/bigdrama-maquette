@@ -139,6 +139,10 @@ python3 rebuild.py     # à chaque modification des sources
 - Le trait est une copie de chaque feuillet (`.bd-trait-calque`), révélée par un masque qui monte. Elle disparaît une fois la rue construite.
 - Écran d'entrée : la clé flotte très légèrement (5 px, ±0,8°, 5,6 s).
 
+## V8.13 · 26.10.2026 · le trait allume en montant
+
+- Apparition `plume` : les immeubles sont noirs d'emblée. Le trait crème monte du sol (2,4 s par immeuble, 110 ms d'écart de gauche à droite) et chaque fenêtre, néon ou enseigne s'allume quand le trait l'atteint. Le trait s'efface ensuite. Environ 5 s. Réglages : `PLUME` dans `_app.js`.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

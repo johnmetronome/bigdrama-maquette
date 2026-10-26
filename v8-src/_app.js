@@ -182,8 +182,8 @@ const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'p
 const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
 scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
 if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
-const DUREE_DEPLI = { plume: 7400, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
-const PLUME = { lumieres: 2900, vague: 2600 };   // plume (ms) : début et étalement de l'allumage, d'en bas à gauche vers en haut à droite
+const DUREE_DEPLI = { plume: 6000, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+const PLUME = { montee: 2400, ecart: 110 };   // plume (ms) : durée de la montée du trait sur un immeuble, écart entre deux immeubles
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -202,17 +202,21 @@ function preparerApparition() {
       if (e.tagName !== 'path' || ALLUMES.includes(f)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', mode === 'ville' ? (des(++n) * 2600).toFixed(0) + 'ms' : (rang * 230 + des(++n) * 500 + 1700).toFixed(0) + 'ms'); }
     });
   }
-  // plume : chaque lumière reçoit son instant selon sa place, d'en bas à gauche vers en haut à droite
+  // plume : chaque lumière s'allume quand le trait qui monte du sol l'atteint
   if (mode === 'plume') {
-    const sr = scene.getBoundingClientRect(), W = sr.width || 1600, H = sr.height || 900, mesures = [];
-    for (const id in pops) pops[id].g.querySelectorAll('path, image, text').forEach(e => {
-      const c = (e.getAttribute('fill') || '').toUpperCase();
-      if (e.tagName === 'path' && !ALLUMES.includes(c)) return;
-      const r = e.getBoundingClientRect();
-      mesures.push([e, sr.width ? Math.max(0, Math.min(1, ((r.left + r.width / 2 - sr.left) + (sr.bottom - r.top - r.height / 2)) / (W + H))) : .5]);
-    });
-    for (const [e, k] of mesures) {
-      e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (PLUME.lumieres + k * PLUME.vague + des(++n) * 700).toFixed(0) + 'ms');
+    const mesures = [];
+    for (const id in pops) {
+      const p = pops[id], pr = p.div.getBoundingClientRect(), rang = +p.div.style.getPropertyValue('--rang') || 0;
+      p.g.querySelectorAll('path, image, text').forEach(e => {
+        const c = (e.getAttribute('fill') || '').toUpperCase();
+        if (e.tagName === 'path' && !ALLUMES.includes(c)) return;
+        const r = e.getBoundingClientRect();
+        const h = pr.height ? Math.max(0, Math.min(1, (pr.bottom - r.top - r.height / 2) / pr.height)) : .5;
+        mesures.push([e, rang * PLUME.ecart + h * PLUME.montee + 120]);
+      });
+    }
+    for (const [e, t] of mesures) {
+      e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (t + des(++n) * 260).toFixed(0) + 'ms');
       if (e.tagName === 'path') e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1);
     }
     // le calque du dessin : une copie au trait de chaque feuillet, révélée du sol vers le haut
