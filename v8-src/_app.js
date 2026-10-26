@@ -182,7 +182,7 @@ const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'p
 const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
 scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
 if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
-const DUREE_DEPLI = { plume: 5600, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
+const DUREE_DEPLI = { plume: 4200, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -201,29 +201,13 @@ function preparerApparition() {
       if (e.tagName !== 'path' || ALLUMES.includes(f)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', mode === 'ville' ? (des(++n) * 2600).toFixed(0) + 'ms' : (rang * 230 + des(++n) * 500 + 1700).toFixed(0) + 'ms'); }
     });
   }
-  // plume : une copie de chaque feuillet, telle qu'à la fin (noirs et lumières) plus un trait crème, monte du sol par un masque.
-  // Le trait et l'allumage passent donc exactement ensemble. Quand la copie est entière, l'original s'allume dessous, puis le trait s'efface.
+  // plume : chaque feuillet se révèle du sol vers le haut, tout ensemble (noirs, lumières, enseignes), souligné d'un trait crème qui reste
   if (mode === 'plume') {
-    for (const id in pops) {
-      const p = pops[id]; if (p.trait) continue;
-      p.g.querySelectorAll('path, image, text').forEach(e => {
-        const c = (e.getAttribute('fill') || '').toUpperCase();
-        if (e.tagName !== 'path' || ALLUMES.includes(c)) { e.classList.add('bd-lumiere-fen'); if (e.tagName === 'path') e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1); }
-      });
-      const t = p.feuille.cloneNode(true); t.setAttribute('class', 'bd-trait-calque'); t.setAttribute('aria-hidden', 'true');
-      t.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
-      t.querySelectorAll('.bd-zone').forEach(e => e.remove());
-      t.querySelectorAll('path, rect, circle, ellipse, polygon, polyline, line, text, image').forEach(e => {
-        const allume = e.classList.contains('bd-lumiere-fen'); e.removeAttribute('style');
-        if (allume) return;                                           // la lumière garde sa couleur et son néon
-        if (e.tagName === 'image' || e.tagName === 'text') return;
-        e.setAttribute('stroke', '#efe1b4'); e.setAttribute('stroke-width', '1'); e.setAttribute('vector-effect', 'non-scaling-stroke');   // le reste garde son noir et reçoit le trait crème
-      });
-      // la copie garde ses classes (rideaux, figures) mais n'est ni une maison cliquable ni une lumière à éteindre
-      t.querySelectorAll('.bd-lieu, .bd-lumiere-fen').forEach(e => e.classList.remove('bd-lieu', 'bd-lumiere-fen'));
-      t.querySelectorAll('[tabindex], [role], [data-id], [aria-label]').forEach(e => ['tabindex', 'role', 'data-id', 'aria-label'].forEach(a => e.removeAttribute(a)));
-      p.div.append(t); p.trait = t;
-    }
+    for (const id in pops) pops[id].g.querySelectorAll('path').forEach(e => {
+      const c = (e.getAttribute('fill') || '').toUpperCase();
+      if (ALLUMES.includes(c) || e.getAttribute('stroke') || e.matches('.bd-zone, .bd-fleur-tige') || c === 'NONE') return;
+      e.classList.add('bd-trait-creme');
+    });
     // les enseignes et néons (feuillets « devant ») attendent que le trait de leur maison arrive à leur hauteur
     for (const id in pops) {
       const p = pops[id]; if (!p.devant) continue;

@@ -148,6 +148,12 @@ python3 rebuild.py     # à chaque modification des sources
 - Apparition `plume` : les immeubles sont noirs d'emblée. Une copie de chaque feuillet, déjà allumée et soulignée d'un trait crème lumineux, monte du sol par un masque : le trait et l'allumage passent exactement ensemble, sans retour au noir. Les enseignes et néons attendent que le trait de leur maison arrive à leur hauteur. Le trait s'efface ensuite, la rue reste allumée.
 - Du film à la rue : glissé plus long (2,1 s). Le film s'assombrit, se floute légèrement et grossit de 4 % pendant qu'il part. Le filet doré est remplacé par un fondu de nuit qui recouvre le bas du film.
 
+## V8.15 · 26.10.2026 · l'immeuble se dessine en montant, le trait crème reste
+
+- Apparition `plume` : plus de masses noires avant. Chaque immeuble se révèle du sol vers le haut, tout ensemble (noirs, fenêtres allumées, néons, enseignes), de gauche à droite (2,4 s par immeuble, 110 ms d'écart). Les enseignes suivent la hauteur de leur maison.
+- Le trait crème souligne désormais toute la rue en permanence (`.bd-trait-creme`, posé sur les formes noires, pas sur les lumières).
+- La copie au trait de la V8.14 est supprimée : la page est plus légère.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
