@@ -546,7 +546,7 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 
 /* Close : chaque fenêtre vit quand on la survole, et chante */
 .bd-fen-zone{fill:transparent;cursor:pointer}
-.a-ombre,.a-mariee,.a-souffle{transform-box:view-box}
+.a-ombre,.a-mariee,.a-souffle{transform-box:fill-box;transform-origin:50% 100%}
 .bd-lieu.actif .a-ombre{animation:bd-ombre 5s ease-in-out infinite alternate}
 @keyframes bd-ombre{from{transform:translateX(-4px)}to{transform:translateX(4px)}}
 .bd-lieu.actif .a-souffle,.bd-lieu.actif .a-mariee{animation:bd-souffle 3.4s ease-in-out infinite alternate}
@@ -631,3 +631,15 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-contact .bd-contacter a:hover,.bd-contact .bd-contacter a:focus-visible{background:transparent;color:#f2efe6!important}
 
 @media(prefers-reduced-motion:reduce){.a-toquer,.a-tueur,.a-poignard,.a-victime,.a-chifoumi,.bd-cf,.a-passant,.a-passant-lent,.a-passant-retour,.bd-volute,.bd-braise,.a-neon-norma,.entry-bottom .entry-enter span{animation:none!important}.bd-cf-a-feuille,.bd-cf-b-pierre,.bd-volute{opacity:1}}
+
+/* ───────── v8.1 · plus doux ───────── */
+/* pendant le glissé et la construction, les petites animations attendent : tout le calcul va au mouvement */
+.bd-glisse .bd-rue *,.bd-construit-en-cours .bd-rue *{animation-play-state:paused!important}
+.bd-construit-en-cours .bd-construction{will-change:transform}
+/* survol : un zoom plus lent et plus léger */
+.bd-lieu .bd-elev{transition:transform 2600ms cubic-bezier(.22,.1,.2,1)!important}
+.bd-lieu.actif .bd-elev{transform:scale(1.022)}
+.bd-lieu[data-id="bar"].actif .bd-elev{transform:scale(1.012)}
+.bd-lieu[data-id="scatolina"].actif .bd-elev{transform:none}
+.bd-bateau-zoom{transition:transform 2600ms cubic-bezier(.22,.1,.2,1)!important}
+.bd-lieu[data-id="scatolina"].actif .bd-bateau-zoom{transform:scale(1.07)}

@@ -519,21 +519,21 @@ const FEM = {
 // les vingt fenêtres de Close (repère du dessin, avant la mise à l'échelle)
 export const FENETRES_CLOSE = [];
 function closeFenetresV8() {
-  const types = ["corset", "rideau", "boa", "mariee",
-                 "bas", "eventail", "rideauRose", "miroir",
-                 "rideauRose", "cancan", "corset2", "boa2",
-                 "boa", "client", "rideau", "bas2",
-                 "miroir2", "corset", "rideauRose", "cancan"];
+  // v8.1 : moins de monde aux fenêtres, sept personnages, les autres fenêtres restent éclairées derrière leurs rideaux
+  const types = ["corset", "vide", "vide", "mariee",
+                 "bas", "vide", "rose", "vide",
+                 "rose", "cancan", "vide", "vide",
+                 "vide", "client", "rose", "vide",
+                 "miroir", "vide", "rose", "vide"];
   const formes = []; let k = 0;
   for (let j = 0; j < 5; j++) for (let i = 0; i < 4; i++) {
     const x = 374 + i * 59, y = 210 + j * 62, w = 42, h = 54, t = types[k];
     FENETRES_CLOSE.push([x, y, w, h]);
-    const rose = t === "rideauRose", fond = rose ? "rose" : "lumiere";
+    const rose = t === "rose", fond = rose ? "rose" : "lumiere";
     formes.push({ d: R(x, y, w, h), fill: fond, classe: "bd-vitre" });
     const fig = []; let anim = "danse";
-    if (t.startsWith("rideau")) {
-      const ombre = FEM.corset(x + 6, y + 4, w - 12, h - 4, k % 2 ? 1 : -1);
-      fig.push({ d: ombre.noir, fill: "noir", opacite: .55 }); anim = "ombre";
+    if (t === "vide" || t === "rose") {
+      anim = null;
     } else if (t === "mariee") {
       const m = FEM.mariee(x, y, w, h);
       fig.push({ d: m.voile, fill: "blanc", opacite: .9 }, { d: m.noir, fill: "noir" }, { d: m.ruban, fill: "blanc" }, { d: m.diademe, fill: "blanc" }); anim = "mariee";
@@ -553,7 +553,7 @@ function closeFenetresV8() {
       const nom = t.replace(/\d$/, ""), s = t.endsWith("2") ? -1 : 1, m = FEM[nom](x, y, w, h, s);
       fig.push({ d: m.noir, fill: "noir" }); if (m.lum) fig.push({ d: m.lum, fill: "lumiere" });
     }
-    formes.push({ classe: "bd-fen bd-fen-" + k, clip: R(x, y, w, h), groupe: [{ groupe: fig, anim, centre: [x + w / 2, y + h] }] });
+    if (fig.length) formes.push({ classe: "bd-fen bd-fen-" + k, clip: R(x, y, w, h), groupe: [anim ? { groupe: fig, anim } : { groupe: fig }] });
     // lambrequin festonné et rideaux drapés retenus
     let noir = R(x - 2, y, w + 4, 3) + fenetres(x, y + 3, 7, 1, 6, 4, 0, 0, (xx, yy, ww, hh) => `M${f(xx)} ${f(yy)}a${f(ww / 2)} ${f(hh)} 0 0 0 ${f(ww)} 0Z`);
     noir += `M${f(x)} ${f(y + 3)}L${f(x + w * .2)} ${f(y + 3)}Q${f(x + w * .13)} ${f(y + h * .42)} ${f(x + w * .07)} ${f(y + h * .55)}Q${f(x + w * .12)} ${f(y + h * .8)} ${f(x + w * .09)} ${f(y + h)}L${f(x)} ${f(y + h)}Z`
@@ -721,7 +721,9 @@ const rue = {
     maison: [
       ...immeuble(360, 620, 170, 7, { eteint: true }),
       ...closeFenetresV8(),
-      N(P([[430, 172], [490, 120], [550, 172]])), { ...N(muchaRue.noir), classe: 'bd-phenix-dessin' }, { ...L(muchaRue.lumiere), classe: 'bd-phenix-dessin' }, { image: 'logos/phenix.png', x: 462, y: 112, w: 56, h: 56, brut: true, classe: 'bd-phenix-image' },
+      N(P([[430, 172], [490, 120], [550, 172]])), { ...N(muchaRue.noir), classe: 'bd-phenix-dessin' }, { ...L(muchaRue.lumiere), classe: 'bd-phenix-dessin' },
+      { ...N(P([[420, 174], [436, 160], [436, 72], [544, 72], [544, 160], [560, 174]])), classe: 'bd-phenix-image' }, { d: R(440, 76, 100, 1.4) + R(440, 155, 100, 1.4) + R(440, 76, 1.4, 80) + R(538.6, 76, 1.4, 80), fill: 'lumiere', opacite: .7, classe: 'bd-phenix-image' },
+      { image: 'logos/phenix.png', x: 444, y: 78, w: 92, h: 76, brut: true, classe: 'bd-phenix-image' },
       L(R(372, 532, 236, 58)), N(R(376, 536, 228, 50)), { image: "logos/maison.png", x: 410, y: 538, w: 160, h: 46, neon: "or", anim: "neon" }, // l'enseigne Close, néon doré qui clignote
       L(arche(470, 596, 40, 46)), N(R(489, 598, 2, 44)),
       L(lampadaireGuimard(458, 640, 50, -1) + lampadaireGuimard(522, 640, 50, 1)),

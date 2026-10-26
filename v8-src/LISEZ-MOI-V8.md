@@ -31,11 +31,20 @@ python3 rebuild.py
 14. Site : « Création » retiré sur Norma et Close, Parfum de Famille passe au-dessus d'Un Conte de Noëlle, bloc Partenaires retiré, bouton « Nous contacter » sous les réseaux sociaux, favicon clé dorée sans fond.
 15. Clé de réglages du mode « Modifier » : `bigdrama-v8-reglages-1` (les réglages V7 enregistrés dans le navigateur ne s'appliquent plus).
 
+## V8.1 · 26.10.2026
+
+- Film d'accueil : Showreel_Montage_V9 (`accueil-v9-1080.mp4`, `accueil-v9-720.mp4`), vitesse normale.
+- Arrivée sur la rue plus douce : glissé de 1,6 s, les maisons sortent de terre sans rebond, les petites animations attendent la fin de la construction.
+- Musiques des créations à 15 % maximum.
+- Le Phénix (logo fourni) sur une plaque au sommet de Close. Close garde son enseigne au néon.
+- Close : sept personnages aux fenêtres au lieu de quinze. Animations corrigées (elles partaient en diagonale).
+- Sous-titres au survol : Burning Bar « Création privée avec Grimbergen », Eros en Russie « Première création immersive pour The Family », La Prophétie del Coco « Création immersive pour Bacardi ».
+- Zoom au survol plus lent (2,6 s) et plus léger.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
 |---|---|---|
-| `logos/phenix.png` | Le Phénix de Close, fond transparent. Remplace le dessin dès qu'il existe | Ariane |
 | `sons/close/chanson-01.mp3` … `chanson-08.mp3` | Huit chansons de Close. Les 20 fenêtres se les partagent. Sans fichier, la musique de Close joue | Alex |
 | `sons/usine.mp3` | Le son « Chaussée aux Moines » pour Burning Bar | Alex |
 | `sons/bar.mp3` | Le refrain Suno de Better Together (remplace l'actuel) | Ariane |

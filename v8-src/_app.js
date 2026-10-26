@@ -11,8 +11,8 @@ const ACCROCHES = {
  maison:'Un cabaret anti-militariste et féministe en 1917', serre:'Enquête en ligne',
  scatolina:'Conte onirique à Venise', bar:'Comédie musicale',
  creche:'Fable contemporaine', cimetiere:'Comédie musicale immersive',
- lune:'Nuits slaves, musique et passions brûlantes', tour:'Création',
- arbre:'Mystère tropical sous les palmiers agités', usine:'Brasserie monastique, braises et renaissance nocturne'
+ lune:'Première création immersive pour The Family', tour:'Création',
+ arbre:'Création immersive pour Bacardi', usine:'Création privée avec Grimbergen'
 };
 const ANCRES = {cimetiere:[98,606],tour:[278,640],maison:[490,640],serre:[690,670],usine:[820,668],bar:[970,700],creche:[1125,698],arbre:[1240,732]};
 const EDIT_KEY = 'bigdrama-v8-reglages-1';
@@ -118,9 +118,9 @@ function dessiner() {
     const grad = el('linearGradient', {id:gradientId,gradientUnits:'userSpaceOnUse',x1:0,x2:0,y1:b.y,y2:b.y+50},defs);
     grad.setAttribute('y1', b.y + b.height + 1.5); grad.setAttribute('y2', b.y + b.height - .5);
     el('stop',{offset:'0%','stop-color':'black'},grad); el('stop',{offset:'100%','stop-color':'white'},grad);
-    const masque = el('mask',{id:masqueId,maskUnits:'userSpaceOnUse',x:b.x-200,y:b.y-400,width:b.width+400,height:b.height+800},defs);
-    el('rect',{x:b.x-200,y:b.y-400,width:b.width+400,height:b.height+800,fill:`url(#${gradientId})`},masque);
-    elev.setAttribute('mask',`url(#${masqueId})`);
+    const masque = el('clipPath',{id:masqueId,clipPathUnits:'userSpaceOnUse'},defs);
+    el('rect',{x:b.x-400,y:b.y-1200,width:b.width+800,height:b.height+1201.5},masque);
+    elev.setAttribute('clip-path',`url(#${masqueId})`);
     if(l.id==='cimetiere')g.setAttribute('aria-label','Norma, mausolée et cierges');
     let hit=b;
     if(l.id==='scatolina'){
@@ -146,23 +146,24 @@ let arme = null;
 const borne = v => Math.max(0, Math.min(1, v)), doux = k => 0.5 - Math.cos(Math.PI * borne(k)) / 2;
 // v8 : deux étapes nettes. Le film, puis un seul geste fait monter la rue. Les maisons sortent de terre une à une, en deux secondes.
 let debutConstruction = null, construite = false;
-const rebond = k => { const c = 1.25; return 1 + (c + 1) * Math.pow(k - 1, 3) + c * Math.pow(k - 1, 2); };
+const rebond = k => 1 - Math.pow(1 - k, 3); // v8.1 : sortie douce, sans rebond
 function lancerConstruction() { if (debutConstruction !== null) return; debutConstruction = performance.now(); const tic = () => { construire(); if (!construite) requestAnimationFrame(tic); }; requestAnimationFrame(tic); }
 function construire() {
   const T = edition || reduit ? Infinity : debutConstruction === null ? -1 : performance.now() - debutConstruction;
   let fini = T !== -1;
   for (const c of constructions) {
-    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 250 - c.rang * 120) / 950);
+    const k = T === -1 ? 0 : T === Infinity ? 1 : borne((T - 150 - c.rang * 150) / 1400);
     if (k < 1) fini = false;
     const e = k === 0 ? 0 : rebond(k);
     c.g.style.opacity = k === 0 ? 0 : 1;
     if (c.lune) c.g.style.transform = `translateY(${(-(1 - e) * 120).toFixed(1)}px)`;
-    else c.g.style.transform = k >= 1 ? '' : `translateY(${((1 - e) * (c.boite.height + 30)).toFixed(1)}px)`;
-    if (k >= 1 || c.lune) c.elev.removeAttribute('mask'); else c.elev.setAttribute('mask', `url(#revelation-${c.id})`);
+    else c.g.style.transform = k >= 1 ? '' : `translate3d(0,${((1 - e) * (c.boite.height + 30)).toFixed(1)}px,0)`;
+    if (k >= 1 || c.lune) c.elev.removeAttribute('clip-path'); else c.elev.setAttribute('clip-path', `url(#revelation-${c.id})`);
   }
   if (fini) construite = true;
   ciel.style.opacity = 1; details.forEach(d => d.style.opacity = 1); $('#bd-voile').style.opacity = 0;
-  const etaitVivante = vivante; vivante = edition || construite || T > 1400; scene.classList.toggle('vivante', vivante);
+  if (construite) document.documentElement.classList.remove('bd-construit-en-cours'); else if (T >= 0) document.documentElement.classList.add('bd-construit-en-cours');
+  const etaitVivante = vivante; vivante = edition || construite || T > 1800; scene.classList.toggle('vivante', vivante);
   $('#bd-indice').style.opacity = vivante && !survole ? 0.8 : 0;
   if (!vivante && etaitVivante) survoler(null);
 }
@@ -203,7 +204,7 @@ addEventListener('pointerup', () => { glisse.x0 = null; setTimeout(() => glisse.
 
 /* ── musique : chaque création a la sienne, elle entre en 4 s et s'éteint en 4 s ── */
 let sonActif = true, deverrouille = false, voulu = null; const pistes = {};
-const FONDU = 4000, VOLUME = 0.7;
+const FONDU = 4000, VOLUME = 0.15; // v8.1 : les musiques restent très discrètes, 15 % au maximum
 const NB_CHANSONS_CLOSE = 8; // sons/close/chanson-01.mp3 … 08 : une chanson du spectacle par fenêtre (les 20 fenêtres se partagent les 8)
 const srcPiste = id => { const m = /^close-(\d+)$/.exec(id); if (m) return `sons/close/chanson-${String(+m[1] % NB_CHANSONS_CLOSE + 1).padStart(2, '0')}.mp3`; return parId[id]?.son; };
 function piste(id) {
@@ -380,11 +381,12 @@ function mettreAJourFil(){
 // v8 · passage forcé : depuis le film, un geste vers le bas fait monter la rue en entier. Depuis le haut de la rue, un geste vers le haut rend le film.
 let glisseEnCours = false, verrou = 0;
 function glisserVers(cible) {
-  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 1100, t0 = performance.now();
-  if (cible > depart) setTimeout(lancerConstruction, reduit ? 0 : 1100 * .7);
+  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 1600, t0 = performance.now();
+  if (cible > depart) setTimeout(lancerConstruction, reduit ? 0 : duree * .8);
+  document.documentElement.classList.add('bd-glisse'); setTimeout(() => document.documentElement.classList.remove('bd-glisse'), duree + 60);
   glisseEnCours = true; verrou = performance.now() + duree + 450;
   if (!duree) { scrollTo({ top: cible, behavior: 'instant' }); glisseEnCours = false; return; }
-  const pas = t => { const k = Math.min(1, (t - t0) / duree), e = k < .5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2; scrollTo({ top: depart + dist * e, behavior: 'instant' }); if (k < 1) requestAnimationFrame(pas); else glisseEnCours = false; };
+  const pas = t => { const k = Math.min(1, (t - t0) / duree), e = .5 - Math.cos(Math.PI * k) / 2; scrollTo({ top: depart + dist * e, behavior: 'instant' }); if (k < 1) requestAnimationFrame(pas); else glisseEnCours = false; };
   requestAnimationFrame(pas);
 }
 const dansLeSas = () => !edition && !projet.classList.contains('ouvert') && !document.querySelector('dialog[open]');
