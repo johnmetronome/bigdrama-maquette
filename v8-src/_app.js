@@ -182,8 +182,7 @@ const APPARITION = (new URLSearchParams(location.search).get('apparition') || 'p
 const MODES = ['plume', 'encre', 'lanterne', 'rideau', 'ville', 'pop'];
 scene.dataset.apparition = MODES.includes(APPARITION) ? APPARITION : 'plume';
 if (!new URLSearchParams(location.search).get('apparition')) scene.dataset.apparition = 'plume';
-const DUREE_DEPLI = { plume: 6000, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
-const PLUME = { montee: 2400, ecart: 110 };   // plume (ms) : durée de la montée du trait sur un immeuble, écart entre deux immeubles
+const DUREE_DEPLI = { plume: 5600, encre: 7200, lanterne: 4600, rideau: 5000, ville: 5400, pop: 4400 }[scene.dataset.apparition];
 // préparation : chaque trait connaît sa longueur (encre), chaque fenêtre reçoit son instant d'allumage (ville, rideau)
 const ALLUMES = ['#FFE34D', '#D6AEB6', '#F5F3EE', '#DDD0AD', '#F37021'];
 function preparerApparition() {
@@ -202,34 +201,37 @@ function preparerApparition() {
       if (e.tagName !== 'path' || ALLUMES.includes(f)) { e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', mode === 'ville' ? (des(++n) * 2600).toFixed(0) + 'ms' : (rang * 230 + des(++n) * 500 + 1700).toFixed(0) + 'ms'); }
     });
   }
-  // plume : chaque lumière s'allume quand le trait qui monte du sol l'atteint
+  // plume : une copie de chaque feuillet, telle qu'à la fin (noirs et lumières) plus un trait crème, monte du sol par un masque.
+  // Le trait et l'allumage passent donc exactement ensemble. Quand la copie est entière, l'original s'allume dessous, puis le trait s'efface.
   if (mode === 'plume') {
-    const mesures = [];
-    for (const id in pops) {
-      const p = pops[id], pr = p.div.getBoundingClientRect(), rang = +p.div.style.getPropertyValue('--rang') || 0;
-      p.g.querySelectorAll('path, image, text').forEach(e => {
-        const c = (e.getAttribute('fill') || '').toUpperCase();
-        if (e.tagName === 'path' && !ALLUMES.includes(c)) return;
-        const r = e.getBoundingClientRect();
-        const h = pr.height ? Math.max(0, Math.min(1, (pr.bottom - r.top - r.height / 2) / pr.height)) : .5;
-        mesures.push([e, rang * PLUME.ecart + h * PLUME.montee + 120]);
-      });
-    }
-    for (const [e, t] of mesures) {
-      e.classList.add('bd-lumiere-fen'); e.style.setProperty('--dl', (t + des(++n) * 260).toFixed(0) + 'ms');
-      if (e.tagName === 'path') e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1);
-    }
-    // le calque du dessin : une copie au trait de chaque feuillet, révélée du sol vers le haut
     for (const id in pops) {
       const p = pops[id]; if (p.trait) continue;
+      p.g.querySelectorAll('path, image, text').forEach(e => {
+        const c = (e.getAttribute('fill') || '').toUpperCase();
+        if (e.tagName !== 'path' || ALLUMES.includes(c)) { e.classList.add('bd-lumiere-fen'); if (e.tagName === 'path') e.style.setProperty('--fo', e.getAttribute('fill-opacity') || 1); }
+      });
       const t = p.feuille.cloneNode(true); t.setAttribute('class', 'bd-trait-calque'); t.setAttribute('aria-hidden', 'true');
       t.querySelectorAll('[id]').forEach(e => e.removeAttribute('id'));
-      t.querySelectorAll('image, .bd-zone').forEach(e => e.remove());
-      t.querySelectorAll('[class]').forEach(e => e.setAttribute('class', '')); t.querySelectorAll('[filter]').forEach(e => e.removeAttribute('filter'));
-      t.querySelectorAll('path, rect, circle, ellipse, polygon, polyline, line, text').forEach(e => {
-        e.removeAttribute('style'); e.setAttribute('fill', 'none'); e.setAttribute('stroke', '#efe1b4'); e.setAttribute('stroke-width', '1'); e.setAttribute('vector-effect', 'non-scaling-stroke'); e.removeAttribute('filter');
+      t.querySelectorAll('.bd-zone').forEach(e => e.remove());
+      t.querySelectorAll('path, rect, circle, ellipse, polygon, polyline, line, text, image').forEach(e => {
+        const allume = e.classList.contains('bd-lumiere-fen'); e.removeAttribute('style');
+        if (allume) return;                                           // la lumière garde sa couleur et son néon
+        if (e.tagName === 'image' || e.tagName === 'text') return;
+        e.setAttribute('stroke', '#efe1b4'); e.setAttribute('stroke-width', '1'); e.setAttribute('vector-effect', 'non-scaling-stroke');   // le reste garde son noir et reçoit le trait crème
       });
+      // la copie garde ses classes (rideaux, figures) mais n'est ni une maison cliquable ni une lumière à éteindre
+      t.querySelectorAll('.bd-lieu, .bd-lumiere-fen').forEach(e => e.classList.remove('bd-lieu', 'bd-lumiere-fen'));
+      t.querySelectorAll('[tabindex], [role], [data-id], [aria-label]').forEach(e => ['tabindex', 'role', 'data-id', 'aria-label'].forEach(a => e.removeAttribute(a)));
       p.div.append(t); p.trait = t;
+    }
+    // les enseignes et néons (feuillets « devant ») attendent que le trait de leur maison arrive à leur hauteur
+    for (const id in pops) {
+      const p = pops[id]; if (!p.devant) continue;
+      const m = pops[id.replace('~devant', '')]; if (!m) continue;
+      const a = m.div.getBoundingClientRect(), b = p.div.getBoundingClientRect(); if (!a.height) continue;
+      const rang = +m.div.style.getPropertyValue('--rang') || 0, bas = Math.max(0, (a.bottom - b.bottom) / a.height), haut = Math.min(1, (a.bottom - b.top) / a.height);
+      p.div.style.setProperty('--m-delai', (rang * 110 + bas * 2400).toFixed(0) + 'ms');
+      p.div.style.setProperty('--m-duree', Math.max(250, (haut - bas) * 2400).toFixed(0) + 'ms');
     }
   }
   void scene.offsetWidth; scene.classList.remove('bd-sans-transition');
@@ -480,8 +482,9 @@ function mettreAJourFil(){
 // v8 · passage forcé : depuis le film, un geste vers le bas fait monter la rue en entier. Depuis le haut de la rue, un geste vers le haut rend le film.
 let glisseEnCours = false, verrou = 0;
 function glisserVers(cible) {
-  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 1600, t0 = performance.now();
-  if (cible > depart && !sansRue()) setTimeout(lancerConstruction, reduit ? 0 : duree * .42);
+  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 2100, t0 = performance.now();
+  document.documentElement.classList.toggle('bd-vers-rue', cible > depart);   // v8.14 · le film s'assombrit et s'estompe pendant qu'on descend
+  if (cible > depart && !sansRue()) setTimeout(lancerConstruction, reduit ? 0 : duree * .3);
   document.documentElement.classList.add('bd-glisse'); setTimeout(() => document.documentElement.classList.remove('bd-glisse'), duree + 60);
   glisseEnCours = true; verrou = performance.now() + duree + 450;
   if (!duree) { scrollTo({ top: cible, behavior: 'instant' }); glisseEnCours = false; return; }

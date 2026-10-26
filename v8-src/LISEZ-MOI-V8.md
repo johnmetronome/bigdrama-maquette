@@ -143,6 +143,11 @@ python3 rebuild.py     # à chaque modification des sources
 
 - Apparition `plume` : les immeubles sont noirs d'emblée. Le trait crème monte du sol (2,4 s par immeuble, 110 ms d'écart de gauche à droite) et chaque fenêtre, néon ou enseigne s'allume quand le trait l'atteint. Le trait s'efface ensuite. Environ 5 s. Réglages : `PLUME` dans `_app.js`.
 
+## V8.14 · 26.10.2026 · trait et lumière ensemble, passage film -> rue plus doux
+
+- Apparition `plume` : les immeubles sont noirs d'emblée. Une copie de chaque feuillet, déjà allumée et soulignée d'un trait crème lumineux, monte du sol par un masque : le trait et l'allumage passent exactement ensemble, sans retour au noir. Les enseignes et néons attendent que le trait de leur maison arrive à leur hauteur. Le trait s'efface ensuite, la rue reste allumée.
+- Du film à la rue : glissé plus long (2,1 s). Le film s'assombrit, se floute légèrement et grossit de 4 % pendant qu'il part. Le filet doré est remplacé par un fondu de nuit qui recouvre le bas du film.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
