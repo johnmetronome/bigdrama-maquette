@@ -703,3 +703,12 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-strips .bd-strip.b2b .strip-logo{height:min(calc(var(--haut-titre) * var(--k)),calc(var(--larg-titre) * var(--j)))!important;transform:translate(var(--cx),var(--cy))!important}
 .bd-strips .strip-identite{width:var(--larg-titre)!important}
 @media (max-width:900px),(pointer:coarse) and (max-height:520px){.bd-strips{--larg-titre:min(66vw,360px)}}
+
+/* ───────── v8.5 · corrections des audits Google et Mistral ───────── */
+/* focus clavier visible sur les maisons */
+.bd-lieu:focus{outline:none}
+.bd-lieu:focus-visible .bd-zone{stroke:#f3dfa6;stroke-width:2;stroke-dasharray:7 5;vector-effect:non-scaling-stroke}
+/* le film d'accueil a de nouveau son bouton pause (et le bouton des films), à gauche pour laisser la place au reste */
+.entry-bottom .entry-controls{display:flex!important;position:absolute;left:0;bottom:0}
+@media (max-width:600px){.entry-bottom .entry-controls{bottom:52px}}
+.bd-projet:focus{outline:none}

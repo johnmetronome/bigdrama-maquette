@@ -11,7 +11,7 @@ const ACCROCHES = {
  maison:'Un cabaret anti-militariste et féministe en 1917', serre:'Enquête en ligne',
  scatolina:'Conte onirique à Venise', bar:'Comédie musicale',
  creche:'Fable contemporaine', cimetiere:'Comédie musicale immersive',
- lune:'Première création immersive pour The Family', tour:'Création',
+ lune:'Première création immersive pour The Family', tour:'Création privée pour My Little Paris',
  arbre:'Création immersive pour Bacardi', usine:'Création privée avec Grimbergen'
 };
 const ANCRES = {cimetiere:[98,606],tour:[278,640],maison:[490,640],serre:[690,670],usine:[820,668],bar:[970,700],creche:[1125,698],arbre:[1240,732]};
@@ -211,7 +211,7 @@ function audioCtx() { try { if (!ctxAudio) { const C = window.AudioContext || wi
 const niveau = (p, v) => { p.niveau = v; if (p.g) p.g.gain.value = v; else p.a.volume = v; };
 function piste(id) {
   const src = srcPiste(id); if (!src) return null;
-  if (!pistes[id]) { const a = new Audio(A + src); a.loop = true; a.volume = 0; a.preload = 'auto'; const p = { a, de: 0, vers: 0, t0: 0, niveau: 0 };
+  if (!pistes[id]) { const a = new Audio(A + src); a.loop = true; a.volume = 0; a.preload = 'none'; /* chargée au premier survol seulement */ const p = { a, de: 0, vers: 0, t0: 0, niveau: 0 };
     const c = deverrouille && audioCtx(); if (c) { try { const s = c.createMediaElementSource(a), g = c.createGain(); g.gain.value = 0; s.connect(g); g.connect(c.destination); p.g = g; a.volume = 1; } catch {} } a.addEventListener('error', () => { p.mort = true; if (voulu === id) son(id); }); pistes[id] = p; }
   return pistes[id].mort ? null : pistes[id];
 }
@@ -233,7 +233,6 @@ $('#bd-son').addEventListener('click', () => { sonActif = !sonActif; $('#bd-son'
 /* ── le seuil : la clé, « Cliquer pour entrer » ── */
 function entrer() {
   deverrouille = true; audioCtx(); $('#bd-seuil').classList.add('ouvert');
-  LIEUX.forEach(l => piste(l.id));
   if (hero) { hero.muted = true; heroLance = true; hero.play().catch(() => {}); } // v8.2 : le film d'accueil reste muet
   son(voulu);
 }
@@ -254,7 +253,6 @@ function ouvrirProjet(id, depuisHash = false) {
     <header class="p-tete">${tete}<h1 class="p-logo"><span class="bd-encre" style="--masque:url('${A + l.logo}');--ratio:${ratios[id] || 2}"></span><span class="cinema-sr">${l.creation}</span></h1></header>
     <div class="p-corps">
       <p class="p-cap">${l.annee} · ${l.cadre}</p>
-      ${id==='cimetiere'?'<p class="p-credit">Photographies : © Alessandro Clemenza</p>':''}
       <p class="p-resume">${l.resume}</p>
       <div class="p-deux">
         <dl class="p-infos">${l.infos.map(([k, v]) => `<div><dt>${k}</dt><dd>${v}</dd></div>`).join('')}</dl>
@@ -264,7 +262,10 @@ function ouvrirProjet(id, depuisHash = false) {
       ${l.legende ? `<p class="p-legende">${l.legende}</p>` : ''}
       <nav class="p-suite"><button type="button" data-id="${prec.id}"><span>Précédent</span>${prec.creation}</button><button type="button" data-id="${suiv.id}" style="text-align:right"><span>Suivant</span>${suiv.creation}</button></nav>
     </div>`;
+  if (!projet.classList.contains('ouvert')) declencheur = document.activeElement;
+  projet.setAttribute('aria-label', l.creation);
   projet.scrollTop = 0; projet.classList.add('ouvert'); document.documentElement.style.overflow = 'hidden';
+  $('#page')?.setAttribute('inert', ''); setTimeout(() => projet.querySelector('.retour')?.focus({ preventScroll: true }), 60);
   projet.querySelector('.retour').onclick = () => { history.replaceState(null,'','#rue'); fermerProjet(); };
   projet.querySelectorAll('.p-suite button').forEach(b => b.onclick = () => { history.replaceState(null, '', '#projet-' + b.dataset.id); ouvrirProjet(b.dataset.id, true); });
   projet.querySelectorAll('.p-galerie button').forEach(b => b.onclick = () => lumiere(b.querySelector('img').src));
@@ -273,8 +274,10 @@ function ouvrirProjet(id, depuisHash = false) {
   clearInterval(diapo); diapo = setInterval(() => { const ims = [...projet.querySelectorAll('.p-diapo img')]; if (ims.length < 2) return; const k = ims.findIndex(x => x.classList.contains('actif')); ims.forEach(x => x.classList.remove('actif')); ims[(k + 1) % ims.length].classList.add('actif'); }, 5500);
   son(id);
 }
+let declencheur = null;
 function fermerProjet() {
   projet.classList.remove('ouvert'); document.documentElement.style.overflow = ''; clearInterval(diapo);
+  $('#page')?.removeAttribute('inert'); if (declencheur && document.contains(declencheur)) declencheur.focus({ preventScroll: true }); declencheur = null;
   projet.querySelectorAll('video').forEach(v => v.pause()); son(null);
 }
 function lumiere(src) { const d = $('#bd-lumiere'); d.innerHTML = `<img src="${src}" alt="">`; d.classList.add('vu'); }
@@ -289,12 +292,12 @@ document.querySelector('#site-navigation').prepend($('#bd-son'));
 /* ── démarrage ── */
 dessiner(); dessinerFil(); cadrer(); construire(); suivreDefilement(); selonHash();
 if ('IntersectionObserver' in window) new IntersectionObserver(es => { if (es.some(e => e.isIntersecting && e.intersectionRatio > .5)) lancerConstruction(); }, { threshold: [.5, .8] }).observe(rue);
-setInterval(() => { if (debutConstruction !== null && !construite && performance.now() - debutConstruction > 6000) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
+const secours = setInterval(() => { if (construite) { clearInterval(secours); return; } if (debutConstruction !== null && performance.now() - debutConstruction > 6000) { debutConstruction = -1e9; construire(); } }, 1000); if (location.hash === '#rue' || scrollY >= rue.offsetTop - 4) lancerConstruction();
 addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); });
 document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href=new URL('../v7/la-veillee/',location.href).href; });
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();
 initialiserEditeur();
-window.__bd = { ouvrirProjet, survoler, boites, entrer, construire, glisserVers, lancerConstruction, allerVersBanniere, chanter };
+if (/[?&](edit|debug)\b/.test(location.search)) window.__bd = { ouvrirProjet, survoler, boites, entrer, construire, glisserVers, lancerConstruction, allerVersBanniere, chanter }; // outils de test seulement
 
 function choisir(id) {
  selection=id; $('#bd-edit-select').value=id;
@@ -396,7 +399,7 @@ function glisserVers(cible) {
 }
 function sansRue() { return getComputedStyle(rue).display === 'none'; }
 function etape2() { return sansRue() ? $('#content').getBoundingClientRect().top + scrollY : rue.offsetTop; }
-const dansLeSas = () => !edition && !projet.classList.contains('ouvert') && !document.querySelector('dialog[open]');
+const dansLeSas = () => !reduit && !edition && !projet.classList.contains('ouvert') && !document.querySelector('dialog[open]');
 function decider(sens, e) {
   if (!dansLeSas()) return false;
   const haut = etape2(), y = scrollY;
@@ -405,7 +408,8 @@ function decider(sens, e) {
   if (sens < 0 && y > 4 && y <= haut + 4) { e?.preventDefault(); glisserVers(0); return true; }
   return false;
 }
-addEventListener('wheel', e => { if (Math.abs(e.deltaY) < 2) return; decider(Math.sign(e.deltaY), e); }, { passive: false });
+addEventListener('wheel', e => { if (e.ctrlKey || Math.abs(e.deltaY) < 2) return; // ctrl + molette = zoom du navigateur, on n'y touche pas
+  decider(Math.sign(e.deltaY), e); }, { passive: false });
 let toucheY = null, toucheX = 0;
 addEventListener('touchstart', e => { toucheY = e.touches[0]?.clientY ?? null; toucheX = e.touches[0]?.clientX ?? 0; }, { passive: true });
 addEventListener('touchmove', e => {

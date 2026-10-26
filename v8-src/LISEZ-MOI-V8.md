@@ -61,6 +61,18 @@ python3 rebuild.py
 - Filet de sécurité : la rue se construit dès qu'elle est à l'écran, et elle est entière au bout de 6 s quoi qu'il arrive.
 - Prompts d'audit pour Google, Codex et Mistral : `AUDIT_PROMPTS_V8.md`.
 
+## V8.5 · 26.10.2026 · corrections après les audits Google et Mistral
+
+- Polices hébergées sur le site (`v8/fonts/`, licence OFL) : plus aucun appel à Google Fonts.
+- Film d'accueil allégé et sans piste son : 21,7 Mo en 1080p (au lieu de 38), 9,3 Mo en 720p, 5,4 Mo en 540p pour les téléphones. Le showreel complet avec le son reste dans le bouton ▷.
+- Politique de sécurité (CSP) en balise meta : tout vient du site lui-même. Referrer-Policy. Description et carte de partage (Open Graph).
+- Musiques chargées au premier survol seulement (plus 17 Mo d'un coup à l'entrée).
+- Accessibilité : focus clavier visible sur les maisons, page création en vrai dialogue (focus sur « Retour », page derrière inerte, focus rendu à la fermeture), bouton pause du film rétabli, ctrl + molette laisse zoomer, aucun défilement forcé en mode « réduire les animations ».
+- Noms des créations harmonisés dans les libellés accessibles. Crédit photo Norma en double supprimé. Sous-titre Viva Barbessia : « Création privée pour My Little Paris ».
+- Indice de la rue : « Survolez la rue, cliquez sur une maison ».
+- Outils de test (`window.__bd`) exposés seulement avec `?edit` ou `?debug`.
+- README sans chemin interne.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

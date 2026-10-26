@@ -1,4 +1,8 @@
-# Big Drama · maquette du nouveau site (v5)
+# Big Drama · maquette du nouveau site
+
+Version de travail actuelle : [v8/](v8/) (sources dans v8-src/). Les versions précédentes restent en place pour mémoire.
+
+## Historique : v5
 
 Une rue de Paris en 1918. Chaque maison est une création de Big Drama.
 Survol : le logo se dessine. Clic : le bâtiment se trace en plan bleu et son histoire se déroule.
@@ -17,7 +21,7 @@ Puis ouvrir http://127.0.0.1:8000
 ## Publier sur GitHub Pages
 
 ```bash
-cd /Volumes/PROD/2026_10_BigDramaWebsite_V1/_Tests/maison-3d/v5/bigdrama-maquette
+cd bigdrama-maquette
 git init
 git add .
 git commit -m "Maquette v5 : la rue"
