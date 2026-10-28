@@ -162,6 +162,16 @@ python3 rebuild.py     # à chaque modification des sources
 - Phare de Scatolina : faisceau trois fois plus lumineux.
 - Un Conte de Noëlle : au survol, le chaudron prend exactement la place du landau, sans monter ni grossir.
 
+## V8.17 · 28.10.2026 · vraies pages création et À propos
+
+- En-tête : À propos · Créations · Contact, sur l'accueil et sur toutes les pages.
+- Une vraie page par création, avec sa propre adresse : `v8/creations/<nom>/` (norma, close, parfum-de-famille, un-conte-de-noelle, scatolina, better-together, la-prophetie-del-coco, burning-bar, viva-barbessia, eros-en-russie). Les bannières de l'accueil y mènent. Les anciens liens `#projet-<id>` redirigent vers la bonne page.
+- Page `v8/a-propos/` : présentation, fondateurs, liste des créations.
+- Visuel « nuit de la rue » : bleu nuit, trait crème, accents jaunes, titres en Bodoni. Tête photo + logo de la création, accroche, texte, chiffres, film, photos (visionneuse au clic, flèches du clavier), crédits courts, distribution complète repliable (Close), partenaires, création précédente et suivante.
+- Contenus : textes de l'ancien site (copie dans `v2/`), relus et mis à jour. Ce qui reste à vérifier est surligné avec `?verif` dans l'adresse.
+- Sources : tout le contenu est dans `v8-src/creations.py` (une entrée par création). `rebuild.py` génère les pages. Styles : `_creations.css`. Script : `_creations.js`.
+- Les sauvegardes du dossier WEBSITE (2018, 2023) n'ont ni base de données ni photos : rien de plus à en tirer.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |

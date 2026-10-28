@@ -124,4 +124,7 @@ else:
 html = html.replace('<link rel="preload" as="image" href="assets/films/hero-poster.jpg">',
                     '<link rel="preload" as="image" href="assets/films/hero-poster.jpg" fetchpriority="high">')
 (out / 'index.html').write_text(html, encoding='utf-8')
+
+# ── 5 · pages création et À propos (vraies pages) ──
+runpy.run_path(str(here / 'creations.py'), run_name='lib')['generer'](carte, VERSION)
 print(out, '· esbuild' if esbuild else '· sans esbuild (fichiers non compressés)', '· images légères' if carte else '')

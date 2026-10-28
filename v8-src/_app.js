@@ -370,10 +370,12 @@ function fermerProjet() {
 function lumiere(src) { const d = $('#bd-lumiere'); d.innerHTML = `<img src="${src}" alt="">`; d.classList.add('vu'); }
 $('#bd-lumiere').onclick = () => $('#bd-lumiere').classList.remove('vu');
 addEventListener('keydown', e => { if (e.key === 'Escape') { if ($('#bd-lumiere').classList.contains('vu')) $('#bd-lumiere').classList.remove('vu'); else if (projet.classList.contains('ouvert')) history.back(); } });
-function selonHash() { const m = location.hash.match(/^#projet-(\w+)/); if (m && parId[m[1]]) ouvrirProjet(m[1], true); else if (projet.classList.contains('ouvert')) fermerProjet(); }
+// v8.17 · chaque création a sa vraie page : les anciens liens #projet-<id> y mènent
+const PAGES = { cimetiere: 'norma', maison: 'close', serre: 'parfum-de-famille', creche: 'un-conte-de-noelle', scatolina: 'scatolina', bar: 'better-together', arbre: 'la-prophetie-del-coco', usine: 'burning-bar', tour: 'viva-barbessia', lune: 'eros-en-russie' };
+function selonHash() { const m = location.hash.match(/^#projet-(\w+)/); if (m && PAGES[m[1]]) location.replace('creations/' + PAGES[m[1]] + '/'); else if (projet.classList.contains('ouvert')) fermerProjet(); }
 addEventListener('popstate', selonHash);
 // les liens du site classique vers les anciennes pages ouvrent la page de la création
-document.querySelectorAll('a[data-projet]').forEach(a => a.addEventListener('click', e => { e.preventDefault(); ouvrirProjet(a.dataset.projet); }));
+// v8.17 · les bannières mènent aux vraies pages création (lien normal, plus de fenêtre par-dessus)
 
 document.querySelector('#site-navigation').prepend($('#bd-son'));
 /* ── démarrage ── */
@@ -519,7 +521,7 @@ addEventListener('keydown', e => { const k = e.key; const sens = ['ArrowDown', '
 
 // v8 · le clic sur une maison descend jusqu'à la bannière de la création
 function allerVersBanniere(id) {
-  const cible = [...document.querySelectorAll(`.bd-strip[data-projet="${id}"]`)].find(a => a.offsetParent !== null);
+  const cible = [...document.querySelectorAll(`.bd-strip[data-creation="${id}"]`)].find(a => a.offsetParent !== null);
   if (!cible) { ouvrirProjet(id); return; }
   history.replaceState(null, '', '#' + (cible.id || 'histoire'));
   scrollTo({ top: cible.getBoundingClientRect().top + scrollY - Math.max(40, (innerHeight - cible.offsetHeight) / 2), behavior: reduit ? 'auto' : 'smooth' });
