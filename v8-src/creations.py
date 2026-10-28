@@ -5,7 +5,7 @@ Tout ce qui n'est pas vérifié porte la marque V(...) : visible seulement avec 
 Lancé par rebuild.py. Écrit v8/creations/<slug>/index.html, v8/a-propos/index.html, creations.css, creations.js.
 """
 from pathlib import Path
-import html, json, shutil
+import html, json, shutil, re
 
 ICI = Path(__file__).resolve().parent
 OUT = ICI.parent / 'v8'
@@ -175,12 +175,100 @@ CREATIONS = [
     },
 ]
 
-APROPOS = {
-    'accroche': "Pionniers du théâtre immersif en France, nous avons créé Big Drama pour imaginer un modèle indépendant pour le spectacle vivant.",
+# ───────── textes d'Ariane, 28.10.2026 (document « Contenus site internet ») ─────────
+# Ils remplacent les textes de l'ancien site ci-dessus. Chiffres alignés sur l'À propos d'Ariane : Close 15 000, Norma 14 000.
+# contexte = la phrase en italique d'Ariane (lieu, public, client). presse = extraits de presse.
+ARIANE = {
+    'norma': {
+        'cadre': 'Grand public', 'quand': '2023 – 2024', 'ou': '', 'genre': 'Comédie noire et musicale',
+        'accroche': "Ce soir, tous les orphelins enterrent Norma. Elle ne leur laisse que des dettes, et quinze minutes pour monter sa plus grande arnaque.",
+        'texte': ["Norma, c’était la reine du clan des orphelins. Elle nous a sauvé la vie et elle nous a tout appris : à lire, à écrire, et même à voler. Alors on prenait aux riches (tout le monde) pour donner aux pauvres (nous). Et puis on est devenus des adultes, et elle une vieille dame.",
+                  "Ce soir, tous les orphelins sont réunis pour célébrer son enterrement, et tout ce qu’elle nous lègue, c’est des dettes. Mais elle a pensé à tout : un de ses amis milliardaires est sur le point d’arriver. Elle nous a laissé exactement 15 minutes pour organiser sa plus grande arnaque…"],
+        'contexte': "Deuxième spectacle de grande ampleur de Big Drama, cette comédie noire et musicale a rassemblé 14 000 spectateurs dans un ancien hôtel au-dessus des Galeries Lafayette.",
+        'presse': [("Des obsèques hautes en couleur à ne pas manquer", "Le Parisien"), ("Des décors qui demanderaient des jours entiers d’observation.", "Regard en Coulisse"),
+                   ("Un incontournable du spectacle immersif à Paris !", "Sortiraparis"), ("Impossible de vous dévoiler quoi que ce soit sous peine de vous gâcher la surprise", "Musical Avenue"),
+                   ("Un spectacle immersif, mortel et captivant", "L’Internaute")],
+    },
+    'close': {
+        'cadre': 'Grand public', 'quand': '2019 – 2020', 'ou': '',
+        'accroche': "Paris, 1918. Au Phénix, cabaret décadent, ce sont les hommes qui se maquillent et les femmes qui commandent. Ici, la guerre n’existe pas.",
+        'texte': ["Paris, 1918. Alors que la guerre n’en finit pas, artistes, révolutionnaires et marginaux se retrouvent pour faire la fête au Phénix. Ce soir, le capitaine Émile Barbiquet va épouser Blanche, la petite protégée de la maison. Mais avant de l’accueillir en son sein, la grande famille du Phénix va le soumettre à un jeu étrange…",
+                  "Plongez en immersion dans la maison. Vous êtes libres de choisir où aller, qui suivre et à quelle porte écouter."],
+        'contexte': "Première grande création immersive de Big Drama pour le grand public, <em>Close</em> s’est jouée à guichets fermés dans une ancienne cartonnerie du 11e arrondissement, pour 15 000 spectateurs.",
+        'presse': [("Le charme évanescent d’une immersion", "Le Figaro"), ("Quel délice !", "Le Parisien"), ("Pourvu qu’il y en ait d’autres.", "L’Express"),
+                   ("En sortant de Close, on n’a qu’une envie : y retourner", "ELLE"),
+                   ("Les comédiens maîtrisent parfaitement leur personnage et peuvent réagir à toutes les interpellations du public.", "France Inter"),
+                   ("L’immersion suit son chemin à travers l’histoire.", "Le Monde")],
+    },
+    'scatolina': {
+        'cadre': 'Pour Hermès × Apple', 'quand': '2022', 'ou': '',
+        'accroche': "Vous êtes-vous déjà demandé d’où venaient les boîtes orange Hermès ?",
+        'texte': ["Une fois par an, sur une petite île perdue dans la lagune de Venise, c’est la pleine saison et le moment idéal pour la récolte des boîtes, dont la culture est restée secrète depuis toujours. Pour la toute première fois, le Grand Jardinier a fait appel à des invités triés sur le volet pour participer à la récolte."],
+        'contexte': "En collaboration avec Hermès et Apple, Big Drama a convié 60 invités de marque venus du monde entier pour une expérience immersive grandeur nature à travers l’île de Mazzorbo.",
+    },
+    'better-together': {
+        'cadre': 'Pour Pernod Ricard', 'quand': '2022', 'ou': '',
+        'accroche': "Quatre colocataires, une mystérieuse invitation, et la dernière soirée d’une amitié.",
+        'texte': ["Alors qu’ils terminent leurs derniers cartons avant un déménagement, les colocataires de l’appartement 1932 reçoivent une mystérieuse invitation. À la recherche de son expéditeur, les quatre amis vont aller de surprises en rencontres et faire de cette dernière soirée le souvenir ultime de leur amitié."],
+        'contexte': "Pour célébrer sa culture de la convivialité avec ses 10 000 collaborateurs, le groupe Pernod Ricard a fait appel à Big Drama pour créer une comédie musicale immersive sur mesure, jouée et retransmise en direct dans le monde entier.",
+    },
+    'un-conte-de-noelle': {
+        'cadre': 'Grand public', 'quand': '2021', 'ou': '',
+        'accroche': "Un conte de Noël bricolé de toutes pièces, où rien ne se passe comme dans les contes.",
+        'texte': ["Dans <em>Un Conte de Noëlle</em>, il y a un Prince qui n’arrive pas à dormir, un Gouvernement catégorique, une méchante marâtre, une orpheline et une famille qui n’a rien d’un conte de fées.",
+                  "Ce soir, pour le grand rituel de l’Endormélie, le Prince a choisi de visiter la maison de Noëlle. Avec sa marâtre et son demi-frère Ionel, ils doivent l’accueillir en grande pompe pour espérer être ceux qui arriveront enfin à l’endormir. C’est alors que les tantes de Noëlle, sorcières renégates, vont faire une entrée fracassante pour lui révéler qui elle est vraiment."],
+        'contexte': "À la sortie du Covid, Big Drama investit le bar Gallia à Pantin pour un spectacle improvisé dans l’urgence joyeuse de retrouver la scène et le public.",
+        'legende': 'Photos : © Le Portrait Parisien.',
+    },
+    'parfum-de-famille': {
+        'cadre': 'Grand public', 'quand': '2021', 'ou': '',
+        'accroche': "Chez les Florimond, on fabrique des parfums de luxe et on règle ses comptes en famille. Zinnia, la matriarche, vient d’en faire les frais.",
+        'texte': ["Un incendie vient de se produire dans la gigantesque demeure des Florimond, une grande famille de parfumeurs. Zinnia, la matriarche, a été retrouvée morte. Riche, autoritaire et puissante, elle était autant adorée que redoutée. Mais qui aurait pu la tuer ?"],
+        'contexte': "Entre théâtre immersif, jeu vidéo et Cluedo, <em>Parfum de Famille</em> fait explorer un manoir virtuel et interroger les suspects en direct, en équipe, depuis chez soi. Lancé pendant la crise sanitaire, <em>Parfum de Famille</em> a affiché complet dès sa sortie.",
+    },
+    'burning-bar': {
+        'cadre': 'Pour Grimbergen', 'quand': '2019', 'ou': '',
+        'accroche': "Le premier bar éphémère qui brûle tous les soirs et renaît de ses cendres le lendemain.",
+        'texte': ["Big Drama a imaginé un univers issu de l’histoire de l’abbaye, avec des personnages historiques dépositaires d’un savoir ancestral sur la fabrication et la dégustation de la bière. Ils partageaient avec les invités leur passion, mais aussi leurs états d’âme, leurs conflits et leurs intrigues amoureuses."],
+        'contexte': "Pendant deux semaines en juin 2019, dans un hôtel particulier au cœur du Vieux-Lille, plus de 3 000 visiteurs ont découvert les 900 ans d’histoire de l’abbaye de Grimbergen.",
+    },
+    'viva-barbessia': {
+        'cadre': 'Pour My Little Paris', 'quand': '2017', 'ou': '',
+        'accroche': "Pour sauver son pays de l’oubli, l’ambassadeur de Barbessie convie les huit dernières familles royales dans son ambassade abandonnée.",
+        'texte': ["Quelques jours avant Noël, l’ambassadeur de Barbessie, petit pays d’Europe orientale dont l’existence est toujours restée secrète, envoie une mystérieuse invitation. La reine Zora, adorée de tous, s’est endormie il y a trente ans sans jamais se réveiller, gardant avec elle les secrets de fabrication des parfums du royaume."],
+        'contexte': "Pour la soirée de Noël de My Little Paris, Big Drama a inventé un pays imaginaire, avec ses coutumes : salut, hymne national, costume folklorique.",
+    },
+    'la-prophetie-del-coco': {
+        'cadre': 'Pour Bacardí', 'quand': '2018', 'ou': '',
+        'accroche': "Depuis des générations, l’arbre sacré des Bacardí veille sur le destin de la famille. Mais pour la première fois, il n’a pas fleuri…",
+        'texte': ["En 1960, avant de quitter Cuba, Diego et Mariposa, les héritiers Bacardí, font un pacte. Elle s’installera à Porto Rico pour préserver le savoir-faire de la famille. Lui sillonnera le monde pour faire découvrir le rhum Bacardí.",
+                  "Mais ce soir, Diego n’a pas écrit, et pendant la cérémonie de floraison del Coco, l’arbre légendaire de la famille tombe malade. Les Compañeros, artisans du temps, organisent des olympiades pour désigner le successeur de Mariposa."],
+        'contexte': "Créée pour Bacardí en collaboration avec Merci Alfred et My Little Paris, cette expérience immersive a transformé une maison de famille parisienne en un univers cubain peuplé de 18 musiciens, comédiens, chanteurs et danseurs.",
+        'partenaires': ['v2/assets/original/wp-content/uploads/2018/10/mercialfreddfull.png', 'v2/assets/original/wp-content/uploads/2018/01/LogoMLP.png'],
+    },
+    'eros-en-russie': {
+        'cadre': 'Pour The Family', 'quand': '2017', 'ou': '',
+        'accroche': "Au Phénix, les nuits sont longues et les amours malheureuses. Ce soir, on fête l’anniversaire de Selena, et personne ne sait encore que ce sera la dernière fois.",
+        'texte': ["Il y a cent ans jour pour jour, dans ce même lieu, on réchauffait les nuits froides au rythme des accords slaves.",
+                  "Au 25 rue du Petit-Musc, à Paris, alors que les convives de The Family dînent sous l’immense verrière, un mystérieux narrateur les interrompt. Depuis le grand escalier, il les plonge un siècle en arrière, dans les entrailles du Phénix, le cabaret le plus réputé de l’époque.",
+                  "Ce soir-là, c’est l’anniversaire de Selena, étoile des danseuses. Elle entame son numéro, fier et tragique. Mais bientôt, Selena et ses filles se sont évaporées, laissant derrière elles le parfum d’un autre temps."],
+        'contexte': "Imaginée pour un dîner de The Family, cette expérience immersive surgissait au milieu des convives pour les entraîner un siècle en arrière, le temps d’un instant suspendu.",
+    },
+}
+for _c in CREATIONS:
+    _c.update(ARIANE.get(_c['slug'], {}))
+    _c['chiffres'] = []          # ligne de chiffres supprimée : la phrase d'Ariane (contexte) la remplace
+
+APROPOS = {   # textes d'Ariane, 28.10.2026
+    'ouverture': ["Nous croyons tellement aux histoires que nous avons décidé de les rendre réelles.",
+                  "Nous aimons les grandes tragédies, les petites arnaques, les gens qui se trompent et les familles qui se choisissent.",
+                  "Depuis 2017, nous écrivons et produisons nos propres spectacles de façon indépendante. Nous fabriquons des mondes de toutes pièces, dans des lieux qui n’étaient pas faits pour ça, pour y inviter le public et retrouver le plaisir de jouer ensemble."],
+    'titre2': 'Conteurs contemporains',
+    'chapeau': "À la croisée du collectif d’artistes et de la maison de production, Big Drama réinvente la façon de raconter les histoires.",
     'texte': [
-        "Chez nous, il n'y a ni scène, ni coulisses. Le public entre dans l'histoire : il choisit où aller, qui suivre et à quelle porte écouter.",
-        "Close (2019 – 2020), puis Norma (2023 – 2024) ont réuni " + V("près de 30 000 spectateurs") + ". En 2021, face à la crise sanitaire, nous avons inventé Parfum de Famille, une enquête immersive en ligne.",
-        "Nous concevons aussi des créations sur mesure pour des marques et des entreprises : Hermès et Apple, Pernod Ricard, Bacardí, Grimbergen, My Little Paris, The Family.",
+        "Nous avons créé Big Drama en 2017 pour inventer un modèle indépendant pour le spectacle vivant. Écriture, mise en scène, scénographie, musique : nous rassemblons tous les métiers nécessaires à la création d’un spectacle, puis nous le produisons et le diffusons nous-mêmes, dans des lieux qui n’étaient pas faits à la base pour le spectacle vivant.",
+        "Après <em>Close</em>, joué devant 15 000 spectateurs, la crise sanitaire nous a poussés à inventer une enquête immersive en ligne, <em>Parfum de Famille</em>. Puis <em>Norma</em>, comédie noire et musicale, a accueilli 14 000 spectateurs pendant cinq mois dans un ancien hôtel au-dessus des Galeries Lafayette.",
+        "Nous croyons en un théâtre à la fois exigeant, poétique et ouvert à tous.",
     ],
     'equipe': [
         ('Alexis Pivot', 'Cofondateur · direction artistique, écriture, musique', ''),   # biographie à fournir
@@ -239,6 +327,9 @@ def page_creation(c, i, carte, version):
     if c.get('alcool'):
         legende += (' ' if legende else '') + "L'abus d'alcool est dangereux pour la santé. À consommer avec modération."
     credits = ''.join(f'<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>' for k, v in c['credits'])
+    presse = ''
+    if c.get('presse'):
+        presse = '<section class="cr-presse" aria-label="La presse"><ul>' + ''.join(f'<li><blockquote>« {E(q)} »</blockquote><cite>{E(src)}</cite></li>' for q, src in c['presse']) + '</ul></section>'
     distribution = ''
     if c.get('distribution'):
         blocs = ''.join(f'<h3>{E(t)}</h3><dl class="cr-liste">' + ''.join(f'<div><dt>{E(a)}</dt><dd>{E(b)}</dd></div>' for a, b in lignes) + '</dl>' for t, lignes in c['distribution'])
@@ -255,15 +346,18 @@ def page_creation(c, i, carte, version):
 <article class="cr-corps">
  <p class="cr-accroche">{c["accroche"]}</p>
  {f'<div class="cr-texte">{texte}</div>' if texte else ''}
- <dl class="cr-chiffres">{chiffres}</dl>
+ {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
+ {f'<dl class="cr-chiffres">{chiffres}</dl>' if chiffres else ''}
 </article>
+{presse}
 {film}
 <section class="cr-galerie" aria-label="Photos"><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
 <section class="cr-credits" aria-label="Crédits"><h2>Crédits</h2><dl class="cr-liste">{credits}</dl>{distribution}</section>
 {partenaires}
 <nav class="cr-suite" aria-label="Autres créations"><a href="../{prec["slug"]}/"><span>Précédente</span>{E(prec["titre"])}</a><a class="cr-retour" href="{R}v8/#rue">Retour à la rue</a><a href="../{suiv["slug"]}/"><span>Suivante</span>{E(suiv["titre"])}</a></nav>
 <div class="cr-visionneuse" hidden><button type="button" class="cr-fermer" aria-label="Fermer">×</button><img alt=""></div>'''
-    desc = (c['accroche'][:150]).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
+    desc = re.sub(r'<[^>]+>', '', c['accroche'])[:150]
+    desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
     og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{photos[0]}">'
     return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og)
 
@@ -277,10 +371,11 @@ def page_apropos(carte, version):
 <section class="cr-tete cr-tete-apropos" style="--fond:url('{image("photos/close-teaser-07.jpg", carte, R)}')"><div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">À propos</p><h1 class="cr-titre-texte">Big Drama</h1><p class="cr-sous">Conception et production de spectacles immersifs · Paris</p></div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
-<article class="cr-corps"><p class="cr-accroche">{a["accroche"]}</p><div class="cr-texte">{"".join(f"<p>{t}</p>" for t in a["texte"])}</div></article>
+<article class="cr-corps cr-ouverture">{"".join(f'<p class="cr-accroche">{t}</p>' for t in a["ouverture"])}</article>
+<article class="cr-corps"><h2 class="cr-h2">{E(a["titre2"])}</h2><p class="cr-chapeau">{a["chapeau"]}</p><div class="cr-texte">{"".join(f"<p>{t}</p>" for t in a["texte"])}</div></article>
 <section class="cr-equipe" aria-label="Équipe"><h2>Les fondateurs</h2><ul>{equipe}</ul></section>
 <section class="cr-toutes" aria-label="Toutes les créations"><h2>Les créations</h2><ul>{liste}</ul></section>'''
-    return page('À propos · Big Drama', a['accroche'], R, corps, 'apropos', version)
+    return page('À propos · Big Drama', a['ouverture'][0], R, corps, 'apropos', version)
 
 
 def generer(carte, version):

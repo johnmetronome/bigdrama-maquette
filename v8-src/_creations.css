@@ -36,6 +36,23 @@ h1,h2,h3{font-family:var(--titre);font-weight:400;color:var(--creme);margin:0}
 .cr-chiffres dt{font:400 10.5px/1.4 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere);margin-bottom:8px}
 .cr-chiffres dd{margin:0;font:400 19px/1.35 var(--titre);color:var(--creme)}
 
+/* phrase de contexte d'Ariane (lieu, public, client) */
+.cr-contexte{margin:34px 0 0;padding:22px 0 0 26px;border-left:1px solid var(--lumiere);font:400 italic clamp(17px,1.6vw,20px)/1.6 var(--titre);color:var(--creme);max-width:44em}
+.cr-contexte em{font-style:normal}
+.cr-texte em{font-style:italic;color:var(--creme)}
+
+/* presse */
+.cr-presse{max-width:1280px;margin:clamp(40px,6vw,80px) auto 0;padding:0 clamp(16px,4vw,48px)}
+.cr-presse ul{list-style:none;margin:0;padding:34px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:34px 48px;border-block:1px solid var(--filet)}
+.cr-presse blockquote{margin:0;font:400 italic clamp(19px,1.8vw,24px)/1.4 var(--titre);color:var(--creme)}
+.cr-presse cite{display:block;margin-top:10px;font:400 10.5px/1.4 var(--texte);font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere)}
+
+/* À propos : ouverture en grand, puis « Conteurs contemporains » */
+.cr-ouverture .cr-accroche{margin-bottom:22px}
+.cr-ouverture .cr-accroche:last-child{font-style:normal;font-size:clamp(18px,1.8vw,22px);color:var(--creme-2)}
+.cr-h2{font-size:clamp(30px,3.6vw,46px);margin-bottom:18px}
+.cr-chapeau{margin:0 0 30px;font:400 italic clamp(19px,2vw,24px)/1.45 var(--titre);color:var(--lumiere);max-width:32em}
+
 /* film */
 .cr-film{max-width:1280px;margin:clamp(40px,6vw,80px) auto 0;padding:0 clamp(16px,4vw,48px)}
 .cr-film video{width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--filet)}

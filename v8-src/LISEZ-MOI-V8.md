@@ -172,6 +172,14 @@ python3 rebuild.py     # à chaque modification des sources
 - Sources : tout le contenu est dans `v8-src/creations.py` (une entrée par création). `rebuild.py` génère les pages. Styles : `_creations.css`. Script : `_creations.js`.
 - Les sauvegardes du dossier WEBSITE (2018, 2023) n'ont ni base de données ni photos : rien de plus à en tirer.
 
+## V8.18 · 28.10.2026 · textes d'Ariane
+
+- Les 10 pages création et l'À propos prennent les textes du document d'Ariane « Contenus site internet ». Ils sont dans `ARIANE` et `APROPOS` de `v8-src/creations.py`.
+- Chaque création : accroche, texte, phrase de contexte en italique (lieu, public, client), extraits de presse pour Norma et Close.
+- Chiffres harmonisés : Close 15 000 spectateurs, Norma 14 000. La ligne de chiffres non vérifiés est retirée.
+- À propos : trois phrases d'ouverture, puis « Conteurs contemporains ».
+- Ce qui reste à fournir ou à valider : document « Big Drama · demandes pour Ariane après ses textes ».
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
