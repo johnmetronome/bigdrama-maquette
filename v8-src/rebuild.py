@@ -18,6 +18,10 @@ runpy.run_path(str(here / 'build.py'))
 out = here.parent / 'v8'
 racine = here.parent
 out.mkdir(exist_ok=True)
+# Feuille de polices et notices suivies dans les sources, sorties générées.
+(out / 'fonts').mkdir(exist_ok=True)
+shutil.copy2(here / '_fonts.css', out / 'fonts' / 'fonts.css')
+shutil.copy2(here / '_fonts-OFL.txt', out / 'fonts' / 'OFL.txt')
 for source, target in [('apparitions.html', 'apparitions.html'), ('_app.js', 'app-source.js'), ('_style.css', 'style.css'),
                        ('silhouettes.js', 'silhouettes.js'), ('lieux.js', 'lieux.js'), ('index.template.html', 'index.html')]:
     shutil.copy2(here / source, out / target)

@@ -390,7 +390,16 @@ addEventListener('resize', () => { cadrer(); construire(); suivreDefilement(); i
 // v8.10 · économies : images de la rue au premier affichage, animations de la rue en pause quand elle est hors de l'écran
 function chargerImagesRue() { scene.querySelectorAll('image[data-href]').forEach(i => { i.setAttribute('href', i.dataset.href); i.removeAttribute('data-href'); }); }
 if ('IntersectionObserver' in window) new IntersectionObserver(es => document.documentElement.classList.toggle('bd-rue-cachee', !es[es.length - 1].isIntersecting), { rootMargin: '80px' }).observe(rue);
-document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href=new URL('../v7/la-veillee/',location.href).href; });
+document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { location.href = 'creations/la-veillee/'; });   // v8.20 · La Veillée a sa page création
+// v8.20 · annonce de La Veillée, en haut à droite sous la navigation. Fermée une fois, elle ne revient pas pendant la visite.
+{ const annonce = $('#bd-annonce'); let fermee = false;
+  try { fermee = sessionStorage.getItem('bd-annonce-veillee') === 'fermee'; } catch {}
+  if (annonce && !fermee) {
+    const montrer = () => { annonce.hidden = false; requestAnimationFrame(() => annonce.classList.add('vu')); };
+    const attendre = () => setTimeout(montrer, 2200);
+    if ($('#bd-seuil').classList.contains('ouvert')) attendre(); else $('#bd-entrer').addEventListener('click', attendre, { once: true });
+    annonce.querySelector('.bd-annonce-fermer').addEventListener('click', () => { annonce.classList.remove('vu'); setTimeout(() => annonce.hidden = true, 600); try { sessionStorage.setItem('bd-annonce-veillee', 'fermee'); } catch {} });
+  } }
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();
 initialiserEditeur();
 if (/[?&](edit|debug)\b/.test(location.search)) window.__bd = { ouvrirProjet, survoler, boites, entrer, construire, glisserVers, lancerConstruction, allerVersBanniere, chanter }; // outils de test seulement

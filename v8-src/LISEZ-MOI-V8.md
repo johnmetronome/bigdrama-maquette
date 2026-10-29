@@ -180,6 +180,15 @@ python3 rebuild.py     # à chaque modification des sources
 - À propos : trois phrases d'ouverture, puis « Conteurs contemporains ».
 - Ce qui reste à fournir ou à valider : document « Big Drama · demandes pour Ariane après ses textes ».
 
+## V8.20 · 29.10.2026 · réponses d'Ariane, La Veillée
+
+- Chiffres : Close « plus de 12 000 spectateurs », Norma 15 000, sur les fiches et dans l'À propos.
+- Crédits de Norma et nouvelle présentation des crédits de Close, fournis par Ariane (`REPONSES` dans `creations.py`). Pas de crédits pour les autres créations.
+- Close : logos partenaires (Truffaut, Make Up For Ever, Kapten) retirés.
+- À propos : équipe sans portraits ni bios.
+- La Veillée : page `v8/creations/la-veillee/` sur le même modèle (bandeau dessiné en tête, univers mur blanc et crayon). Textes, photos et crédits à fournir. Elle ouvre la liste des créations de l'À propos et la navigation précédente / suivante. La bannière de l'accueil y mène.
+- Accueil : annonce « Nouvelle création · La Veillée » en haut à droite, sous la navigation, 2,2 s après l'entrée. Fermée une fois, elle ne revient pas pendant la visite.
+
 ## Fichiers à fournir
 
 | Fichier | Contenu | Qui |
@@ -194,3 +203,18 @@ python3 rebuild.py     # à chaque modification des sources
 - Les films MP4 (le test automatique ne lit pas le H.264).
 - Le son au survol des fenêtres de Close une fois les chansons posées.
 - Safari et iPhone : le passage forcé film ↔ rue et le glisser horizontal.
+
+## V8.19 · 29.10.2026 · composition et identités des créations
+
+- Navigation basse : « Retour ». Crédits affichés seulement si des contributions utiles sont renseignées. Une attribution générique à Big Drama ou au client ne crée plus de section vide.
+- Composition centrée : accroches, contexte, titres de section, partenaires et photographies isolées. Les paragraphes restent alignés à gauche dans une colonne de lecture.
+- Dix palettes et signes graphiques discrets, gabarit, en-tête et pied communs. Les effets littéraux du brief sont volontairement réduits pour garder les pages sobres.
+- À propos : seule l’ouverture « Depuis 2017… », équipe Ariane Raynaud, Alexis Pivot, Rémi, initiales dans des cadres carrés en attendant les portraits. Aucun rôle ajouté pour Rémi.
+- Quatre créations grand public séparées des six partenariats, noms des marques et grilles équilibrées.
+- Bandeau de l’accueil : logo, « Créateurs de spectacles immersifs », lien À propos, sur ordinateur et téléphone.
+- Polices existantes uniquement. Yeseva One, déjà dans `v8/fonts/v2/`, déclarée pour les intertitres du conte et du bistrot. Les sources `_fonts.css` et `_fonts-OFL.txt` sont recopiées par `rebuild.py`, sans édition manuelle de `v8/`.
+- Prompts indépendants : `PROMPT_GOOGLE_V8.19.md` et `PROMPT_MISTRAL_V8.19.md`. Leurs audits doivent distinguer la version publique et la V8.19 locale non poussée.
+
+Contenu à fournir : nom de famille et rôle de Rémi, les trois portraits, bios courtes et crédits des créations hors Close. Rien de provisoire n’est inventé dans les pages.
+
+Sauvegarde avant intervention : `../_sauvegardes/v8.18-avant-v8.19/code.tgz`, avec manifeste SHA-256. Aucun commit ni push effectué par Codex.

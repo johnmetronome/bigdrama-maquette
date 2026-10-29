@@ -258,22 +258,91 @@ ARIANE = {
 for _c in CREATIONS:
     _c.update(ARIANE.get(_c['slug'], {}))
     _c['chiffres'] = []          # ligne de chiffres supprimée : la phrase d'Ariane (contexte) la remplace
+    _c['type'] = 'public' if _c['slug'] in ('norma', 'close', 'parfum-de-famille', 'un-conte-de-noelle') else 'marque'
+    _c['da'] = _c['slug']
+    _c['marque'] = {
+        'scatolina': 'Hermès × Apple', 'better-together': 'Pernod Ricard',
+        'la-prophetie-del-coco': 'Bacardí', 'burning-bar': 'Grimbergen',
+        'viva-barbessia': 'My Little Paris', 'eros-en-russie': 'The Family',
+    }.get(_c['slug'], '')
+
+# ───────── réponses d'Ariane, 29.10.2026 (Google Doc « questions pour Ariane ») ─────────
+# Chiffres : Close plus de 12 000 spectateurs, Norma 15 000. Crédits de Norma et de Close fournis par Ariane.
+# Pas de crédits pour les autres créations, pas de logos partenaires sur Close, pas de bios ni de portraits.
+REPONSES = {
+    'norma': {
+        'contexte': "Deuxième spectacle de grande ampleur de Big Drama, cette comédie noire et musicale a rassemblé 15 000 spectateurs dans un ancien hôtel au-dessus des Galeries Lafayette.",
+        'credits': [
+            ('Écriture', 'Alexis Pivot et Ariane Raynaud, en collaboration avec l’ensemble des comédien·nes'),
+            ('Mise en scène', 'Ariane Raynaud'), ('Direction artistique et musicale', 'Alexis Pivot'),
+            ('Scénographie', 'Doriane Fréreau'), ('Costumes', 'Juliette du Pont de Romémont, assistée de Margot Déon et Bérangère Pivot'),
+            ('Lumières', 'Denis Koransky'), ('Production', 'Noémie Benizri'),
+        ],
+        'distribution': [
+            ('Distribution', [('Avec, en alternance', 'Lucas Berger, Nathanaël Bez, Victor Bourigault, Louis Buisset, Éléonore Duizabo, Nouritza Emmanuelian, Anthony Fernandes, Eva Freitas, Eva Gentili, Chelsee Gunputh, Alexis Pivot, Rosy Pollastro, Ariane Raynaud, Diane Renier, Morgane Ricoteau-Jérôme, Steven Sequeira')]),
+            ('L’équipe', [('Crew manager et casting', 'Rosy Pollastro'), ('Maquillage', 'Fanny Jakubowicz'), ('Coiffure', 'Louma Sliti'),
+                          ('Coaching vocal', 'Antonio Macipe'), ('Communication et marketing', 'Nathanaël Bez'), ('Direction financière', 'Mathieu Bressenot')]),
+        ],
+    },
+    'close': {
+        'contexte': "Première grande création immersive de Big Drama pour le grand public, <em>Close</em> s’est jouée à guichets fermés dans une ancienne cartonnerie du 11e arrondissement, pour plus de 12 000 spectateurs.",
+        'partenaires': [],
+        'credits': [
+            ('Écrit par', 'Clément Marchand, Alexis Pivot, Ariane Raynaud, en collaboration avec l’ensemble des comédien·nes'),
+            ('D’après', 'Close 1, écrit par Roman Carrère, Clément Marchand, Alexis Pivot et Ariane Raynaud'),
+            ('Direction artistique', 'Alexis Pivot'), ('Mise en scène', 'Ariane Raynaud, assistée de Rosy Pollastro'),
+            ('Musique', 'Alexis Pivot'), ('Scénographie', 'Doriane Fréreau'), ('Costumes', 'Juliette du Pont de Romémont'),
+            ('Chorégraphie', 'Emma Scherer'), ('Lumières', 'Arnaud Bouret, assisté de Lenaïc Pujol'), ('Son', 'Jacques Estève'),
+        ],
+        'distribution': [
+            ('Distribution', [
+                ('Avec', 'Nathanaël Bez, Clara Brajtman, Anthony Fernandes, Eva Freitas, Baptiste Marc, Fanny Pascaud, Alexis Pivot, Rosy Pollastro, Diane Renier, Emma Scherer et Guillaume Tagnati'),
+                ('En alternance', 'Marine André, Laurent Evuort-Orlandi, Pascal Lacoste, Gaëlle Pauly et Ariane Raynaud'),
+                ('Le personnel du Phénix', 'Lucas Hoffmann, Louis Busset, Odran Guillemard et Célia Pyamootoo'),
+                ('Au café-concert des Heures Joyeuses', 'Jahel Japhet ou Morgane Ricoteau-Jérôme'),
+                ('Au bar du Phénix', 'Mélina Fernandez, Dylan Arab, Mike Kibuanda')]),
+            ('L’équipe', [
+                ('Régie', 'Maxime Martin, assisté d’Eloi Morival'), ('Régie technique', 'Adrien Lacaille, Lenaïc Pujol et Arnaud Bouret'),
+                ('Habillage', 'Bérangère Pivot, assistée de Lucile Fauchier'),
+                ('Équipe de scénographie', 'Cécile Peillon, Vivian Guillermin, Clément Bourdeleau, Cristina Becerra, Sarah Dureuil, Nicolas Nicolle'),
+                ('Assistant·es montage', 'Pierre Bertet, Sébastien Dumas, Jim Quernez, Amélie Villeneuve, Quentin Tally, Lola Lambrez'),
+                ('Couture', 'Margot Déon'), ('Coiffure', 'Eduardo Alvarez'), ('Maquillage', 'Fanny Jakubowicz'),
+                ('Direction de casting', 'Rosy Pollastro'), ('Producteur', 'Mathieu Bressenot'),
+                ('Direction de production', 'Noémie Benizri et Gersende Michel, Raoule Productions'), ('Stagiaire production', 'Anaïs Joubert'),
+                ('La Cartonnerie', 'Arnaud Bouret, Marion Delemazure, Nick Jones'), ('Commercial', 'Emeline Dewitte'), ('Stagiaire commercial', 'Héléna Beyer'),
+                ('Communication et marketing', 'Nathanaël Bez'), ('Création graphique et coordination', 'Juliette Delvienne'), ('Presse', 'Valérie Talagas'),
+                ('Conseil juridique', 'Clara Benyamin'), ('Production de bar', 'Florence Demarcy'), ('Traiteur', 'Tess en Cuisine'),
+                ('Sécurité', 'Koff Security : Ulrich Kpetehoto, Sidi Mohamed Diakitée et Mady Ndiaye')]),
+        ],
+    },
+}
+for _c in CREATIONS:
+    _c.update(REPONSES.get(_c['slug'], {}))
+
+# La Veillée : page sur le même modèle. Textes, photos et crédits à fournir : rien n'est inventé.
+CREATIONS.insert(0, {
+    'slug': 'la-veillee', 'id': 'veillee', 'titre': 'La Veillée', 'logo': None,
+    'genre': '', 'cadre': 'Nouvelle création', 'quand': '', 'ou': '',
+    'accroche': '', 'texte': [], 'contexte': '', 'chiffres': [], 'credits': [],
+    'photos': ['v8/assets/la-veillee-bandeau.jpg'], 'film': None, 'legende': '',
+    'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-bandeau.jpg',
+})
 
 APROPOS = {   # textes d'Ariane, 28.10.2026
-    'ouverture': ["Nous croyons tellement aux histoires que nous avons décidé de les rendre réelles.",
-                  "Nous aimons les grandes tragédies, les petites arnaques, les gens qui se trompent et les familles qui se choisissent.",
-                  "Depuis 2017, nous écrivons et produisons nos propres spectacles de façon indépendante. Nous fabriquons des mondes de toutes pièces, dans des lieux qui n’étaient pas faits pour ça, pour y inviter le public et retrouver le plaisir de jouer ensemble."],
+    'ouverture': ["Depuis 2017, nous écrivons et produisons nos propres spectacles de façon indépendante. Nous fabriquons des mondes de toutes pièces, dans des lieux qui n’étaient pas faits pour ça, pour y inviter le public et retrouver le plaisir de jouer ensemble."],
     'titre2': 'Conteurs contemporains',
     'chapeau': "À la croisée du collectif d’artistes et de la maison de production, Big Drama réinvente la façon de raconter les histoires.",
     'texte': [
         "Nous avons créé Big Drama en 2017 pour inventer un modèle indépendant pour le spectacle vivant. Écriture, mise en scène, scénographie, musique : nous rassemblons tous les métiers nécessaires à la création d’un spectacle, puis nous le produisons et le diffusons nous-mêmes, dans des lieux qui n’étaient pas faits à la base pour le spectacle vivant.",
-        "Après <em>Close</em>, joué devant 15 000 spectateurs, la crise sanitaire nous a poussés à inventer une enquête immersive en ligne, <em>Parfum de Famille</em>. Puis <em>Norma</em>, comédie noire et musicale, a accueilli 14 000 spectateurs pendant cinq mois dans un ancien hôtel au-dessus des Galeries Lafayette.",
+        "Après <em>Close</em>, joué devant plus de 12 000 spectateurs, la crise sanitaire nous a poussés à inventer une enquête immersive en ligne, <em>Parfum de Famille</em>. Puis <em>Norma</em>, comédie noire et musicale, a accueilli 15 000 spectateurs pendant cinq mois dans un ancien hôtel au-dessus des Galeries Lafayette.",
         "Nous croyons en un théâtre à la fois exigeant, poétique et ouvert à tous.",
     ],
     'equipe': [
-        ('Alexis Pivot', 'Cofondateur · direction artistique, écriture, musique', ''),   # biographie à fournir
         ('Ariane Raynaud', 'Cofondatrice · mise en scène, écriture', ''),
+        ('Alexis Pivot', 'Cofondateur · direction artistique, écriture, musique', ''),
+        ('Rémi', '', ''),
     ],
+    'portraits': {},
 }
 
 # ───────── gabarit ─────────
@@ -288,7 +357,7 @@ def image(chemin, carte, R):
 def entete(R, actif):
     lien = lambda href, nom, cle: f'<a href="{href}"{" aria-current=\"page\"" if actif == cle else ""}>{nom}</a>'
     return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/" aria-label="Big Drama, accueil"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
-            f'<nav aria-label="Navigation principale">{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/#histoire", "Créations", "creations")}{lien(R + "v8/#contact", "Contact", "contact")}</nav></header>')
+            f'<nav aria-label="Navigation principale">{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/?direct#contact", "Contact", "contact")}</nav></header>')
 
 
 def pied(R):
@@ -298,14 +367,14 @@ def pied(R):
             f'<p class="cr-legal">© Big Drama 2026 · <a href="{R}v2/mentionslegales.html">Mentions légales</a> · <a href="{R}v2/cgv.html">CGV</a> · <a href="{R}v2/politiqueconfidentialite.html">Politique de confidentialité</a></p></footer>')
 
 
-def page(titre, description, R, corps, actif, version, image_og=''):
+def page(titre, description, R, corps, actif, version, image_og='', slug=''):
     return f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{CSP}"><meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{E(titre)}</title><meta name="description" content="{E(description)}">
 <meta property="og:type" content="article"><meta property="og:title" content="{E(titre)}"><meta property="og:description" content="{E(description)}">{image_og}
 <link rel="stylesheet" href="{R}v8/fonts/fonts.css"><link rel="stylesheet" href="{R}v8/creations/creations.css?v={version}">
 <link rel="icon" type="image/png" href="{R}v8/favicon.png"><script src="{R}v8/creations/creations.js?v={version}" defer></script></head>
-<body class="cr">{entete(R, actif)}<main id="contenu">{corps}</main>{pied(R)}</body></html>
+<body class="cr{(' cr-' + E(slug)) if slug else ''}">{entete(R, actif)}<main id="contenu">{corps}</main>{pied(R)}</body></html>
 '''
 
 
@@ -326,7 +395,10 @@ def page_creation(c, i, carte, version):
     legende = c.get('legende', '')
     if c.get('alcool'):
         legende += (' ' if legende else '') + "L'abus d'alcool est dangereux pour la santé. À consommer avec modération."
-    credits = ''.join(f'<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>' for k, v in c['credits'])
+    # Une attribution à Big Drama ou au client ne justifie pas à elle seule un bloc Crédits.
+    lignes_credits = [(k, v) for k, v in c.get('credits', [])
+                      if k.strip().casefold() not in ('une création', 'pour', 'avec') and v.strip()]
+    credits = ''.join(f'<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>' for k, v in lignes_credits)
     presse = ''
     if c.get('presse'):
         presse = '<section class="cr-presse" aria-label="La presse"><ul>' + ''.join(f'<li><blockquote>« {E(q)} »</blockquote><cite>{E(src)}</cite></li>' for q, src in c['presse']) + '</ul></section>'
@@ -334,48 +406,70 @@ def page_creation(c, i, carte, version):
     if c.get('distribution'):
         blocs = ''.join(f'<h3>{E(t)}</h3><dl class="cr-liste">' + ''.join(f'<div><dt>{E(a)}</dt><dd>{E(b)}</dd></div>' for a, b in lignes) + '</dl>' for t, lignes in c['distribution'])
         distribution = f'<details class="cr-distribution"><summary>Distribution et équipe complètes</summary>{blocs}</details>'
+    liste_credits = f'<dl class="cr-liste">{credits}</dl>' if credits else ''
+    section_credits = (f'<section class="cr-credits" aria-label="Crédits"><h2>Crédits</h2>'
+                      f'{liste_credits}{distribution}</section>') if credits or distribution else ''
     partenaires = ''
     if c.get('partenaires'):
         partenaires = '<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>' + ''.join(f'<li><img src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>'
     corps = f'''
+{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}" alt="{E(c["titre"])}"></figure>' if c.get("bandeau") else ''}
 <section class="cr-tete" style="--fond:url('{fond}')"><div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">{E(c["cadre"])}</p>
-  <h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>
-  <p class="cr-sous">{sous}</p></div>
+  {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
+  {f'<p class="cr-sous">{sous}</p>' if sous else ''}</div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
 <article class="cr-corps">
- <p class="cr-accroche">{c["accroche"]}</p>
+ {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
  {f'<div class="cr-texte">{texte}</div>' if texte else ''}
  {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
  {f'<dl class="cr-chiffres">{chiffres}</dl>' if chiffres else ''}
 </article>
 {presse}
 {film}
-<section class="cr-galerie" aria-label="Photos"><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
-<section class="cr-credits" aria-label="Crédits"><h2>Crédits</h2><dl class="cr-liste">{credits}</dl>{distribution}</section>
+<section class="cr-galerie" aria-label="Photos"{' hidden' if c.get("bandeau") else ''}><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
+{section_credits}
 {partenaires}
-<nav class="cr-suite" aria-label="Autres créations"><a href="../{prec["slug"]}/"><span>Précédente</span>{E(prec["titre"])}</a><a class="cr-retour" href="{R}v8/#rue">Retour à la rue</a><a href="../{suiv["slug"]}/"><span>Suivante</span>{E(suiv["titre"])}</a></nav>
+<nav class="cr-suite" aria-label="Autres créations"><a href="../{prec["slug"]}/"><span>Précédente</span>{E(prec["titre"])}</a><a class="cr-retour" href="{R}v8/?direct#content">Retour</a><a href="../{suiv["slug"]}/"><span>Suivante</span>{E(suiv["titre"])}</a></nav>
 <div class="cr-visionneuse" hidden><button type="button" class="cr-fermer" aria-label="Fermer">×</button><img alt=""></div>'''
-    desc = re.sub(r'<[^>]+>', '', c['accroche'])[:150]
+    desc = re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
     desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
     og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{photos[0]}">'
-    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og)
+    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og, slug=c['da'])
 
 
 def page_apropos(carte, version):
     R = '../../'
     a = APROPOS
-    equipe = ''.join(f'<li><h3>{E(n)}</h3><p class="cr-role">{E(r)}</p>{f"<p>{b}</p>" if b else ""}</li>' for n, r, b in a['equipe'])
-    liste = ''.join(f'<li><a href="../creations/{c["slug"]}/"><img class="cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt=""><span>{E(c["titre"])}</span><small>{c["quand"]}</small></a></li>' for c in CREATIONS)
+    equipe = ''
+    for n, r, b in a['equipe']:
+        portrait = a['portraits'].get(n)
+        initiales = ''.join(mot[0] for mot in n.split())
+        visuel = (f'<img src="{image(portrait, carte, R)}" alt="{E(n)}" loading="lazy">' if portrait
+                  else f'<span aria-hidden="true">{E(initiales)}</span>')
+        role = f'<p class="cr-role">{E(r)}</p>' if r else ''
+        bio = f'<p>{b}</p>' if b else ''
+        equipe += f'<li><h3>{E(n)}</h3>{role}{bio}</li>'   # pas de portrait (Ariane, 29.10)
+    def liste_creations(type_creation):
+        liste = ''
+        for c in CREATIONS:
+            if c['type'] != type_creation:
+                continue
+            marque = f'<strong>{E(c["marque"])}</strong>' if c['marque'] else ''
+            liste += (f'<li><a href="../creations/{c["slug"]}/"><div class="cr-case-logo">'
+                      + (f'<img class="cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="">' if c.get("logo") else f'<img class="cr-vignette-bandeau" src="{image(c["bandeau"], carte, R)}" alt="">') + '</div>'
+                      f'<span>{E(c["titre"])}</span>{marque}<small>{c["quand"]}</small></a></li>')
+        return liste
     corps = f'''
 <section class="cr-tete cr-tete-apropos" style="--fond:url('{image("photos/close-teaser-07.jpg", carte, R)}')"><div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">À propos</p><h1 class="cr-titre-texte">Big Drama</h1><p class="cr-sous">Conception et production de spectacles immersifs · Paris</p></div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
 <article class="cr-corps cr-ouverture">{"".join(f'<p class="cr-accroche">{t}</p>' for t in a["ouverture"])}</article>
 <article class="cr-corps"><h2 class="cr-h2">{E(a["titre2"])}</h2><p class="cr-chapeau">{a["chapeau"]}</p><div class="cr-texte">{"".join(f"<p>{t}</p>" for t in a["texte"])}</div></article>
-<section class="cr-equipe" aria-label="Équipe"><h2>Les fondateurs</h2><ul>{equipe}</ul></section>
-<section class="cr-toutes" aria-label="Toutes les créations"><h2>Les créations</h2><ul>{liste}</ul></section>'''
-    return page('À propos · Big Drama', a['ouverture'][0], R, corps, 'apropos', version)
+<section class="cr-equipe" aria-label="Équipe"><h2>L'équipe</h2><ul>{equipe}</ul></section>
+<section class="cr-toutes cr-toutes--public" aria-label="Créations grand public"><h2>Créations</h2><ul>{liste_creations('public')}</ul></section>
+<section class="cr-toutes cr-toutes--marques" aria-label="Partenariats avec des marques"><h2>Partenariats avec des marques</h2><ul>{liste_creations('marque')}</ul></section>'''
+    return page('À propos · Big Drama', a['ouverture'][0], R, corps, 'apropos', version, slug='apropos')
 
 
 def generer(carte, version):

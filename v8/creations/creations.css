@@ -1,139 +1,170 @@
-/* Big Drama V8 · pages création et À propos · « nuit de la rue » : bleu nuit, trait crème, lumière jaune */
-:root{--nuit:#101e2b;--nuit-2:#0b151e;--creme:#efe1b4;--creme-2:#d8cfbd;--lumiere:#FFE34D;--filet:rgba(239,225,180,.28);--titre:"Bodoni Moda",Georgia,serif;--texte:Montserrat,"Helvetica Neue",Arial,sans-serif}
+/* V8.19 · Une composition commune, dix identités retenues. */
+:root{--nuit:#101e2b;--nuit-2:#0b151e;--creme:#efe1b4;--creme-2:#d8cfbd;--lumiere:#FFE34D;--filet:#efe1b447;--titre:"Bodoni Moda",Georgia,serif;--texte:Montserrat,"Helvetica Neue",Arial,sans-serif;--chrome:#0b1118;--chrome-texte:#f3ead7;--chrome-secondaire:#c8c0b2;--espace:clamp(52px,7vw,96px)}
 *{box-sizing:border-box}
-html{background:var(--nuit-2);color-scheme:dark;scroll-behavior:smooth}
-body.cr{margin:0;background:linear-gradient(180deg,var(--nuit) 0,var(--nuit-2) 70vh);color:var(--creme-2);font:300 16px/1.75 var(--texte);-webkit-font-smoothing:antialiased}
+html{background:#0b1118;scroll-behavior:smooth;scroll-padding-top:90px}
+body.cr{margin:0;background:var(--nuit-2);color:var(--creme-2);font:400 16px/1.8 var(--texte);-webkit-font-smoothing:antialiased;color-scheme:dark}
 body.cr-fige{overflow:hidden}
-a{color:inherit}
-img{max-width:100%;display:block}
-h1,h2,h3{font-family:var(--titre);font-weight:400;color:var(--creme);margin:0}
+a{color:inherit}img{max-width:100%;display:block}
+h1,h2,h3{font-family:var(--titre);font-weight:400;color:var(--creme);margin:0;text-wrap:balance}
+a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var(--lumiere);outline-offset:5px}
 
-/* en-tête : même navigation que l'accueil, calée aux bords */
-.cr-entete{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;padding:18px clamp(16px,3vw,44px);background:linear-gradient(180deg,rgba(11,21,30,.85),rgba(11,21,30,0))}
-.cr-marque img{height:22px;width:auto}
-.cr-entete nav{display:flex;gap:clamp(16px,3vw,34px)}
-.cr-entete nav a{font:400 11px/1 var(--texte);letter-spacing:.24em;text-transform:uppercase;text-decoration:none;color:var(--creme);padding:6px 0;border-bottom:1px solid transparent;transition:border-color .4s,color .4s}
-.cr-entete nav a:hover,.cr-entete nav a[aria-current]{border-color:var(--lumiere);color:#fff}
+/* Navigation commune, indépendante des couleurs du spectacle. */
+.cr-entete{position:fixed;inset:0 0 auto;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:24px;padding:20px clamp(16px,3vw,44px);background:#0b1118f5;border-bottom:1px solid #f3ead71f;color:var(--chrome-texte)}
+.cr-marque img{height:32px;width:auto}.cr-entete nav{display:flex;gap:clamp(16px,3vw,34px)}
+.cr-entete nav a{font:400 11px/1.4 var(--texte);letter-spacing:.2em;text-transform:uppercase;text-decoration:none;color:var(--chrome-texte);padding:6px 0;border-bottom:1px solid transparent;transition:border-color .25s,color .25s}
+.cr-entete nav a:hover,.cr-entete nav a[aria-current]{border-color:#FFE34D;color:#FFE34D}
 
-/* tête : la photo dans la nuit, le logo de la création en lumière */
-.cr-tete{position:relative;min-height:min(78svh,760px);display:grid;place-items:end center;padding:120px clamp(16px,5vw,64px) 70px;background:var(--fond) center/cover no-repeat;isolation:isolate;overflow:hidden}
-.cr-tete-voile{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(16,30,43,.55) 0,rgba(16,30,43,.35) 40%,var(--nuit) 100%),radial-gradient(ellipse at 50% 70%,rgba(255,227,77,.08),transparent 60%)}
-.cr-tete-contenu{text-align:center;max-width:900px}
-.cr-cadre{margin:0 0 22px;font:400 11px/1.4 var(--texte);letter-spacing:.3em;text-transform:uppercase;color:var(--lumiere)}
-.cr-logo{width:min(520px,78vw);max-height:220px;object-fit:contain;margin:0 auto;filter:drop-shadow(0 0 18px rgba(255,227,77,.25))}
-.cr-titre-texte{font-size:clamp(46px,8vw,104px);line-height:1}
-.cr-sous{margin:24px 0 0;font:400 12px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--creme)}
-.cr-trait{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:40px}
-.cr-trait path{fill:none;stroke:var(--creme);stroke-width:1;opacity:.6;vector-effect:non-scaling-stroke}
+/* Photo et logo. Le voile rend les légendes lisibles sur toutes les images. */
+.cr-tete{position:relative;min-height:min(76svh,760px);display:grid;place-items:end center;padding:140px 24px 76px;background:var(--fond) center/cover no-repeat;isolation:isolate;overflow:hidden}
+.cr-tete-voile{position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#080a10a6 0,#080a1033 35%,#080a10d9 100%)}
+.cr-tete-contenu{text-align:center;width:min(100%,900px)}
+.cr-cadre{display:table;margin:0 auto 24px;padding:6px 12px;background:#080a10cc;font:500 10px/1.6 var(--texte);letter-spacing:.26em;text-transform:uppercase;color:#fff0cc}
+.cr-tete h1{display:grid;place-items:center;width:fit-content;max-width:100%;margin:auto}
+.cr-logo{width:min(480px,76vw);max-height:200px;object-fit:contain;margin:auto;filter:brightness(0) invert(1)}
+.cr-titre-texte{font:italic clamp(46px,8vw,104px)/1 "Bodoni Moda",Georgia,serif;color:#f3ead7}
+.cr-sous{display:table;padding:8px 12px;background:#080a10cc;max-width:55em;margin:26px auto 0;font:400 11px/1.8 var(--texte);letter-spacing:.15em;text-transform:uppercase;color:#f7f1e6;text-wrap:balance}
+.cr-trait{position:absolute;left:0;bottom:0;width:100%;height:1px;background:var(--filet)}.cr-trait path{display:none}
 
-/* texte */
-.cr-corps{max-width:1080px;margin:0 auto;padding:clamp(40px,7vw,90px) clamp(16px,5vw,48px) 20px}
-.cr-accroche{margin:0 0 42px;font:400 italic clamp(23px,2.7vw,34px)/1.4 var(--titre);color:var(--creme);max-width:28em}
-.cr-texte{columns:2 24em;column-gap:56px}
-.cr-texte p{margin:0 0 1.1em;break-inside:avoid}
-.cr-chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:0;margin:56px 0 0;border-top:1px solid var(--filet)}
-.cr-chiffres div{padding:20px 22px 22px 0;border-bottom:1px solid var(--filet)}
-.cr-chiffres dt{font:400 10.5px/1.4 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere);margin-bottom:8px}
-.cr-chiffres dd{margin:0;font:400 19px/1.35 var(--titre);color:var(--creme)}
+/* Titres centrés. Le texte garde une colonne de lecture commune. */
+.cr-corps{width:min(100%,1060px);margin:auto;padding:var(--espace) 32px 0}
+.cr-accroche{max-width:29em;margin:0 auto 38px;text-align:center;font:italic clamp(25px,2.8vw,36px)/1.45 "Bodoni Moda",Georgia,serif;color:var(--creme);text-wrap:balance}
+.cr-accroche::before{content:"";display:block;width:76px;height:10px;margin:0 auto 28px;background:var(--motif,linear-gradient(var(--lumiere),var(--lumiere))) center/100% 1px no-repeat}
+.cr-texte{max-width:66ch;margin:auto}.cr-texte p{margin:0 0 1.25em}.cr-texte p:last-child{margin-bottom:0}.cr-texte em{color:var(--creme)}
+.cr-contexte{max-width:64ch;margin:36px auto 0;padding-top:28px;border-top:1px solid var(--filet);font:italic clamp(18px,1.7vw,21px)/1.6 "Bodoni Moda",Georgia,serif;text-align:center;color:var(--creme);text-wrap:balance}
+.cr-chiffres{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,210px),1fr));gap:24px;margin:40px auto 0;max-width:860px;text-align:center}
+.cr-chiffres dt{font:500 10px/1.5 var(--texte);letter-spacing:.18em;text-transform:uppercase;color:var(--lumiere)}.cr-chiffres dd{margin:8px 0 0;color:var(--creme)}
+.cr-presse,.cr-film,.cr-galerie{width:min(100%,1280px);margin:var(--espace) auto 0;padding:0 32px}
+.cr-presse ul{list-style:none;margin:0;padding:32px 0;display:flex;flex-wrap:wrap;justify-content:center;gap:32px 40px;border-block:1px solid var(--filet)}
+.cr-presse li{flex:0 1 340px;text-align:center}.cr-presse blockquote{margin:0;font:italic clamp(20px,1.8vw,25px)/1.45 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-presse cite{display:block;margin-top:14px;font:500 10px/1.6 var(--texte);font-style:normal;letter-spacing:.2em;text-transform:uppercase;color:var(--lumiere)}
+.cr-film video{display:block;width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--filet)}
 
-/* phrase de contexte d'Ariane (lieu, public, client) */
-.cr-contexte{margin:34px 0 0;padding:22px 0 0 26px;border-left:1px solid var(--lumiere);font:400 italic clamp(17px,1.6vw,20px)/1.6 var(--titre);color:var(--creme);max-width:44em}
-.cr-contexte em{font-style:normal}
-.cr-texte em{font-style:italic;color:var(--creme)}
-
-/* presse */
-.cr-presse{max-width:1280px;margin:clamp(40px,6vw,80px) auto 0;padding:0 clamp(16px,4vw,48px)}
-.cr-presse ul{list-style:none;margin:0;padding:34px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:34px 48px;border-block:1px solid var(--filet)}
-.cr-presse blockquote{margin:0;font:400 italic clamp(19px,1.8vw,24px)/1.4 var(--titre);color:var(--creme)}
-.cr-presse cite{display:block;margin-top:10px;font:400 10.5px/1.4 var(--texte);font-style:normal;letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere)}
-
-/* À propos : ouverture en grand, puis « Conteurs contemporains » */
-.cr-ouverture .cr-accroche{margin-bottom:22px}
-.cr-ouverture .cr-accroche:last-child{font-style:normal;font-size:clamp(18px,1.8vw,22px);color:var(--creme-2)}
-.cr-h2{font-size:clamp(30px,3.6vw,46px);margin-bottom:18px}
-.cr-chapeau{margin:0 0 30px;font:400 italic clamp(19px,2vw,24px)/1.45 var(--titre);color:var(--lumiere);max-width:32em}
-
-/* film */
-.cr-film{max-width:1280px;margin:clamp(40px,6vw,80px) auto 0;padding:0 clamp(16px,4vw,48px)}
-.cr-film video{width:100%;aspect-ratio:16/9;background:#000;border:1px solid var(--filet)}
-
-/* photos */
-.cr-galerie{max-width:1280px;margin:clamp(40px,6vw,80px) auto 0;padding:0 clamp(16px,4vw,48px)}
-.cr-galerie ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:14px}
-.cr-galerie li:first-child:not(:only-child){grid-column:1/-1}
+/* Une image isolée reste centrée au lieu de tomber dans la première colonne. */
+.cr-galerie ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.cr-galerie li{min-width:0}.cr-galerie li:first-child{grid-column:1/-1}
 .cr-galerie li:first-child:not(:only-child) img{aspect-ratio:21/9}
-.cr-galerie img{aspect-ratio:3/2;object-fit:cover}
+.cr-galerie li:last-child:nth-child(even){grid-column:1/-1;width:min(100%,860px);justify-self:center}
 .cr-galerie button{all:unset;cursor:zoom-in;display:block;width:100%;border:1px solid var(--filet);overflow:hidden}
-.cr-galerie img{width:100%;height:auto;transition:transform 1.6s cubic-bezier(.2,.6,.2,1),filter .8s;filter:saturate(.9)}
-.cr-galerie button:hover img,.cr-galerie button:focus-visible img{transform:scale(1.025);filter:none}
-.cr-galerie button:focus-visible{outline:1px solid var(--lumiere);outline-offset:3px}
-.cr-legende{margin:10px 0 0;font-size:12px;color:#a59d8b}
+.cr-galerie img{display:block;width:100%;height:auto;aspect-ratio:3/2;object-fit:cover;transition:transform .7s ease}
+.cr-galerie button:hover img{transform:scale(1.02)}
+.cr-galerie button:focus-visible{outline:2px solid var(--lumiere);outline-offset:4px}
+.cr-legende{max-width:72ch;margin:18px auto 0;text-align:center;font-size:12px;line-height:1.7;color:var(--creme-2)}
 
-/* crédits */
-.cr-credits,.cr-partenaires,.cr-equipe,.cr-toutes{max-width:1080px;margin:clamp(50px,7vw,96px) auto 0;padding:0 clamp(16px,5vw,48px)}
-.cr-credits h2,.cr-partenaires h2,.cr-equipe h2,.cr-toutes h2{font-size:clamp(26px,3vw,36px);margin-bottom:26px;padding-bottom:14px;border-bottom:1px solid var(--filet)}
-.cr-liste{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));column-gap:48px;margin:0}
-.cr-liste div{display:grid;grid-template-columns:minmax(120px,40%) 1fr;gap:14px;padding:9px 0;border-bottom:1px dotted rgba(239,225,180,.16)}
-.cr-liste dt{font:400 10.5px/1.9 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--lumiere)}
-.cr-liste dd{margin:0;color:var(--creme)}
-.cr-distribution{margin-top:30px}
-.cr-distribution summary{cursor:pointer;display:inline-block;font:400 11px/1 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--creme);padding:14px 22px;border:1px solid var(--creme);transition:background .4s,color .4s}
-.cr-distribution summary:hover,.cr-distribution[open] summary{background:var(--creme);color:var(--nuit)}
-.cr-distribution summary::-webkit-details-marker{display:none}
-.cr-distribution h3{font-size:22px;margin:34px 0 10px}
+/* Les crédits n'existent que si des contributions réelles sont renseignées. */
+.cr-credits,.cr-partenaires,.cr-equipe,.cr-toutes{width:min(100%,1120px);margin:var(--espace) auto 0;padding:0 32px}
+.cr-credits h2,.cr-partenaires h2,.cr-equipe h2,.cr-toutes h2,.cr-h2{font-size:clamp(29px,3.2vw,40px);line-height:1.3;text-align:center;margin:0 0 34px}
+.cr-liste{display:grid;grid-template-columns:1fr;max-width:860px;margin:0 auto}
+.cr-liste div{display:grid;grid-template-columns:minmax(150px,32%) 1fr;gap:24px;padding:14px 0;border-bottom:1px solid var(--filet)}
+.cr-liste dt{font:500 10px/1.8 var(--texte);letter-spacing:.16em;text-transform:uppercase;color:var(--lumiere)}
+.cr-liste dd{margin:0;color:var(--creme);font-size:14px;line-height:1.7}
+.cr-distribution{max-width:860px;margin:32px auto 0;text-align:center}
+.cr-distribution summary{cursor:pointer;display:inline-block;font:500 10px/1.6 var(--texte);letter-spacing:.18em;text-transform:uppercase;color:var(--creme);padding:14px 22px;border:1px solid var(--filet);transition:background .25s,color .25s}
+.cr-distribution summary:hover,.cr-distribution[open] summary{background:var(--creme);color:var(--nuit-2)}
+.cr-distribution summary::-webkit-details-marker{display:none}.cr-distribution h3{font-size:26px;margin:36px 0 12px}.cr-distribution dl{text-align:left}
+.cr-partenaires ul{list-style:none;margin:0;padding:0;display:flex;justify-content:center;flex-wrap:wrap;gap:28px 48px;align-items:center}
+.cr-partenaires img{max-height:58px;max-width:170px;width:auto;filter:grayscale(1) brightness(0) invert(1)}
 
-/* partenaires */
-.cr-partenaires ul{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:28px 48px;align-items:center}
-.cr-partenaires img{max-height:60px;max-width:180px;width:auto;opacity:.8;filter:grayscale(1) brightness(1.6)}
+/* Navigation basse : une grille symétrique et un seul libellé Retour. */
+.cr-suite{width:min(100% - 64px,1216px);margin:var(--espace) auto 0;padding:32px 0;display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:32px;align-items:center;border-top:1px solid var(--filet)}
+.cr-suite a{text-decoration:none;text-align:center;font:400 clamp(20px,2vw,27px)/1.3 "Bodoni Moda",Georgia,serif;color:var(--creme);text-wrap:balance}
+.cr-suite a span{display:block;margin-bottom:7px;font:500 9px/1.8 var(--texte);letter-spacing:.22em;text-transform:uppercase;color:var(--lumiere)}
+.cr-suite .cr-retour{font:500 10px/1.4 var(--texte);letter-spacing:.2em;text-transform:uppercase;padding:14px 24px;border:1px solid var(--filet);transition:background .25s,color .25s}
+.cr-suite a:hover{color:var(--lumiere)}.cr-suite .cr-retour:hover{background:var(--creme);color:var(--nuit-2)}
 
-/* suite */
-.cr-suite{max-width:1280px;margin:clamp(60px,8vw,110px) auto 0;padding:34px clamp(16px,4vw,48px);display:grid;grid-template-columns:1fr auto 1fr;gap:20px;align-items:center;border-top:1px solid var(--filet)}
-.cr-suite a{text-decoration:none;font:400 clamp(19px,2vw,26px)/1.2 var(--titre);color:var(--creme)}
-.cr-suite a span{display:block;font:400 10px/1.8 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere)}
-.cr-suite a:last-child{text-align:right}
-.cr-suite .cr-retour{font:400 11px/1 var(--texte);letter-spacing:.24em;text-transform:uppercase;padding:14px 20px;border:1px solid var(--filet)}
-.cr-suite a:hover{color:#fff}
+/* À propos : même rythme, portraits carrés, 4 créations et 6 partenariats. */
+.cr-apropos .cr-tete{min-height:60svh}.cr-ouverture .cr-accroche{font-size:clamp(25px,2.8vw,34px);margin-bottom:0}
+.cr-chapeau{max-width:36em;margin:0 auto 30px;text-align:center;font:italic clamp(20px,2vw,25px)/1.5 "Bodoni Moda",Georgia,serif;color:var(--lumiere);text-wrap:balance}
+.cr-equipe ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px;text-align:center}
+.cr-portrait{width:min(100%,240px);aspect-ratio:1;margin:0 auto 24px;border:1px solid var(--filet);display:grid;place-items:center;background:var(--nuit)}
+.cr-portrait span{font:italic clamp(48px,6vw,76px)/1 "Bodoni Moda",Georgia,serif;color:var(--creme)}.cr-portrait img{width:100%;height:100%;object-fit:cover}
+.cr-equipe h3{font-size:28px}.cr-role{max-width:29em;margin:10px auto 0;font:400 10px/1.8 var(--texte);letter-spacing:.12em;text-transform:uppercase;color:var(--creme-2)}
+.cr-toutes ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:1fr;gap:16px}
+.cr-toutes--marques ul{grid-template-columns:repeat(3,minmax(0,1fr))}
+.cr-toutes li{display:flex;min-width:0;border:1px solid var(--filet)}
+.cr-toutes a{width:100%;display:grid;grid-template-rows:90px auto 1fr;align-content:start;justify-items:center;gap:12px;padding:26px 16px;background:var(--nuit);text-decoration:none;text-align:center;transition:border-color .25s,background .25s}
+.cr-toutes--marques a{grid-template-rows:90px auto auto 1fr}
+.cr-toutes a:hover{background:#1b2c3a}.cr-case-logo{width:100%;height:90px;display:grid;place-items:center}
+.cr-case-logo img{width:min(100%,180px);height:76px;object-fit:contain;filter:brightness(0) invert(1)}
+.cr-toutes span{font:400 21px/1.25 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-toutes strong{font:400 12px/1.5 var(--texte);color:var(--creme-2)}
+.cr-toutes small{align-self:end;font:400 10px/1.6 var(--texte);letter-spacing:.14em;text-transform:uppercase;color:var(--creme-2)}
 
-/* À propos */
-.cr-equipe ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:40px}
-.cr-equipe h3{font-size:28px}
-.cr-role{margin:4px 0 12px;font:400 11px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--lumiere)}
-.cr-toutes ul{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:0;border-top:1px solid var(--filet);border-left:1px solid var(--filet)}
-.cr-toutes li{border-right:1px solid var(--filet);border-bottom:1px solid var(--filet)}
-.cr-toutes a{display:grid;gap:10px;justify-items:center;padding:30px 18px;background:var(--nuit-2);text-decoration:none;text-align:center;transition:background .5s}
-.cr-toutes a:hover{background:var(--nuit)}
-.cr-toutes img{height:60px;width:auto;max-width:170px;object-fit:contain}
-.cr-toutes span{font:400 18px/1.2 var(--titre);color:var(--creme)}
-.cr-toutes small{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#a59d8b}
+/* Pied commun. Les identités des créations ne modifient pas sa palette. */
+.cr-pied{margin-top:var(--espace);padding:58px 20px 36px;text-align:center;border-top:1px solid #f3ead72e;background:#070a0e;color:var(--chrome-secondaire)}
+.cr-pied-titre{margin:0 0 24px;font:italic clamp(24px,2.6vw,32px)/1.3 "Bodoni Moda",Georgia,serif;color:var(--chrome-texte)}
+.cr-bouton{display:inline-block;padding:16px 28px;background:var(--chrome-texte);color:#070a0e;text-decoration:none;font:500 10px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;transition:background .25s}
+.cr-bouton:hover{background:#FFE34D}.cr-reseaux{display:flex;flex-wrap:wrap;justify-content:center;gap:18px 26px;margin:30px 0 0}
+.cr-reseaux a{text-decoration:none;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--chrome-texte)}
+.cr-legal{margin:26px auto 0;max-width:66em;font-size:11px;line-height:1.9;color:var(--chrome-secondaire)}.cr-legal a{text-decoration:none;color:inherit}
+.cr-pied a:focus-visible{outline-color:#FFE34D}
 
-/* pied */
-.cr-pied{margin-top:clamp(60px,8vw,110px);padding:60px 16px 40px;text-align:center;border-top:1px solid var(--filet);background:#000}
-.cr-pied-titre{margin:0 0 22px;font:400 italic clamp(22px,2.6vw,30px)/1.3 var(--titre);color:var(--creme)}
-.cr-bouton{display:inline-block;padding:15px 28px;background:var(--creme);color:var(--nuit);text-decoration:none;font:500 11px/1 var(--texte);letter-spacing:.26em;text-transform:uppercase;transition:background .4s}
-.cr-bouton:hover{background:var(--lumiere)}
-.cr-reseaux{display:flex;justify-content:center;gap:26px;margin:30px 0 0}
-.cr-reseaux a,.cr-legal a{text-decoration:none;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--creme-2)}
-.cr-legal{margin:28px 0 0;font-size:11px;color:#8d8676}
-.cr-legal a{font-size:11px;letter-spacing:0;text-transform:none}
+/* Visionneuse existante. */
+.cr-visionneuse{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:4vh 4vw;background:#050a0ef5;color:#f3ead7}
+.cr-visionneuse[hidden]{display:none}.cr-visionneuse img{max-width:100%;max-height:92vh;width:auto;cursor:e-resize;border:1px solid #f3ead747}
+.cr-fermer{all:unset;position:absolute;top:14px;right:22px;font:300 40px/1 var(--texte);color:#f3ead7;cursor:pointer}.cr-fermer:focus-visible{outline:2px solid #FFE34D;outline-offset:5px}
 
-/* visionneuse */
-.cr-visionneuse{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:4vh 4vw;background:rgba(5,10,14,.94)}
-.cr-visionneuse[hidden]{display:none}
-.cr-visionneuse img{max-width:100%;max-height:92vh;width:auto;cursor:e-resize;border:1px solid var(--filet)}
-.cr-fermer{all:unset;position:absolute;top:14px;right:22px;font:300 40px/1 var(--texte);color:var(--creme);cursor:pointer}
-.cr-fermer:focus-visible{outline:1px solid var(--lumiere)}
+/* Identités : une palette et un signe, sans décor ajouté sur les photographies. */
+.cr-norma{--nuit:#15101e;--nuit-2:#0c0a14;--creme:#efe8da;--creme-2:#d1c9d7;--lumiere:#FFE34D;--filet:#efe8da40;--titre:UnifrakturMaguntia,Georgia,serif;--motif:repeating-linear-gradient(0deg,transparent 0 3px,#efe8da 3px 4px,transparent 4px 7px)}
+.cr-norma .cr-sous{font-family:var(--titre);font-size:23px;letter-spacing:0;text-transform:none;line-height:1.4}
+.cr-logo-norma{filter:brightness(0) saturate(100%) invert(86%) sepia(73%) saturate(1300%) hue-rotate(352deg) brightness(105%) contrast(98%) drop-shadow(0 0 12px #ffe34d55)!important}
+.cr-close{--nuit:#211016;--nuit-2:#120a0c;--creme:#f3e6c8;--creme-2:#d6beb8;--lumiere:#d8b575;--filet:#c9a35b66;--motif:radial-gradient(ellipse at 50% 50%,transparent 34%,#c9a35b 36% 43%,transparent 45%)}
+.cr-close .cr-accroche::before{width:116px;height:16px;background-size:100% 100%}
+.cr-parfum-de-famille{--nuit:#cdb38b;--nuit-2:#f4efe4;--creme:#1c1a17;--creme-2:#383128;--lumiere:#932127;--filet:#1c1a1747;--titre:"Special Elite",Georgia,serif;--motif:repeating-linear-gradient(90deg,#932127 0 5px,transparent 5px 9px);color-scheme:light}
+.cr-parfum-de-famille .cr-accroche::before{background-size:100% 2px}.cr-parfum-de-famille .cr-tete h1,.cr-viva-barbessia .cr-tete h1{padding:18px 28px;background:var(--nuit-2);border:1px solid var(--filet)}
+.cr-parfum-de-famille .cr-logo,.cr-viva-barbessia .cr-logo,.cr-parfum-de-famille .cr-partenaires img,.cr-viva-barbessia .cr-partenaires img{filter:brightness(0)}
+.cr-parfum-de-famille .cr-tete{background-size:auto max(155%,76vw);background-position:center bottom}
+.cr-parfum-de-famille .cr-accroche{font-family:var(--titre);font-style:normal;font-size:clamp(24px,2.6vw,31px)}
+.cr-parfum-de-famille .cr-corps{background:linear-gradient(90deg,transparent, #cdb38b15,transparent)}
+.cr-un-conte-de-noelle{--nuit:#1c2d4a;--nuit-2:#14213d;--creme:#f6efe0;--creme-2:#d6dce6;--lumiere:#f2c14e;--filet:#f2c14e59;--titre:"Yeseva One","Bodoni Moda",Georgia,serif;--motif:radial-gradient(circle at 50% 50%,#f2c14e 0 2px,transparent 3px),linear-gradient(#f2c14e,#f2c14e)}
+.cr-un-conte-de-noelle .cr-accroche,.cr-better-together .cr-accroche{font-family:var(--titre);font-style:normal;font-size:clamp(24px,2.6vw,32px)}
+.cr-un-conte-de-noelle .cr-accroche::before{height:14px;background-size:14px 14px,100% 1px}
+.cr-scatolina{--nuit:#174a58;--nuit-2:#123e4d;--creme:#f6eee2;--creme-2:#e4dbce;--lumiere:#ffb57e;--filet:#f6eee24d;--motif:linear-gradient(#F37021,#F37021)}
+.cr-scatolina .cr-accroche::before{height:3px;background-size:100% 3px}
+.cr-better-together{--nuit:#363b38;--nuit-2:#252b28;--creme:#f1efe6;--creme-2:#d7d8cf;--lumiere:#f2c14e;--filet:#f1efe64d;--titre:"Yeseva One","Bodoni Moda",Georgia,serif;--motif:repeating-linear-gradient(90deg,#d4bd9c 0 16px,transparent 16px 19px)}
+.cr-better-together .cr-accroche{padding:24px clamp(12px,3vw,32px);border-block:1px solid #b69a7659}.cr-better-together .cr-accroche::before{display:none}
+.cr-la-prophetie-del-coco{--nuit:#194b3c;--nuit-2:#12382e;--creme:#f4e7c5;--creme-2:#d7d7b9;--lumiere:#d4b75e;--filet:#d4af3766;--motif:linear-gradient(0deg,transparent 1px,#d4af37 1px 2px,transparent 2px 6px,#d4af37 6px 7px,transparent 7px)}
+.cr-burning-bar{--nuit:#241810;--nuit-2:#120d0a;--creme:#efe1c6;--creme-2:#d4c6ad;--lumiere:#edab6b;--filet:#d9a44159;--motif:linear-gradient(90deg,transparent,#e8642c,transparent)}
+.cr-burning-bar h2{text-transform:uppercase;font-size:clamp(24px,2.8vw,34px);font-weight:600;letter-spacing:.07em}.cr-burning-bar .cr-accroche::before{background-size:100% 2px}
+.cr-viva-barbessia{--nuit:#e5d4af;--nuit-2:#efe3c6;--creme:#1d1a16;--creme-2:#403529;--lumiere:#a41d27;--filet:#1d1a1647;--motif:repeating-linear-gradient(45deg,#b3202a 0 2px,transparent 2px 6px);color-scheme:light}
+.cr-viva-barbessia .cr-accroche::before{width:92px;height:5px;background-size:100% 5px}
+.cr-eros-en-russie{--nuit:#711820;--nuit-2:#5e0d12;--creme:#f1e2c2;--creme-2:#e4cfc4;--lumiere:#e0bf70;--filet:#d9b25a70;--motif:linear-gradient(0deg,transparent 2px,#d9b25a 2px 3px,transparent 3px 6px,#d9b25a 6px 7px,transparent 7px)}
+.cr-verif .a-verifier{outline:1px dashed var(--lumiere);outline-offset:2px}
 
-/* Norma : titre noir sur fond noir dans l'original, passé en néon jaune comme sur l'accueil */
-.cr-logo-norma{filter:brightness(0) saturate(100%) invert(86%) sepia(73%) saturate(1300%) hue-rotate(352deg) brightness(105%) contrast(98%) drop-shadow(0 0 14px rgba(255,227,77,.45))!important}
-
-/* à vérifier (?verif) */
-.cr-verif .a-verifier{background:rgba(255,227,77,.18);outline:1px dashed var(--lumiere);outline-offset:2px}
-
-@media (max-width:700px){
-  .cr-entete{padding:14px 16px}.cr-marque img{height:18px}.cr-entete nav{gap:14px}.cr-entete nav a{font-size:9.5px;letter-spacing:.16em}
-  .cr-tete{min-height:64svh;padding-bottom:54px}
-  .cr-texte{columns:1}
-  .cr-liste{grid-template-columns:1fr}.cr-liste div{grid-template-columns:1fr;gap:2px}
-  .cr-suite{grid-template-columns:1fr 1fr}.cr-suite .cr-retour{grid-column:1/-1;grid-row:2;justify-self:center}
+@media(max-width:1100px){.cr-toutes--marques ul{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:820px){.cr-toutes--public ul{grid-template-columns:repeat(2,minmax(0,1fr))}.cr-equipe ul{gap:22px}.cr-equipe h3{font-size:24px}.cr-role{font-size:9px}}
+@media(max-width:700px){
+ .cr-entete{padding:16px;gap:16px}.cr-marque img{height:26px}.cr-entete nav{gap:14px}.cr-entete nav a{font-size:10px;letter-spacing:.12em}
+ .cr-tete{min-height:65svh;padding:120px 20px 54px}.cr-cadre{font-size:9px;letter-spacing:.18em}.cr-sous{font-size:10px;letter-spacing:.12em}.cr-logo{max-height:156px}
+ .cr-corps,.cr-presse,.cr-film,.cr-galerie,.cr-credits,.cr-partenaires,.cr-equipe,.cr-toutes{padding-left:22px;padding-right:22px}
+ .cr-accroche{margin-bottom:28px}.cr-texte{font-size:15px}.cr-contexte{font-size:19px}
+ .cr-galerie ul{grid-template-columns:1fr;gap:16px}.cr-galerie li:last-child:nth-child(even){width:100%}.cr-galerie li:first-child:not(:only-child) img{aspect-ratio:3/2}
+ .cr-liste div{grid-template-columns:1fr;gap:4px;padding:16px 0}.cr-liste dt{font-size:9px}.cr-distribution summary{font-size:9px;letter-spacing:.12em}
+ .cr-suite{width:calc(100% - 44px);grid-template-columns:1fr 1fr;gap:26px 18px}.cr-suite .cr-retour{grid-column:1/-1;grid-row:2;justify-self:center}.cr-suite a{font-size:22px}
+ .cr-equipe ul{grid-template-columns:1fr;gap:36px}.cr-portrait{width:200px}.cr-equipe h3{font-size:28px}.cr-role{max-width:29em;font-size:10px}
+ .cr-toutes ul{gap:12px}.cr-toutes a{padding:20px 10px;grid-template-rows:76px auto 1fr}.cr-toutes span{font-size:20px}.cr-case-logo{height:76px}.cr-case-logo img{max-height:66px}
+ .cr-toutes--marques a{grid-template-rows:76px auto auto 1fr}.cr-pied{padding-top:48px}.cr-legal{max-width:29em}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+@media(max-width:600px){.cr-toutes--marques ul{grid-template-columns:1fr}.cr-toutes--marques a{padding:26px 18px}.cr-presse li{flex-basis:100%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ───────── V8.20 · La Veillée : mur blanc, dessin d'enfant au crayon ───────── */
+.cr-la-veillee{--nuit:#e9e4da;--nuit-2:#f3efe7;--creme:#2c2a28;--creme-2:#4a4642;--lumiere:#7a3b2e;--filet:#2c2a2833;color-scheme:light}
+.cr-la-veillee body,.cr.cr-la-veillee{background:var(--nuit)}
+.cr-bandeau{margin:0;padding-top:64px;background:var(--nuit)}
+.cr-bandeau img{display:block;width:100%;height:auto;max-height:46vh;object-fit:cover;object-position:left center}
+.cr-la-veillee .cr-tete{min-height:auto;padding:38px 16px 46px;background:var(--nuit)}
+.cr-la-veillee .cr-tete-voile,.cr-la-veillee .cr-trait{display:none}
+.cr-la-veillee .cr-tete h1{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.cr-la-veillee .cr-cadre{color:var(--lumiere);font-size:13px}
+.cr-la-veillee .cr-entete{background:linear-gradient(180deg,rgba(233,228,218,.96),rgba(233,228,218,.8))}
+.cr-la-veillee .cr-entete nav a,.cr-la-veillee .cr-entete nav a[aria-current]{color:var(--creme)}
+.cr-la-veillee .cr-marque img{filter:brightness(0)}
+
+/* À propos : La Veillée en tête des créations, sur toute la largeur, puis les quatre autres */
+.cr-toutes--public li:has(.cr-vignette-bandeau){grid-column:1/-1}
+.cr-toutes--public li:has(.cr-vignette-bandeau) .cr-case-logo{height:auto}
+.cr-case-logo .cr-vignette-bandeau{width:100%;height:auto;max-height:150px;object-fit:cover;object-position:left center;filter:none}
+.cr-toutes--public li:has(.cr-vignette-bandeau) a{grid-template-rows:auto auto 1fr}
+.cr-la-veillee .cr-cadre{background:none;padding:0;border:0;color:var(--lumiere);font-size:14px;letter-spacing:.3em}
+.cr-la-veillee .cr-tete{padding:46px 16px 30px}
+.cr-la-veillee .cr-suite{margin-top:30px}

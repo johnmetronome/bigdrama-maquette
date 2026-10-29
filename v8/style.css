@@ -438,7 +438,7 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 /* V7.8 : couleurs cohérentes et marques partenaires recentrées. */
 :is(.bd-lieu,.bd-devant).actif .bd-cheminee-flamme{fill:#ed742d;transition:fill 1s}
 .bd-flamme-atelier path{fill:#ed742d!important}
-.bd-brand>p{display:none!important}
+
 #partenaires .sow-image-container,#mobile-partenaires .sow-image-container{display:flex!important;align-items:center!important;justify-content:center!important}
 #partenaires .sow-image-container a,#mobile-partenaires .sow-image-container a{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important}
 #partenaires .sow-image-container img.partner-logo,#mobile-partenaires .sow-image-container img.partner-logo{height:23px!important;max-height:23px!important;max-width:82px!important;object-fit:contain!important;margin:auto!important}
@@ -868,3 +868,28 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 
 /* v8.10 · la rue hors de l'écran ne calcule plus ses animations */
 .bd-rue-cachee .bd-rue *{animation-play-state:paused!important}
+
+/* V8.19 · Bandeau manifeste commun aux deux versions. */
+.bd-brand{min-height:300px;padding:58px 24px;gap:22px;text-align:center}
+.bd-brand>img{width:min(380px,70vw);max-height:110px}
+.bd-brand>p{display:block;font:400 clamp(15px,1.6vw,19px)/1.5 var(--bd-titre)!important;letter-spacing:.04em}
+.bd-brand-lien{display:inline-block;padding:14px 24px;border:1px solid #efe1b477;color:#efe1b4!important;background:transparent;text-decoration:none!important;font:500 10px/1.5 var(--bd-texte);letter-spacing:.2em;text-transform:uppercase;transition:background .25s,color .25s}
+.bd-brand-lien:hover{background:#FFE34D;color:#101010!important;border-color:#FFE34D}
+.bd-brand-lien:focus-visible{outline:2px solid #FFE34D;outline-offset:5px}
+@media(max-width:700px){.bd-brand{min-height:260px;padding:40px 22px;gap:20px}.bd-brand>img{width:min(300px,74vw);max-height:96px}}
+
+/* v8.20 · annonce de La Veillée, en haut sous la navigation */
+.bd-annonce{position:fixed;top:78px;right:clamp(12px,2.4vw,40px);z-index:60;width:min(360px,calc(100vw - 24px));background:#e9e4da;color:#2c2a28;border:1px solid #2c2a2840;box-shadow:0 18px 50px rgba(0,0,0,.45);opacity:0;transform:translateY(-10px);transition:opacity .6s ease,transform .6s cubic-bezier(.2,.7,.2,1)}
+.bd-annonce.vu{opacity:1;transform:none}
+.bd-annonce[hidden]{display:none}
+.bd-annonce-lien{display:block;color:inherit!important;text-decoration:none!important}
+.bd-annonce img{display:block;width:100%;height:92px;object-fit:cover;object-position:left center}
+.bd-annonce-texte{display:grid;gap:4px;padding:14px 18px 16px}
+.bd-annonce small{font:500 10px/1.4 var(--bd-texte);letter-spacing:.24em;text-transform:uppercase;color:#7a3b2e}
+.bd-annonce strong{font:400 26px/1.15 var(--bd-titre);color:#2c2a28}
+.bd-annonce em{font:500 10.5px/1.4 var(--bd-texte);font-style:normal;letter-spacing:.22em;text-transform:uppercase;color:#2c2a28;text-decoration:underline;text-underline-offset:4px}
+.bd-annonce-lien:hover em,.bd-annonce-lien:focus-visible em{color:#7a3b2e}
+.bd-annonce-fermer{all:unset;position:absolute;top:6px;right:8px;width:30px!important;height:30px!important;display:grid;place-items:center;border-radius:50%;background:#e9e4dae6;color:#2c2a28!important;-webkit-text-fill-color:#2c2a28;font:400 22px/30px var(--bd-texte)!important;text-align:center;text-indent:0!important;cursor:pointer}
+.bd-annonce-fermer:focus-visible{outline:1px solid #7a3b2e}
+@media(max-width:700px){.bd-annonce{top:64px;right:12px;left:12px;width:auto}.bd-annonce-lien{display:grid!important;grid-template-columns:40% 1fr;align-items:stretch}.bd-annonce img{height:100%;min-height:92px;max-height:110px}.bd-annonce-texte{padding:12px 34px 12px 14px}.bd-annonce strong{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.bd-annonce{transition:none}}
