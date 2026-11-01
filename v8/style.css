@@ -935,3 +935,10 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-bande-veillee img{object-position:0% 38%!important}
 .bd-rue:before{height:calc(34vh - clamp(72px,9.5vw,130px))!important}
 @media (max-width:700px){.cinema-entry{--bande:clamp(64px,19vw,92px)}.bd-rue:before{height:calc(34vh - clamp(64px,19vw,92px))!important}}
+
+/* V8.24 · bande et bandeau La Veillée dézoomés (mur prolongé à droite, 7,3:1) : le titre se lit en entier */
+.cinema-entry{--bande:clamp(84px,11vw,170px)}
+.bd-bande-veillee img{object-position:0% 45%!important}
+.bd-rue:before{height:calc(34vh - clamp(84px,11vw,170px))!important}
+@media (max-width:700px){.cinema-entry{--bande:clamp(76px,22vw,104px)}.bd-rue:before{height:calc(34vh - clamp(76px,22vw,104px))!important}}
+.bd-strip.veillee>img{object-position:0% 45%!important}

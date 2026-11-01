@@ -1,0 +1,11 @@
+# Big Drama · réglages de mise en ligne (copiés dans ftp.conf, qui n'est jamais envoyé sur GitHub).
+# Ces informations sont dans l'espace client de l'hébergeur, rubrique FTP / SFTP / accès aux fichiers.
+# Pas de mot de passe ici : deployer.sh le demande à chaque fois.
+
+HOTE="ftp.exemple.fr"           # adresse du serveur, sans ftp:// ni sftp://
+UTILISATEUR="identifiant"       # identifiant FTP ou SFTP
+DOSSIER="/htdocs"               # dossier du site sur le serveur (souvent /htdocs, /www ou /public_html)
+PROTOCOLE="sftp"                # sftp (recommandé), ftps, ou ftp (mot de passe en clair, à éviter)
+
+# Optionnel : autre dossier à envoyer que ../../bigdrama-en-ligne
+# SITE="/Volumes/PROD/2026_10_BigDramaWebsite_V3/2-site-en-ligne"

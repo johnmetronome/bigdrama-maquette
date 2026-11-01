@@ -266,3 +266,26 @@ Avant la mise en ligne officielle :
 - Pages création : plus de Précédente et Suivante, seulement Retour.
 - La Veillée : film « LaVeillee_V3_3 » (Packshot V2, 8 s) en tête, muet, en boucle, 1080p et 540p (`v8/assets/films/la-veillee-*`). Page de nuit : fond noir chaud, grain léger, lueur de bougie. Nouvelle création, 26 et 27 novembre 2026 · Paris 20e, bouton Réserver vers Billetweb (sans tarif). Appel, billetterie intégrée et infos pratiques retirés. Questions fréquentes : modèle de la FAQ Norma, seulement les réponses connues pour La Veillée.
 - Norma et Close : leur film devient le bandeau de tête, muet, en boucle, sans commandes. Plus de film en bas de page. Close : photo du général (`close-04`) retirée.
+
+## V8.24 · 01.11.2026 · mise en ligne FTP, film 4K de La Veillée
+
+- La Veillée : film de tête remplacé par `LaVeillee_V3_3pourUPSCALE&Ralenti_4_apo8_prob4_hyp1.mp4` (4K, 7,7 s), réduit en 1080p (2,2 Mo) et 540p (0,4 Mo) pour le site.
+- Bande de l'accueil et bandeau des créations : `la-veillee-bande.jpg`, le mur V2 prolongé vers la droite (3126 × 427). Le titre « La Veillée » se lit en entier, bande un peu plus haute.
+- Crédits, distribution, FAQ, équipe : une seule typographie sobre (Bodoni Moda, Montserrat) sur toutes les pages. Plus de gothique sur Norma.
+- `exporter.py` ajoute un `.htaccess` pour un hébergeur Apache : pas de liste de dossiers, `index.html` en premier, page 404, en-têtes de sécurité, tout fichier PHP ou script serveur refusé, cache des médias.
+
+### Mise en ligne : `deployer.sh`
+
+Il faut lftp sur le Mac : `brew install lftp`.
+
+```
+cd v8-src
+python3 exporter.py https://www.bigdrama.fr ../../bigdrama-en-ligne
+bash deployer.sh test            # crée ftp.conf au premier lancement : le remplir, puis relancer
+bash deployer.sh sauvegarde      # copie le serveur actuel, avant toute modification
+bash deployer.sh essai           # liste ce qui partirait
+bash deployer.sh envoi           # envoie, ne supprime rien
+bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (confirmation « SUPPRIMER »)
+```
+
+`ftp.conf` contient l'hôte, l'identifiant, le dossier et le protocole (sftp recommandé, puis ftps). Il n'est pas versionné. Le mot de passe est demandé à chaque lancement et n'est écrit nulle part. Testé sur un serveur FTP local : envoi complet, puis suppression des anciens fichiers PHP avec `envoi-propre`, serveur identique au dossier exporté.

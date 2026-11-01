@@ -174,6 +174,44 @@ jour = datetime.date.today().isoformat()
                                      + ''.join(f'<url><loc>{BASE}/{p}</loc><lastmod>{jour}</lastmod></url>\n' for p in pages) + '</urlset>\n', encoding='utf-8')
 (SORTIE / 'robots.txt').write_text('User-agent: *\nDisallow: /\n' if NOINDEX else f'User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n', encoding='utf-8')
 (SORTIE / '.nojekyll').write_text('', encoding='utf-8')
+# Hébergeur Apache (FTP) : pas de liste de dossiers, page 404, en-têtes de sécurité, aucun script serveur, cache des médias.
+(SORTIE / '.htaccess').write_text("""# Big Drama · site statique (exporter.py). Sans effet sur un hébergeur qui n'est pas Apache.
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddType video/mp4 .mp4
+AddType font/woff2 .woff2
+AddType image/webp .webp
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+</IfModule>
+
+# Le site n'utilise aucun script côté serveur : tout fichier de ce type est refusé (protection si un ancien fichier traîne).
+<FilesMatch "\\.(php[0-9]?|phtml|phar|pl|py|cgi|sh|asp|aspx|jsp)$">
+  <IfModule mod_authz_core.c>
+    Require all denied
+  </IfModule>
+</FilesMatch>
+
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType text/javascript "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType image/webp "access plus 30 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/svg+xml "access plus 30 days"
+  ExpiresByType video/mp4 "access plus 30 days"
+  ExpiresByType audio/mpeg "access plus 30 days"
+  ExpiresByType font/woff2 "access plus 365 days"
+</IfModule>
+""", encoding='utf-8')
 CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
 (SORTIE / '404.html').write_text(f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex"><meta http-equiv="Content-Security-Policy" content="{CSP}"><title>Page introuvable · Big Drama</title>

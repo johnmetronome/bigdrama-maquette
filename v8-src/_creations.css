@@ -264,3 +264,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-la-veillee .cr-pied{background:#050404}
 @media (max-width:700px){.cr-la-veillee .cr-tete.cr-tete--video{min-height:78svh;padding:110px 16px 40px}}
 @media (prefers-reduced-motion:reduce){.cr.cr-la-veillee::before{display:none}}
+
+/* V8.24 · crédits : même typographie sobre sur toutes les pages (plus de gothique ni d'écriture de spectacle) */
+.cr .cr-credits h2,.cr .cr-distribution h3,.cr .cr-faq h2,.cr .cr-equipe h2,.cr .cr-toutes h2{font-family:"Bodoni Moda",Georgia,serif;font-weight:400;letter-spacing:.01em;text-transform:none}
+.cr .cr-credits h2{font-size:clamp(26px,2.6vw,34px)}
+.cr .cr-liste dt,.cr .cr-liste dd{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif}
