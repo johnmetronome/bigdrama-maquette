@@ -289,3 +289,10 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 ```
 
 `ftp.conf` contient l'hôte, l'identifiant, le dossier et le protocole (sftp recommandé, puis ftps). Il n'est pas versionné. Le mot de passe est demandé à chaque lancement et n'est écrit nulle part. Testé sur un serveur FTP local : envoi complet, puis suppression des anciens fichiers PHP avec `envoi-propre`, serveur identique au dossier exporté.
+
+## V8.25 · 01.11.2026 · films en tête partout où il y en a
+
+- Plus de « Grand public » ni « Pour Pernod Ricard », « Pour Hermès × Apple »… en tête des pages création. La Veillée garde « Nouvelle création ».
+- Film en tête, muet, en boucle, sur toutes les pages qui en ont un : Norma, Close, Better Together, La Prophétie del Coco, Viva Barbessia, Eros en Russie (plus de film en bas de page). Affiches tirées des films : `v8/assets/films/{bar,arbre,tour,lune}-poster.jpg`.
+- Sans film (Parfum de Famille, Scatolina, Burning Bar, Un Conte de Noëlle) : plus de photo en tête, le titre seul sur la couleur du spectacle. Les photos restent dans la galerie.
+- `exporter.py` met à jour le dossier de sortie sur place au lieu de le supprimer (le partage SMB du NAS refusait de vider `videos/`).

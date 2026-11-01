@@ -10,7 +10,7 @@ pas de sources, pas de notes, pas d'anciennes versions (v6, v7-src…), pas de f
 Le site y est à la racine : /, /a-propos/, /creations/close/, /contact/…
 Ajouts : robots.txt, sitemap.xml, 404.html, .nojekyll, adresses canoniques, aperçus de partage absolus.
 Option --noindex : garde l'interdiction d'indexation (pour une préversion).
-Le dossier de sortie est vidé puis refait à chaque lancement.
+Le dossier de sortie est mis à jour à chaque lancement : fichiers inutiles retirés, médias inchangés gardés.
 """
 from pathlib import Path, PurePosixPath
 import os, re, shutil, sys, posixpath, datetime
@@ -147,9 +147,21 @@ while file:
     a_copier.add(f)
 
 # ── écriture ──
-if SORTIE.exists():
-    shutil.rmtree(SORTIE)
-SORTIE.mkdir(parents=True)
+# Mise à jour sur place (un partage réseau SMB refuse parfois de vider un dossier) :
+# les fichiers devenus inutiles sont retirés, les médias inchangés ne sont pas recopiés.
+SORTIE.mkdir(parents=True, exist_ok=True)
+GARDES = {'robots.txt', 'sitemap.xml', '.nojekyll', '404.html', '.htaccess'} | {cible(f) for f in a_copier}
+for vieux in sorted(SORTIE.rglob('*'), reverse=True):
+    rel = vieux.relative_to(SORTIE).as_posix()
+    if vieux.name.startswith(('.smbdelete', '._')) or vieux.name == '.DS_Store':
+        continue
+    try:
+        if vieux.is_file() and rel not in GARDES:
+            vieux.unlink()
+        elif vieux.is_dir() and not any(vieux.iterdir()):
+            vieux.rmdir()
+    except OSError:
+        pass
 for f in sorted(a_copier):
     d = SORTIE / cible(f)
     d.parent.mkdir(parents=True, exist_ok=True)
@@ -166,7 +178,9 @@ for f in sorted(a_copier):
                 t = t.replace('<meta property="og:type"', f'<meta property="og:url" content="{adresse}"><meta property="og:type"', 1)
         d.write_text(t, encoding='utf-8')
     else:
-        shutil.copy2(RACINE / f, d)
+        src = RACINE / f
+        if not (d.exists() and d.stat().st_size == src.stat().st_size and int(d.stat().st_mtime) == int(src.stat().st_mtime)):
+            shutil.copy2(src, d)
 
 pages = [cible(p)[:-len('index.html')] for p in PAGES]
 jour = datetime.date.today().isoformat()

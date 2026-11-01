@@ -269,3 +269,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr .cr-credits h2,.cr .cr-distribution h3,.cr .cr-faq h2,.cr .cr-equipe h2,.cr .cr-toutes h2{font-family:"Bodoni Moda",Georgia,serif;font-weight:400;letter-spacing:.01em;text-transform:none}
 .cr .cr-credits h2{font-size:clamp(26px,2.6vw,34px)}
 .cr .cr-liste dt,.cr .cr-liste dd{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif}
+
+/* V8.25 · pages sans film : pas de photo en tête, le titre seul sur la couleur du spectacle */
+.cr-tete--sobre{min-height:auto;padding:150px 24px 56px;background:var(--nuit)}
+.cr-tete--sobre .cr-tete-voile{display:none}
+@media (max-width:700px){.cr-tete--sobre{padding:120px 20px 40px}}

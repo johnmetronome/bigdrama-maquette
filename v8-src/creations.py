@@ -321,9 +321,12 @@ REPONSES = {
 for _c in CREATIONS:
     _c.update(REPONSES.get(_c['slug'], {}))
 
-# V8.23 · Norma et Close : le film devient le bandeau de tête, muet, en boucle. Plus de film en bas de page.
+# V8.23 · Norma et Close, V8.25 · toutes les créations qui ont un film : le film devient le bandeau de tête,
+# muet, en boucle. Plus de film en bas de page. Sans film : pas de photo en tête, le titre seul (Alex, 01.11.2026).
+# V8.25 · plus de « Grand public » ni « Pour <marque> » en tête des pages (La Veillée garde « Nouvelle création »).
 for _c in CREATIONS:
-    if _c['slug'] in ('norma', 'close'):
+    _c['cadre'] = ''
+    if _c.get('film'):
         _nom = Path(_c['film']).stem.replace('-169', '')
         _c['tete_video'] = {'film': _c['film'], 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
         _c['film'] = None
@@ -502,8 +505,8 @@ def page_creation(c, i, carte, version):
         partenaires = '<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>' + ''.join(f'<li><img src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>'
     corps = f'''
 {f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}"{jeu_images(c["bandeau"], carte, R)} sizes="100vw" alt="{E(c["titre"])}" fetchpriority="high"></figure>' if c.get("bandeau") and not c.get("tete_video") else ''}
-<section class="cr-tete{' cr-tete--video' if c.get('tete_video') else ''}" style="--fond:url('{image(c['tete_video']['affiche'], carte, R) if c.get('tete_video') else fond}')">{tete_video(c, carte, R)}<div class="cr-tete-voile"></div>
- <div class="cr-tete-contenu"><p class="cr-cadre">{E(c["cadre"])}</p>
+<section class="cr-tete{' cr-tete--video' if c.get('tete_video') else ' cr-tete--sobre'}"{f" style=\"--fond:url('{image(c['tete_video']['affiche'], carte, R)}')\"" if c.get('tete_video') else ''}>{tete_video(c, carte, R)}<div class="cr-tete-voile"></div>
+ <div class="cr-tete-contenu">{f'<p class="cr-cadre">{E(c["cadre"])}</p>' if c.get("cadre") else ''}
   {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
   {f'<p class="cr-sous">{E(c["dates_courtes"]) if c.get("dates_courtes") else sous}</p>' if sous or c.get("dates_courtes") else ''}
   {f'<a class="cr-bouton cr-reserver" href="{c["reserver"]}" target="_blank" rel="noopener">Réserver</a>' if c.get('reserver') else ''}</div>
