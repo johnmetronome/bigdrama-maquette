@@ -296,3 +296,7 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Film en tête, muet, en boucle, sur toutes les pages qui en ont un : Norma, Close, Better Together, La Prophétie del Coco, Viva Barbessia, Eros en Russie (plus de film en bas de page). Affiches tirées des films : `v8/assets/films/{bar,arbre,tour,lune}-poster.jpg`.
 - Sans film (Parfum de Famille, Scatolina, Burning Bar, Un Conte de Noëlle) : plus de photo en tête, le titre seul sur la couleur du spectacle. Les photos restent dans la galerie.
 - `exporter.py` met à jour le dossier de sortie sur place au lieu de le supprimer (le partage SMB du NAS refusait de vider `videos/`).
+
+## V8.26 · 01.11.2026 · pages courtes
+
+- Parfum de Famille et Scatolina (pas de film) : page courte. Titre, une grande image, accroche et texte, partenaires, Retour. Plus de galerie ni de citations de presse sur ces deux pages.

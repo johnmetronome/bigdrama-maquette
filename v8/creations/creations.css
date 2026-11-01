@@ -274,3 +274,8 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-tete--sobre{min-height:auto;padding:150px 24px 56px;background:var(--nuit)}
 .cr-tete--sobre .cr-tete-voile{display:none}
 @media (max-width:700px){.cr-tete--sobre{padding:120px 20px 40px}}
+
+/* V8.26 · page courte (Parfum de Famille, Scatolina) : titre, une image, l'histoire */
+.cr-simple-image{width:min(100% - 40px,1100px);margin:0 auto;border:1px solid var(--filet)}
+.cr-simple-image img{width:100%;height:auto;max-height:78vh;object-fit:cover}
+.cr-corps--simple{padding-top:clamp(40px,5vw,64px)}

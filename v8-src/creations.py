@@ -330,6 +330,8 @@ for _c in CREATIONS:
         _nom = Path(_c['film']).stem.replace('-169', '')
         _c['tete_video'] = {'film': _c['film'], 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
         _c['film'] = None
+    if _c['slug'] in ('parfum-de-famille', 'scatolina'):
+        _c['simple'] = True   # V8.26 · pas de film : page courte (titre, une image, l'histoire, crédits) (Alex, 01.11.2026)
     if _c['slug'] == 'close':
         _c['photos'] = [x for x in _c['photos'] if x != 'photos/close-04.jpg']   # « la photo du général » (Alex, 01.11.2026)
 
@@ -527,6 +529,19 @@ def page_creation(c, i, carte, version):
 {partenaires}
 <nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>
 <div class="cr-visionneuse" hidden><button type="button" class="cr-fermer" aria-label="Fermer">×</button><img alt=""></div>'''
+    if c.get('simple'):
+        corps = f'''
+<section class="cr-tete cr-tete--sobre"><div class="cr-tete-contenu">
+  {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
+  {f'<p class="cr-sous">{sous}</p>' if sous else ''}</div></section>
+<figure class="cr-simple-image"><img src="{image(photos[0], carte, R)}" alt="" decoding="async"></figure>
+<article class="cr-corps cr-corps--simple">
+ {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
+ {f'<div class="cr-texte">{texte}</div>' if texte else ''}
+</article>
+{section_credits}
+{partenaires}
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
     desc = re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
     desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
     og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{photos[0]}">'
