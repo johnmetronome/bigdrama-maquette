@@ -225,3 +225,42 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-infos dd a{color:var(--lumiere)}
 @media (max-width:700px){.cr-billetweb-cadre{height:1200px}.cr-radio{font-size:12px}}
 .cr-devise{max-width:46em}
+
+/* V8.23 · films de tête, navigation, retour seul, FAQ */
+.cr-tete--video{background:#000 var(--fond) center/cover no-repeat}
+.cr-tete-film{position:absolute;inset:0;z-index:-2;width:100%;height:100%;object-fit:cover;pointer-events:none}
+.cr-entete nav a.cr-nav-billetterie{color:#f0c987}
+@media (max-width:700px){.cr-entete nav a.cr-nav-creations{display:none}}
+.cr-suite--seule{display:flex;justify-content:center}
+.cr-faq{width:min(100% - 40px,760px);margin:var(--espace) auto 0}
+.cr-faq h2{text-align:center;margin-bottom:26px;font-size:clamp(28px,3.4vw,40px)}
+.cr-faq details{border-bottom:1px solid var(--filet)}
+.cr-faq summary{cursor:pointer;list-style:none;padding:18px 34px 18px 0;position:relative;font:400 clamp(18px,1.7vw,21px)/1.4 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-faq summary::-webkit-details-marker{display:none}
+.cr-faq summary::after{content:"+";position:absolute;right:4px;top:50%;transform:translateY(-50%);font:300 22px var(--texte);color:var(--lumiere);transition:transform .3s}
+.cr-faq details[open] summary::after{transform:translateY(-50%) rotate(45deg)}
+.cr-faq details p{margin:0 0 20px;color:var(--creme-2);font-size:15px;line-height:1.75}
+.cr-faq details a{color:var(--lumiere)}
+
+/* V8.23 · La Veillée : nuit post-apocalyptique, lueur de bougie (remplace le mur clair) */
+.cr-la-veillee{--nuit:#0b0a09;--nuit-2:#070605;--creme:#e8dfcf;--creme-2:#a99e8c;--lumiere:#d89c5c;--filet:#e8dfcf24;color-scheme:dark}
+.cr.cr-la-veillee{background:radial-gradient(ellipse 80% 50% at 50% 0,#1a140e 0,transparent 70%),var(--nuit-2)}
+.cr.cr-la-veillee::before{content:"";position:fixed;inset:0;z-index:30;pointer-events:none;opacity:.07;mix-blend-mode:screen;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E")}
+.cr-la-veillee .cr-entete{background:#070605ee;border-bottom-color:#e8dfcf14}
+.cr-la-veillee .cr-entete nav a{color:var(--chrome-texte)}
+.cr-la-veillee .cr-entete nav a[aria-current]{color:#FFE34D}
+.cr-la-veillee .cr-entete nav a.cr-nav-billetterie{color:#f0c987}
+.cr-la-veillee .cr-marque img{filter:none}
+.cr-la-veillee .cr-tete.cr-tete--video{min-height:min(92svh,860px);padding:140px 20px 56px;place-items:end center;background-color:#000}
+.cr-la-veillee .cr-tete--video .cr-tete-voile{display:block;background:linear-gradient(180deg,#0706058c 0,transparent 22%,transparent 55%,#070605 100%)}
+.cr-la-veillee .cr-cadre{font-family:"Special Elite","Courier New",monospace;letter-spacing:.24em;color:var(--lumiere)}
+.cr-la-veillee .cr-sous{background:none;padding:0;margin-top:12px;font:400 12px/1.6 var(--texte);letter-spacing:.2em;color:var(--creme)}
+.cr-la-veillee .cr-reserver{margin-top:26px;padding:15px 34px;background:var(--lumiere);border:1px solid var(--lumiere);color:#140f0a;letter-spacing:.26em}
+.cr-la-veillee .cr-reserver:hover{background:var(--creme);border-color:var(--creme);color:#140f0a}
+.cr-la-veillee .cr-corps{padding-top:var(--espace)}
+.cr-la-veillee .cr-accroche{color:var(--creme)}
+.cr-la-veillee .cr-texte p{color:var(--creme-2)}
+.cr-la-veillee .cr-devise{color:var(--lumiere);font-family:"Special Elite","Courier New",monospace;letter-spacing:.14em}
+.cr-la-veillee .cr-pied{background:#050404}
+@media (max-width:700px){.cr-la-veillee .cr-tete.cr-tete--video{min-height:78svh;padding:110px 16px 40px}}
+@media (prefers-reduced-motion:reduce){.cr.cr-la-veillee::before{display:none}}

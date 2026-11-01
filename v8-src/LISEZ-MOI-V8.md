@@ -255,3 +255,14 @@ Avant la mise en ligne officielle :
 - Données d'événement schema.org (dates sans horaire) pour Google.
 - Typographie : espaces fines insécables avant : ? ! ; » et après « sur toutes les pages générées.
 - À fournir : horaires des deux séances (rien n'est affiché en attendant), photos du spectacle.
+
+## V8.23 · 01.11.2026 · billetterie partout, La Veillée de nuit, films de tête
+
+- Navigation : Billetterie (lien direct Billetweb, nouvel onglet), À propos, Créations, Contact (ouvre un mail à contact@bigdrama.fr). Sur téléphone, « Créations » est masqué : le logo Big Drama y mène.
+- Logo Big Drama sur toutes les pages : retour aux bandeaux des créations de l'accueil, sans repasser par la clé.
+- Accueil : bande « La Veillée » en bas du film (mur V2, dates, « Prendre son billet », lien Billetweb). L'annonce en fenêtre est retirée (la bande la remplace). Bande La Veillée des créations : mur V2.
+- Rue et bandeaux : les logos seuls. Sous-titres retirés (rue, « Enquête en ligne », « Fable immersive »). Les sous-titres restent visibles dans l'atelier (`?edit`).
+- Contact : plus de page `v8/contact/` (supprimée), tous les liens Contact ouvrent un mail. « Une histoire à raconter ? » retiré partout. « Nous contacter » seulement en bas de l'accueil.
+- Pages création : plus de Précédente et Suivante, seulement Retour.
+- La Veillée : film « LaVeillee_V3_3 » (Packshot V2, 8 s) en tête, muet, en boucle, 1080p et 540p (`v8/assets/films/la-veillee-*`). Page de nuit : fond noir chaud, grain léger, lueur de bougie. Nouvelle création, 26 et 27 novembre 2026 · Paris 20e, bouton Réserver vers Billetweb (sans tarif). Appel, billetterie intégrée et infos pratiques retirés. Questions fréquentes : modèle de la FAQ Norma, seulement les réponses connues pour La Veillée.
+- Norma et Close : leur film devient le bandeau de tête, muet, en boucle, sans commandes. Plus de film en bas de page. Close : photo du général (`close-04`) retirée.

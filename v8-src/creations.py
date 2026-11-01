@@ -18,6 +18,8 @@ def V(t):
 
 
 E = html.escape
+CONTACT = 'contact@bigdrama.fr'   # adresse confirmée par le paquet La Veillée de Rémi (01.11.2026)
+BILLETTERIE = 'https://www.billetweb.fr/shop.php?event=la-veillee2'   # La Veillée, Billetweb
 
 # ───────── contenu ─────────
 # ordre = ordre des bannières de l'accueil (sert au précédent / suivant)
@@ -319,37 +321,39 @@ REPONSES = {
 for _c in CREATIONS:
     _c.update(REPONSES.get(_c['slug'], {}))
 
+# V8.23 · Norma et Close : le film devient le bandeau de tête, muet, en boucle. Plus de film en bas de page.
+for _c in CREATIONS:
+    if _c['slug'] in ('norma', 'close'):
+        _nom = Path(_c['film']).stem.replace('-169', '')
+        _c['tete_video'] = {'film': _c['film'], 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
+        _c['film'] = None
+    if _c['slug'] == 'close':
+        _c['photos'] = [x for x in _c['photos'] if x != 'photos/close-04.jpg']   # « la photo du général » (Alex, 01.11.2026)
+
+
 # La Veillée : page sur le même modèle. Dates, photos de spectacle et crédits à fournir : rien n'est inventé.
 CREATIONS.insert(0, {
     # Textes : Ariane (01.11.2026). Dates, lieu, infos pratiques, équipe, billetterie : paquet de Rémi Large (01.11.2026).
     # Visuel : « La veillée sur mur décrépit » (31.10.2026). Horaires des séances : à fournir, rien d'affiché en attendant.
     'slug': 'la-veillee', 'id': 'veillee', 'titre': 'La Veillée', 'logo': None,
-    'genre': '', 'cadre': 'Nouvelle création', 'quand': '26 et 27 novembre 2026', 'ou': 'Villa Riberolle, Paris 20e',
+    'genre': '', 'cadre': 'Nouvelle création', 'quand': '26 et 27 novembre 2026', 'ou': 'Paris 20e',
     'accroche': "Pour que les histoires ne meurent jamais",
     'devise': ["Nous ne sommes que les voix de nos histoires", "Ce qu’on nous a raconté, nous le raconterons"],
     'texte': ["Depuis que les machines ont pris le pouvoir et interdit toute forme de fiction, un groupe de rebelles se réunit dans un refuge clandestin pour se souvenir des histoires qui ont fait l’humanité.",
               "Mais comment raconter nos plus grandes œuvres, de Shakespeare à <em>Retour vers le futur</em>, quand tous les livres et les films ont été détruits ? Il ne leur reste que leurs souvenirs incertains, un piano et l’imagination des spectateurs pour réinventer, soir après soir, ce cabaret brinquebalant, qui ne cesse de changer et que l’on appelle la Veillée."],
     'citation': ("Le feu ne brûlait pas pour détruire : il réchauffait.", "Fahrenheit 451"),
-    'appel': {
-        'radio_avant': ["Attention, attention.", "Ceci est un message de bonne humeur.", "Bonjour, les amours !", "Ici Le Centre.", "Il est déjà quatre heures !", "Et c’est déjà l’heure d’être de bonne humeur.", "C’est obligatoire."],
-        'message': [["Les Amis,", "Ceci n’est pas un message officiel.", "Ils ont interdit les histoires,", "Mais nous refusons de vivre sans elles."],
-                    ["Alors rejoins-nous dans la pénombre, au coin du feu.", "Nous raconterons les histoires que nous avons sauvées.", "Même mal.", "Même avec presque rien."],
-                    ["Chaque soir, nous rallumerons le feu.", "Chaque soir, ce sera une autre histoire.", "Et chaque soir, nous l’appellerons…", "La Veillée."],
-                    ["Ma sœur.", "Mon frère.", "Tu ne seras plus jamais seul."],
-                    ["Qui est là ?"]],
-        'radio_apres': ["Respirez.", "Apaisez.", "Oubliez.", "Avez-vous rempli votre formulaire de sérénité ?", "Et maintenant, votre émission : Comment améliorer sa productivité."],
-    },
-    'billetterie': {
-        'dates': [("Jeudi", "26 novembre 2026", "2026-11-26"), ("Vendredi", "27 novembre 2026", "2026-11-27")],
-        'tarif': "25 €", 'prix': "25",
-        'lien': "https://www.billetweb.fr/shop.php?event=la-veillee2",
-    },
-    'infos': [("Lieu", "Villa Riberolle"),
-              ("Adresse", "10 Villa Riberolle, 75020 Paris<br><small>Entrée de l’impasse au 35 rue de Bagnolet</small>"),
-              ("Accès", "Métro Alexandre Dumas (ligne 2)<br>Bus 76, arrêts Charonne-Bagnolet ou La Réunion"),
-              ("Durée", "1 h 30"),
-              ("Public", "À partir de 12 ans"),
-              ("Accessibilité", "Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue, nous organiserons votre accueil.")],
+    'tete_video': {'film': 'v8/assets/films/la-veillee-1080.mp4', 'mobile': 'v8/assets/films/la-veillee-540.mp4', 'affiche': 'v8/assets/films/la-veillee-poster.jpg'},
+    'reserver': BILLETTERIE,
+    'dates_courtes': '26 et 27 novembre 2026 · Paris 20e',
+    'evenement': {'dates': ['2026-11-26', '2026-11-27'], 'prix': '25', 'lien': BILLETTERIE},
+    # FAQ : questions de la FAQ Norma (Ariane, 2023) dont la réponse est connue pour La Veillée (paquet de Rémi, 01.11.2026)
+    'faq': [("Où se joue le spectacle ?", "À la Villa Riberolle, 10 Villa Riberolle, 75020 Paris. L’entrée de l’impasse est au 35 rue de Bagnolet."),
+            ("Comment y aller ?", "Métro Alexandre Dumas (ligne 2). Bus 76, arrêts Charonne-Bagnolet ou La Réunion."),
+            ("Combien de temps dure l’expérience ?", "Le spectacle dure 1 h 30."),
+            ("À partir de quel âge peut-on venir ?", "Nous recommandons le spectacle à partir de 12 ans."),
+            ("Où acheter les billets ?", f'En ligne, sur <a href="{BILLETTERIE}" target="_blank" rel="noopener">la billetterie Billetweb</a>.'),
+            ("Qu’en est-il des personnes à mobilité réduite ?", f"Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue à <a href=\"mailto:{CONTACT}\">{CONTACT}</a>, nous organiserons votre accueil."),
+            ("Nous n’avons pas répondu à votre question ?", f'<a href="mailto:{CONTACT}">Écrivez-nous</a>.')],
     'contexte': '', 'chiffres': [],
     'credits': [("Autrice, mise en scène, chant, interprétation", "Ariane Raynaud"),
                 ("Auteur, direction artistique, musique, interprétation", "Alexis Pivot"),
@@ -361,8 +365,8 @@ CREATIONS.insert(0, {
                 ("Accessoires", "Les Petites Odyssées"),
                 ("Création lumière", "Titouan Laporte"),
                 ("Production", "Rémi Large")],
-    'photos': ['v8/assets/la-veillee-mur.jpg'], 'film': None, 'legende': '',
-    'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-mur.jpg',
+    'photos': ['v8/assets/la-veillee-mur-v2.jpg'], 'film': None, 'legende': '',
+    'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-mur-v2.jpg',
 })
 
 APROPOS = {   # textes d'Ariane, 28.10.2026
@@ -384,8 +388,7 @@ APROPOS = {   # textes d'Ariane, 28.10.2026
 
 # ───────── gabarit ─────────
 ANNEE = 2026
-CONTACT = 'contact@bigdrama.fr'   # adresse de l'ancienne politique de confidentialité : à confirmer
-CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src https://www.billetweb.fr"
+CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
 
 
 def image(chemin, carte, R):
@@ -402,15 +405,15 @@ def jeu_images(chemin, carte, R):
 
 
 def entete(R, actif):
-    lien = lambda href, nom, cle: f'<a href="{href}"{" aria-current=\"page\"" if actif == cle else ""}>{nom}</a>'
-    return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/" aria-label="Big Drama, accueil"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
-            f'<nav aria-label="Navigation principale">{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/contact/", "Contact", "contact")}</nav></header>')
+    lien = lambda href, nom, cle, plus='': f'<a href="{href}" class="cr-nav-{cle}"{" aria-current=\"page\"" if actif == cle else ""}{plus}>{nom}</a>'
+    return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/?direct#content" aria-label="Big Drama, retour aux créations"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
+            f'<nav aria-label="Navigation principale">{lien(BILLETTERIE, "Billetterie", "billetterie", " target=\"_blank\" rel=\"noopener\"")}'
+            f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
 
 
-def pied(R, appel=True):
+def pied(R, appel=False):
     return (f'<footer class="cr-pied" id="contact">'
-            + (f'<p class="cr-pied-titre">Une histoire à raconter ?</p><a class="cr-bouton" href="{R}v8/contact/">Nous contacter</a>' if appel else '')
-            + f'<p class="cr-reseaux"><a href="https://www.facebook.com/bigdramaparis" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" rel="noopener">LinkedIn</a></p>'
+            f'<p class="cr-reseaux"><a href="mailto:{CONTACT}">Email</a><a href="https://www.facebook.com/bigdramaparis" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" rel="noopener">LinkedIn</a></p>'
             f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a></p></footer>')
 
 
@@ -423,7 +426,7 @@ def typo(h):
     return ''.join(morceaux)
 
 
-def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=True):
+def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=False):
     return typo(f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{CSP}"><meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{E(titre)}</title><meta name="description" content="{E(description)}">
@@ -434,41 +437,16 @@ def page(titre, description, R, corps, actif, version, image_og='', slug='', app
 ''')
 
 
-def appel(c):
-    """Le manifeste : la radio du Centre encadre le message clandestin des Veilleurs."""
-    a = c.get('appel')
-    if not a:
+def faq(c):
+    if not c.get('faq'):
         return ''
-    radio = lambda lignes: '<p class="cr-radio">' + '<br>'.join(E(x) for x in lignes) + '</p>'
-    message = ''.join('<p>' + '<br>'.join(E(x) for x in strophe) + '</p>' for strophe in a['message'])
-    return (f'<section class="cr-appel" aria-label="Manifeste"><h2>L’appel</h2>{radio(a["radio_avant"])}'
-            f'<div class="cr-message">{message}</div>{radio(a["radio_apres"])}</section>')
-
-
-def billetterie(c):
-    """Dates, tarif et billetterie Billetweb. Le cadre Billetweb ne se charge qu'au clic (aucun script ni cookie tiers avant)."""
-    b = c.get('billetterie')
-    if not b:
-        return ''
-    dates = ''.join(f'<li><time datetime="{iso}"><span>{E(j)}</span>{E(d)}</time></li>' for j, d, iso in b['dates'])
-    return f'''<section class="cr-billetterie" id="billetterie" aria-label="Billetterie"><h2>Réserver</h2>
-<ul class="cr-dates">{dates}</ul><p class="cr-tarif">Tarif unique <strong>{E(b["tarif"])}</strong></p>
-<div class="cr-billetweb" data-billetweb="{E(b["lien"])}"><button type="button" class="cr-bouton cr-billetweb-ouvrir">Choisir ses places</button>
-<p class="cr-billetweb-note">La billetterie est gérée par Billetweb. Elle s’affiche ici après le clic.</p></div>
-<p class="cr-secours"><a href="{E(b["lien"])}" target="_blank" rel="noopener">Ouvrir la billetterie dans un nouvel onglet</a></p></section>'''
-
-
-def infos(c):
-    if not c.get('infos'):
-        return ''
-    lignes = ''.join(f'<div><dt>{E(k)}</dt><dd>{v}</dd></div>' for k, v in c['infos'])
-    lignes += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
-    return f'<section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{lignes}</dl></section>'
+    q = ''.join(f'<details><summary>{E(k)}</summary><p>{v}</p></details>' for k, v in c['faq'])
+    return f'<section class="cr-faq" aria-label="Questions fréquentes"><h2>Questions fréquentes</h2>{q}</section>'
 
 
 def evenements(c):
     """Données structurées schema.org pour les moteurs de recherche (dates sans horaire tant qu'elles manquent)."""
-    b = c.get('billetterie')
+    b = c.get('evenement')
     if not b:
         return ''
     ev = [{"@context": "https://schema.org", "@type": "TheaterEvent", "name": c['titre'], "startDate": iso,
@@ -476,13 +454,21 @@ def evenements(c):
            "location": {"@type": "Place", "name": "Villa Riberolle", "address": {"@type": "PostalAddress", "streetAddress": "10 Villa Riberolle", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
            "organizer": {"@type": "Organization", "name": "Big Drama"},
            "offers": {"@type": "Offer", "price": b['prix'], "priceCurrency": "EUR", "url": b['lien']},
-           "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for _, _, iso in b['dates']]
+           "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for iso in b['dates']]
     return '<script type="application/ld+json">' + json.dumps(ev, ensure_ascii=False).replace('</', '<\\/') + '</script>'
+
+
+def tete_video(c, carte, R):
+    """Film en tête de page : muet, en boucle, sans commandes. Version 540p sur téléphone."""
+    v = c.get('tete_video')
+    if not v:
+        return ''
+    return (f'<video class="cr-tete-film" autoplay muted loop playsinline disablepictureinpicture preload="auto" poster="{image(v["affiche"], carte, R)}" aria-hidden="true">'
+            f'<source media="(max-width:900px)" src="{R}{v["mobile"]}" type="video/mp4"><source src="{R}{v["film"]}" type="video/mp4"></video>')
 
 
 def page_creation(c, i, carte, version):
     R = '../../../'
-    prec, suiv = CREATIONS[i - 1], CREATIONS[(i + 1) % len(CREATIONS)]
     photos = c['photos']
     fond = image(photos[0], carte, R)
     sous = ' · '.join(x for x in (c['genre'], c['quand'], c['ou']) if x)
@@ -515,12 +501,12 @@ def page_creation(c, i, carte, version):
     if c.get('partenaires'):
         partenaires = '<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>' + ''.join(f'<li><img src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>'
     corps = f'''
-{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}"{jeu_images(c["bandeau"], carte, R)} sizes="100vw" alt="{E(c["titre"])}" fetchpriority="high"></figure>' if c.get("bandeau") else ''}
-<section class="cr-tete" style="--fond:url('{fond}')"><div class="cr-tete-voile"></div>
+{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}"{jeu_images(c["bandeau"], carte, R)} sizes="100vw" alt="{E(c["titre"])}" fetchpriority="high"></figure>' if c.get("bandeau") and not c.get("tete_video") else ''}
+<section class="cr-tete{' cr-tete--video' if c.get('tete_video') else ''}" style="--fond:url('{image(c['tete_video']['affiche'], carte, R) if c.get('tete_video') else fond}')">{tete_video(c, carte, R)}<div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">{E(c["cadre"])}</p>
   {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
-  {f'<p class="cr-sous">{sous}</p>' if sous else ''}
-  {f'<a class="cr-bouton cr-reserver" href="#billetterie">Réserver · {E(c["billetterie"]["tarif"])}</a>' if c.get('billetterie') else ''}</div>
+  {f'<p class="cr-sous">{E(c["dates_courtes"]) if c.get("dates_courtes") else sous}</p>' if sous or c.get("dates_courtes") else ''}
+  {f'<a class="cr-bouton cr-reserver" href="{c["reserver"]}" target="_blank" rel="noopener">Réserver</a>' if c.get('reserver') else ''}</div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
 <article class="cr-corps">
  {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
@@ -530,15 +516,13 @@ def page_creation(c, i, carte, version):
  {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
  {f'<dl class="cr-chiffres">{chiffres}</dl>' if chiffres else ''}
 </article>
-{appel(c)}
-{billetterie(c)}
-{infos(c)}
 {presse}
 {film}
 <section class="cr-galerie" aria-label="Photos"{' hidden' if c.get("bandeau") else ''}><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
+{faq(c)}
 {section_credits}
 {partenaires}
-<nav class="cr-suite" aria-label="Autres créations"><a href="../{prec["slug"]}/"><span>Précédente</span>{E(prec["titre"])}</a><a class="cr-retour" href="{R}v8/?direct#content">Retour</a><a href="../{suiv["slug"]}/"><span>Suivante</span>{E(suiv["titre"])}</a></nav>
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>
 <div class="cr-visionneuse" hidden><button type="button" class="cr-fermer" aria-label="Fermer">×</button><img alt=""></div>'''
     desc = re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
     desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
@@ -585,14 +569,6 @@ def tete_simple(cadre, titre):
             f'<h1 class="cr-titre-texte">{E(titre)}</h1></div></section>')
 
 
-def page_contact(version):
-    R = '../../'
-    corps = f'''{tete_simple("Contact", "Une histoire à raconter ?")}
-<article class="cr-corps cr-contact"><p class="cr-accroche">Écrivez-nous.</p>
-<p class="cr-contact-mail"><a href="mailto:{CONTACT}">{CONTACT}</a></p></article>'''
-    return page('Contact · Big Drama', f'Contacter Big Drama : {CONTACT}', R, corps, 'contact', version, slug='simple', appel=False)
-
-
 LEGAL = [('mentions-legales', 'Mentions légales'), ('cgv', 'Conditions générales de vente'), ('confidentialite', 'Politique de confidentialité')]
 
 
@@ -611,8 +587,6 @@ def generer(carte, version):
         (d / 'index.html').write_text(page_creation(c, i, carte, version), encoding='utf-8')
     (OUT / 'a-propos').mkdir(exist_ok=True)
     (OUT / 'a-propos' / 'index.html').write_text(page_apropos(carte, version), encoding='utf-8')
-    (OUT / 'contact').mkdir(exist_ok=True)
-    (OUT / 'contact' / 'index.html').write_text(page_contact(version), encoding='utf-8')
     for slug, titre in LEGAL:
         (OUT / slug).mkdir(exist_ok=True)
         (OUT / slug / 'index.html').write_text(page_legale(slug, titre, version), encoding='utf-8')

@@ -908,3 +908,30 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-annonce-dates{font:400 12px/1.4 var(--bd-texte);letter-spacing:.04em;color:#4a4642}
 @media (orientation:landscape) and (max-height:520px){.bd-annonce-dates{display:none}}
 .bd-annonce-texte,.bd-annonce-texte *{text-align:left!important}
+
+/* V8.23 · bande La Veillée en bas du film d'accueil (lien direct vers la billetterie) */
+.cinema-entry{--bande:clamp(68px,9vw,118px)}
+.bd-bande-veillee{position:absolute;left:0;right:0;bottom:0;z-index:4;display:block;height:var(--bande);overflow:hidden;text-decoration:none!important;border-top:1px solid #00000059;box-shadow:0 -14px 40px rgba(0,0,0,.45)}
+.bd-bande-veillee img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:0% 50%;transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.bd-bande-veillee:hover img{transform:scale(1.02)}
+.bd-bande-texte{position:absolute;right:clamp(14px,3vw,48px);top:50%;transform:translateY(-50%);display:flex;align-items:center;gap:clamp(10px,2vw,26px)}
+.bd-bande-dates{font:400 clamp(11px,1vw,14px)/1.3 var(--bd-texte);letter-spacing:.14em;text-transform:uppercase;color:#2a2622;text-shadow:0 0 12px #e9e4da}
+.bd-bande-billet{display:inline-block;padding:clamp(9px,1vw,13px) clamp(14px,1.8vw,24px);background:#1d1a17;color:#efe7d8!important;font:500 clamp(10px,.9vw,12px)/1 var(--bd-texte);letter-spacing:.22em;text-transform:uppercase;transition:background .3s}
+.bd-bande-veillee:hover .bd-bande-billet,.bd-bande-veillee:focus-visible .bd-bande-billet{background:#7a3b2e}
+.cinema-entry .entry-bottom{bottom:calc(var(--bande) + 22px)!important}
+@media (max-width:700px){.bd-bande-dates{display:none}.bd-bande-veillee img{object-position:0% 50%}.cinema-entry{--bande:clamp(64px,19vw,92px)}}
+/* V8.23 · navigation : Billetterie en premier, mise en avant */
+#site-navigation a.nav-billetterie{color:#f0c987!important}
+@media (max-width:600px){body.media-home #site-navigation a.nav-creations{display:none!important}}
+/* V8.23 · rue : les logos seuls */
+.bd-hover-phrase{display:none}
+.bd-edition .bd-hover-phrase{display:block}
+.bd-bande-veillee{z-index:6}
+@media (max-width:1100px){.bd-bande-dates{display:none}}
+/* le fondu du film vers la rue s'arrête au-dessus de la bande La Veillée */
+.bd-rue:before{top:-34vh!important;height:calc(34vh - clamp(68px,9vw,118px))!important;background:linear-gradient(to bottom,#101e2b00,#101e2b73)!important}
+@media (max-width:700px){.bd-rue:before{height:calc(34vh - clamp(64px,19vw,92px))!important}}
+.cinema-entry{--bande:clamp(72px,9.5vw,130px)}
+.bd-bande-veillee img{object-position:0% 38%!important}
+.bd-rue:before{height:calc(34vh - clamp(72px,9.5vw,130px))!important}
+@media (max-width:700px){.cinema-entry{--bande:clamp(64px,19vw,92px)}.bd-rue:before{height:calc(34vh - clamp(64px,19vw,92px))!important}}

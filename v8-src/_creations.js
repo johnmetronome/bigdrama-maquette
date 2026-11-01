@@ -11,13 +11,10 @@
   addEventListener('keydown', e => { if (v.hidden) return; if (e.key === 'Escape') fermer(); if (e.key === 'ArrowRight') montrer(k + 1); if (e.key === 'ArrowLeft') montrer(k - 1); });
 })();
 
-// V8.22 · billetterie Billetweb : le cadre ne se charge qu'au clic. Aucun script tiers sur la page.
+// V8.23 · films de tête (Norma, Close, La Veillée) : muets, en boucle. À l'arrêt si l'on demande moins d'animations.
 (() => {
-  const zone = document.querySelector('[data-billetweb]'); if (!zone) return;
-  zone.querySelector('.cr-billetweb-ouvrir').addEventListener('click', () => {
-    const f = document.createElement('iframe');
-    f.src = zone.dataset.billetweb; f.title = 'Billetterie La Veillée (Billetweb)'; f.allow = 'payment';
-    f.className = 'cr-billetweb-cadre';
-    zone.replaceChildren(f); zone.classList.add('ouverte'); f.focus();
-  });
+  const v = document.querySelector('.cr-tete-film'); if (!v) return;
+  v.muted = true;
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); return; }
+  const p = v.play(); if (p) p.catch(() => {});
 })();

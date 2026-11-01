@@ -279,7 +279,7 @@ function survoler(id) {
   const ratio=ratios[id]||2, largeur=Math.min(260,Math.sqrt(9000*ratio),70*ratio);
   titre.style.width=largeur+'px';titre.style.height=(largeur/ratio)+'px';titre.style.setProperty('--masque',`url('${A+parId[id].logo}')`);
   const phrase=document.createElement('span');phrase.className='bd-hover-phrase';phrase.textContent=c.phrase;
-  logo.append(titre,phrase);
+  logo.append(titre); if (edition) logo.append(phrase);   // V8.23 · dans la rue, les logos seuls (le sous-titre reste visible dans l'atelier)
   logo.classList.remove('vu'); void logo.offsetWidth; logo.classList.add('vu');
 }
 
