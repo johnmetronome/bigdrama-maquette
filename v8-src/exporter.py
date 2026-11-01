@@ -198,6 +198,10 @@ AddType font/woff2 .woff2
 AddType image/webp .webp
 
 <IfModule mod_headers.c>
+  # le site ne peut pas être affiché dans le cadre d'un autre site ; HTTPS imposé au navigateur pendant 6 mois
+  Header always set Content-Security-Policy "frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+  Header always set Strict-Transport-Security "max-age=15552000"
+  Header always set Cross-Origin-Opener-Policy "same-origin"
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -211,18 +215,22 @@ AddType image/webp .webp
   </IfModule>
 </FilesMatch>
 
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml text/plain application/xml
+</IfModule>
+
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType text/html "access plus 0 seconds"
   ExpiresByType text/css "access plus 7 days"
   ExpiresByType text/javascript "access plus 7 days"
   ExpiresByType application/javascript "access plus 7 days"
-  ExpiresByType image/webp "access plus 30 days"
-  ExpiresByType image/jpeg "access plus 30 days"
-  ExpiresByType image/png "access plus 30 days"
-  ExpiresByType image/svg+xml "access plus 30 days"
-  ExpiresByType video/mp4 "access plus 30 days"
-  ExpiresByType audio/mpeg "access plus 30 days"
+  ExpiresByType image/webp "access plus 7 days"
+  ExpiresByType image/jpeg "access plus 7 days"
+  ExpiresByType image/png "access plus 7 days"
+  ExpiresByType image/svg+xml "access plus 7 days"
+  ExpiresByType video/mp4 "access plus 7 days"
+  ExpiresByType audio/mpeg "access plus 7 days"
   ExpiresByType font/woff2 "access plus 365 days"
 </IfModule>
 """, encoding='utf-8')

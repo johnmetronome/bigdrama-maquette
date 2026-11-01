@@ -300,3 +300,9 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 ## V8.26 · 01.11.2026 · pages courtes
 
 - Parfum de Famille et Scatolina (pas de film) : page courte. Titre, une grande image, accroche et texte, partenaires, Retour. Plus de galerie ni de citations de presse sur ces deux pages.
+
+## V8.27 · 01.11.2026 · mise en ligne réparée, sécurité, vidéos plus légères
+
+- `deployer.sh` : envoi sans recopier les droits du NAS (700, illisibles par le serveur : erreur 403 sur tout le site), puis droits de lecture remis sur tout le dossier. Nouveau mode `bash deployer.sh droits`.
+- Vidéos de tête des pages création : versions muettes et légères `v8/assets/films/tete-*-720.mp4` (29 Mo pour les six au lieu de 59).
+- `.htaccess` : interdiction d affichage dans le cadre d un autre site (CSP frame-ancestors), HTTPS imposé au navigateur (HSTS 6 mois), isolation de la fenêtre, compression des textes, cache des médias ramené à 7 jours.

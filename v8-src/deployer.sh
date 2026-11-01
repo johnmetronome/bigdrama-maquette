@@ -6,6 +6,7 @@
 #   bash deployer.sh sauvegarde    copie tout le serveur actuel dans ../../sauvegarde-serveur-AAAA-MM-JJ-HHMM
 #   bash deployer.sh essai         montre ce qui serait envoyé, sans rien envoyer
 #   bash deployer.sh envoi         envoie le site (ajoute et remplace, ne supprime rien sur le serveur)
+#   bash deployer.sh droits        rend tous les fichiers du site lisibles par le serveur web (erreur 403)
 #   bash deployer.sh envoi-propre  envoie le site ET supprime du serveur tout ce qui n'en fait pas partie
 #                                  (ancien WordPress, fichiers PHP). Demande une sauvegarde et une confirmation.
 #
@@ -61,7 +62,8 @@ case "$MODE" in
   essai)
     lancer "mirror --reverse --dry-run --only-newer $EXCLUS '$SITE' '$DOSSIER'" ;;
   envoi)
-    lancer "mirror --reverse --only-newer --parallel=4 --verbose=1 $EXCLUS '$SITE' '$DOSSIER'"
+    lancer "mirror --reverse --no-perms --only-newer --parallel=4 --verbose=1 $EXCLUS '$SITE' '$DOSSIER'"
+    lancer "chmod -R 755 '$DOSSIER'"
     echo "Site envoyé. Vérifie l'adresse dans un navigateur privé." ;;
   envoi-propre)
     ls -d "$ICI"/../../sauvegarde-serveur-* >/dev/null 2>&1 || { echo "Fais d'abord : bash deployer.sh sauvegarde"; exit 1; }
@@ -69,8 +71,12 @@ case "$MODE" in
     lancer "mirror --reverse --dry-run --delete $EXCLUS '$SITE' '$DOSSIER'" | grep -iE "^(rm|Removing)" || echo "(aucun)"
     read -r -p "Tape SUPPRIMER pour envoyer le site et supprimer ces fichiers du serveur : " R
     [ "$R" = "SUPPRIMER" ] || { echo "Annulé, rien n'a changé."; exit 1; }
-    lancer "mirror --reverse --delete --parallel=4 --verbose=1 $EXCLUS '$SITE' '$DOSSIER'"
+    lancer "mirror --reverse --no-perms --delete --parallel=4 --verbose=1 $EXCLUS '$SITE' '$DOSSIER'"
+    lancer "chmod -R 755 '$DOSSIER'"
     echo "Site envoyé, anciens fichiers retirés du serveur." ;;
-  *) echo "Mode inconnu : $MODE (test, sauvegarde, essai, envoi, envoi-propre)"; exit 1 ;;
+  droits)
+    lancer "chmod -R 755 '$DOSSIER'"
+    echo "Droits de lecture rétablis sur $DOSSIER" ;;
+  *) echo "Mode inconnu : $MODE (test, sauvegarde, essai, envoi, envoi-propre, droits)"; exit 1 ;;
 esac
 unset LFTP_PASSWORD

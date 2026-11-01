@@ -328,7 +328,7 @@ for _c in CREATIONS:
     _c['cadre'] = ''
     if _c.get('film'):
         _nom = Path(_c['film']).stem.replace('-169', '')
-        _c['tete_video'] = {'film': _c['film'], 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
+        _c['tete_video'] = {'film': f"v8/assets/films/tete-{_nom}-720.mp4", 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
         _c['film'] = None
     if _c['slug'] in ('parfum-de-famille', 'scatolina'):
         _c['simple'] = True   # V8.26 · pas de film : page courte (titre, une image, l'histoire, crédits) (Alex, 01.11.2026)
