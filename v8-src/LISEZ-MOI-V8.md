@@ -245,3 +245,13 @@ Avant la mise en ligne officielle :
 2. Adresse contact@bigdrama.fr confirmée, ou changer `CONTACT` dans `creations.py`.
 3. Domaine bigdrama.fr repris chez Gandi, puis DNS vers l'hébergeur choisi.
 4. Publier le dossier exporté, pas le dépôt de la maquette : le dépôt contient les sources, les notes de travail et l'ancien site v2.
+
+## V8.22 · 01.11.2026 · page La Veillée complète et billetterie
+
+- Textes d'Ariane : « Pour que les histoires ne meurent jamais », la devise, le synopsis à la 3e personne, la citation de *Fahrenheit 451*, l'appel (radio du Centre, message des Veilleurs). Passages barrés retirés, indications sonores entre crochets non publiées. Le synopsis à la 1re personne n'est pas utilisé. Le texte « lore » d'Aliosha est retiré.
+- Paquet de Rémi : dates (26 et 27 novembre 2026), lieu et infos pratiques, tarif 25 €, équipe en crédits. Rémi Large, Production, dans l'équipe de l'À propos.
+- Billetterie : le module Billetweb n'utilise pas leur script `export.js`. Le site affiche la page Billetweb dans un cadre, seulement après un clic sur « Choisir ses places ». Avant le clic, aucune requête ni cookie Billetweb. Lien de secours vers un nouvel onglet. CSP des pages création : `frame-src https://www.billetweb.fr` uniquement.
+- Bouton « Réserver · 25 € » en tête de page, annonce de l'accueil avec les dates.
+- Données d'événement schema.org (dates sans horaire) pour Google.
+- Typographie : espaces fines insécables avant : ? ! ; » et après « sur toutes les pages générées.
+- À fournir : horaires des deux séances (rien n'est affiché en attendant), photos du spectacle.

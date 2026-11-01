@@ -904,3 +904,7 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 @media (max-width:350px){body.media-home #masthead .archive-nav{grid-template-columns:84px minmax(0,1fr)!important;gap:8px!important}body.media-home .custom-logo-link,body.media-home .custom-logo-link img{width:84px!important;max-width:84px!important;height:auto!important}body.media-home #site-navigation{gap:6px!important}body.media-home #site-navigation a{font-size:8.5px!important;letter-spacing:.02em!important}}
 .bd-strips .strip-legende{font-size:clamp(10px,.8vw,12px)!important}
 #bottom-footer a{display:inline-block;padding:10px 2px}
+/* V8.22 · dates dans l'annonce */
+.bd-annonce-dates{font:400 12px/1.4 var(--bd-texte);letter-spacing:.04em;color:#4a4642}
+@media (orientation:landscape) and (max-height:520px){.bd-annonce-dates{display:none}}
+.bd-annonce-texte,.bd-annonce-texte *{text-align:left!important}

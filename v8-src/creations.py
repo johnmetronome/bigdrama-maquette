@@ -321,14 +321,46 @@ for _c in CREATIONS:
 
 # La Veillée : page sur le même modèle. Dates, photos de spectacle et crédits à fournir : rien n'est inventé.
 CREATIONS.insert(0, {
+    # Textes : Ariane (01.11.2026). Dates, lieu, infos pratiques, équipe, billetterie : paquet de Rémi Large (01.11.2026).
+    # Visuel : « La veillée sur mur décrépit » (31.10.2026). Horaires des séances : à fournir, rien d'affiché en attendant.
     'slug': 'la-veillee', 'id': 'veillee', 'titre': 'La Veillée', 'logo': None,
-    'genre': '', 'cadre': 'Nouvelle création', 'quand': '', 'ou': '',
-    # textes : doc d'Ariane « Contenu com - La Veillée », partie lore (31.10.2026). Visuel : « La veillée sur mur décrépit » (31.10.2026)
-    'accroche': "Aliosha est un reclus. Il vit seul dans son studio, il bidouille des ordinateurs, écrit de la musique. Mais il n’a personne pour les écouter.",
-    'texte': ["Un jour, alors qu’il répare une vieille radio, il capte un signal qui semble venir de très loin. Un appel à l’aide.",
-              "Ils s’appellent 46, 125B et 9001. Leur message n’est pas très clair, mais ils semblent en danger. Ils disent faire partie d’un groupe clandestin appelé la Veillée. Ils parlent d’un gouvernement qui n’a pas de nom, ils semblent être surveillés en permanence.",
-              "Jour après jour, Aliosha décrypte leurs messages. Il devient obsédé par l’idée de les retrouver. Mais leur monde semble très éloigné du nôtre, comme dans une autre dimension. À force d’analyser leurs messages, Aliosha finit par comprendre. Il parle avec notre futur."],
-    'contexte': '', 'chiffres': [], 'credits': [],
+    'genre': '', 'cadre': 'Nouvelle création', 'quand': '26 et 27 novembre 2026', 'ou': 'Villa Riberolle, Paris 20e',
+    'accroche': "Pour que les histoires ne meurent jamais",
+    'devise': ["Nous ne sommes que les voix de nos histoires", "Ce qu’on nous a raconté, nous le raconterons"],
+    'texte': ["Depuis que les machines ont pris le pouvoir et interdit toute forme de fiction, un groupe de rebelles se réunit dans un refuge clandestin pour se souvenir des histoires qui ont fait l’humanité.",
+              "Mais comment raconter nos plus grandes œuvres, de Shakespeare à <em>Retour vers le futur</em>, quand tous les livres et les films ont été détruits ? Il ne leur reste que leurs souvenirs incertains, un piano et l’imagination des spectateurs pour réinventer, soir après soir, ce cabaret brinquebalant, qui ne cesse de changer et que l’on appelle la Veillée."],
+    'citation': ("Le feu ne brûlait pas pour détruire : il réchauffait.", "Fahrenheit 451"),
+    'appel': {
+        'radio_avant': ["Attention, attention.", "Ceci est un message de bonne humeur.", "Bonjour, les amours !", "Ici Le Centre.", "Il est déjà quatre heures !", "Et c’est déjà l’heure d’être de bonne humeur.", "C’est obligatoire."],
+        'message': [["Les Amis,", "Ceci n’est pas un message officiel.", "Ils ont interdit les histoires,", "Mais nous refusons de vivre sans elles."],
+                    ["Alors rejoins-nous dans la pénombre, au coin du feu.", "Nous raconterons les histoires que nous avons sauvées.", "Même mal.", "Même avec presque rien."],
+                    ["Chaque soir, nous rallumerons le feu.", "Chaque soir, ce sera une autre histoire.", "Et chaque soir, nous l’appellerons…", "La Veillée."],
+                    ["Ma sœur.", "Mon frère.", "Tu ne seras plus jamais seul."],
+                    ["Qui est là ?"]],
+        'radio_apres': ["Respirez.", "Apaisez.", "Oubliez.", "Avez-vous rempli votre formulaire de sérénité ?", "Et maintenant, votre émission : Comment améliorer sa productivité."],
+    },
+    'billetterie': {
+        'dates': [("Jeudi", "26 novembre 2026", "2026-11-26"), ("Vendredi", "27 novembre 2026", "2026-11-27")],
+        'tarif': "25 €", 'prix': "25",
+        'lien': "https://www.billetweb.fr/shop.php?event=la-veillee2",
+    },
+    'infos': [("Lieu", "Villa Riberolle"),
+              ("Adresse", "10 Villa Riberolle, 75020 Paris<br><small>Entrée de l’impasse au 35 rue de Bagnolet</small>"),
+              ("Accès", "Métro Alexandre Dumas (ligne 2)<br>Bus 76, arrêts Charonne-Bagnolet ou La Réunion"),
+              ("Durée", "1 h 30"),
+              ("Public", "À partir de 12 ans"),
+              ("Accessibilité", "Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue, nous organiserons votre accueil.")],
+    'contexte': '', 'chiffres': [],
+    'credits': [("Autrice, mise en scène, chant, interprétation", "Ariane Raynaud"),
+                ("Auteur, direction artistique, musique, interprétation", "Alexis Pivot"),
+                ("Artistes", "Emma Scherer, Colin Melquiond, Madeleine Flodd"),
+                ("Assistante à la mise en scène", "Julia Erin"),
+                ("Scénographie", "Camille Dugas"),
+                ("Costumes", "Juliette de Romemont"),
+                ("Habilleuse", "Bérangère Pivot"),
+                ("Accessoires", "Les Petites Odyssées"),
+                ("Création lumière", "Titouan Laporte"),
+                ("Production", "Rémi Large")],
     'photos': ['v8/assets/la-veillee-mur.jpg'], 'film': None, 'legende': '',
     'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-mur.jpg',
 })
@@ -345,7 +377,7 @@ APROPOS = {   # textes d'Ariane, 28.10.2026
     'equipe': [
         ('Ariane Raynaud', 'Cofondatrice · mise en scène, écriture', ''),
         ('Alexis Pivot', 'Cofondateur · direction artistique, écriture, musique', ''),
-        ('Rémi', '', ''),
+        ('Rémi Large', 'Production', ''),   # nom et rôle : paquet La Veillée de Rémi (01.11.2026)
     ],
     'portraits': {},
 }
@@ -353,7 +385,7 @@ APROPOS = {   # textes d'Ariane, 28.10.2026
 # ───────── gabarit ─────────
 ANNEE = 2026
 CONTACT = 'contact@bigdrama.fr'   # adresse de l'ancienne politique de confidentialité : à confirmer
-CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-src https://www.billetweb.fr"
 
 
 def image(chemin, carte, R):
@@ -382,15 +414,70 @@ def pied(R, appel=True):
             f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a></p></footer>')
 
 
+def typo(h):
+    """Espaces fines insécables avant : ? ! ; » et après «, dans le texte seulement (pas dans les balises)."""
+    morceaux = re.split(r'(<script[\s\S]*?</script>|<style[\s\S]*?</style>|<[^>]+>)', h)
+    for k in range(0, len(morceaux), 2):
+        if morceaux[k].strip():
+            morceaux[k] = re.sub(r' ([:?!;»])', '\u202f\\1', morceaux[k]).replace('« ', '«\u202f')
+    return ''.join(morceaux)
+
+
 def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=True):
-    return f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+    return typo(f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{CSP}"><meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{E(titre)}</title><meta name="description" content="{E(description)}">
 <meta property="og:type" content="article"><meta property="og:title" content="{E(titre)}"><meta property="og:description" content="{E(description)}">{image_og}
 <link rel="stylesheet" href="{R}v8/fonts/fonts.css"><link rel="stylesheet" href="{R}v8/creations/creations.css?v={version}">
 <link rel="icon" type="image/png" href="{R}v8/favicon.png"><script src="{R}v8/creations/creations.js?v={version}" defer></script></head>
 <body class="cr{(' cr-' + E(slug)) if slug else ''}">{entete(R, actif)}<main id="contenu">{corps}</main>{pied(R, appel)}</body></html>
-'''
+''')
+
+
+def appel(c):
+    """Le manifeste : la radio du Centre encadre le message clandestin des Veilleurs."""
+    a = c.get('appel')
+    if not a:
+        return ''
+    radio = lambda lignes: '<p class="cr-radio">' + '<br>'.join(E(x) for x in lignes) + '</p>'
+    message = ''.join('<p>' + '<br>'.join(E(x) for x in strophe) + '</p>' for strophe in a['message'])
+    return (f'<section class="cr-appel" aria-label="Manifeste"><h2>L’appel</h2>{radio(a["radio_avant"])}'
+            f'<div class="cr-message">{message}</div>{radio(a["radio_apres"])}</section>')
+
+
+def billetterie(c):
+    """Dates, tarif et billetterie Billetweb. Le cadre Billetweb ne se charge qu'au clic (aucun script ni cookie tiers avant)."""
+    b = c.get('billetterie')
+    if not b:
+        return ''
+    dates = ''.join(f'<li><time datetime="{iso}"><span>{E(j)}</span>{E(d)}</time></li>' for j, d, iso in b['dates'])
+    return f'''<section class="cr-billetterie" id="billetterie" aria-label="Billetterie"><h2>Réserver</h2>
+<ul class="cr-dates">{dates}</ul><p class="cr-tarif">Tarif unique <strong>{E(b["tarif"])}</strong></p>
+<div class="cr-billetweb" data-billetweb="{E(b["lien"])}"><button type="button" class="cr-bouton cr-billetweb-ouvrir">Choisir ses places</button>
+<p class="cr-billetweb-note">La billetterie est gérée par Billetweb. Elle s’affiche ici après le clic.</p></div>
+<p class="cr-secours"><a href="{E(b["lien"])}" target="_blank" rel="noopener">Ouvrir la billetterie dans un nouvel onglet</a></p></section>'''
+
+
+def infos(c):
+    if not c.get('infos'):
+        return ''
+    lignes = ''.join(f'<div><dt>{E(k)}</dt><dd>{v}</dd></div>' for k, v in c['infos'])
+    lignes += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
+    return f'<section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{lignes}</dl></section>'
+
+
+def evenements(c):
+    """Données structurées schema.org pour les moteurs de recherche (dates sans horaire tant qu'elles manquent)."""
+    b = c.get('billetterie')
+    if not b:
+        return ''
+    ev = [{"@context": "https://schema.org", "@type": "TheaterEvent", "name": c['titre'], "startDate": iso,
+           "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
+           "location": {"@type": "Place", "name": "Villa Riberolle", "address": {"@type": "PostalAddress", "streetAddress": "10 Villa Riberolle", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
+           "organizer": {"@type": "Organization", "name": "Big Drama"},
+           "offers": {"@type": "Offer", "price": b['prix'], "priceCurrency": "EUR", "url": b['lien']},
+           "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for _, _, iso in b['dates']]
+    return '<script type="application/ld+json">' + json.dumps(ev, ensure_ascii=False).replace('</', '<\\/') + '</script>'
 
 
 def page_creation(c, i, carte, version):
@@ -432,14 +519,20 @@ def page_creation(c, i, carte, version):
 <section class="cr-tete" style="--fond:url('{fond}')"><div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">{E(c["cadre"])}</p>
   {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
-  {f'<p class="cr-sous">{sous}</p>' if sous else ''}</div>
+  {f'<p class="cr-sous">{sous}</p>' if sous else ''}
+  {f'<a class="cr-bouton cr-reserver" href="#billetterie">Réserver · {E(c["billetterie"]["tarif"])}</a>' if c.get('billetterie') else ''}</div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
 <article class="cr-corps">
  {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
+ {('<p class="cr-devise">' + '<br>'.join(E(x) for x in c['devise']) + '</p>') if c.get('devise') else ''}
  {f'<div class="cr-texte">{texte}</div>' if texte else ''}
+ {f'<figure class="cr-citation"><blockquote>« {E(c["citation"][0])} »</blockquote><figcaption><cite>{E(c["citation"][1])}</cite></figcaption></figure>' if c.get('citation') else ''}
  {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
  {f'<dl class="cr-chiffres">{chiffres}</dl>' if chiffres else ''}
 </article>
+{appel(c)}
+{billetterie(c)}
+{infos(c)}
 {presse}
 {film}
 <section class="cr-galerie" aria-label="Photos"{' hidden' if c.get("bandeau") else ''}><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
@@ -450,7 +543,7 @@ def page_creation(c, i, carte, version):
     desc = re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
     desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
     og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{photos[0]}">'
-    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og, slug=c['da'])
+    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og + evenements(c), slug=c['da'])
 
 
 def page_apropos(carte, version):

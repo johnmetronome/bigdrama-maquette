@@ -194,3 +194,34 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-legal-texte p{margin:0 0 1em;overflow-wrap:anywhere}
 .cr-legal-texte a{color:var(--lumiere)}
 .cr-la-veillee .cr-corps{padding-top:18px}
+
+/* V8.22 · La Veillée : devise, citation, appel, billetterie, infos (mur clair, crayon, rouille) */
+.cr-reserver{margin-top:26px}
+.cr-la-veillee .cr-sous{background:none;padding:0;color:var(--creme-2);margin-top:14px;letter-spacing:.18em}
+.cr-la-veillee .cr-bouton{background:var(--creme);color:var(--nuit-2);border:1px solid var(--creme)}
+.cr-la-veillee .cr-bouton:hover{background:var(--lumiere);border-color:var(--lumiere);color:#f3efe7}
+.cr-devise{max-width:34em;margin:-14px auto 44px;text-align:center;font:500 11px/2.1 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere)}
+.cr-citation{max-width:34em;margin:46px auto 0;padding-top:30px;border-top:1px solid var(--filet);text-align:center}
+.cr-citation blockquote{margin:0;font:italic clamp(20px,2vw,26px)/1.5 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-citation figcaption{margin-top:10px;font:500 10px/1.6 var(--texte);letter-spacing:.22em;text-transform:uppercase;color:var(--lumiere)}
+.cr-citation cite{font-style:normal}
+.cr-appel,.cr-billetterie,.cr-infos{width:min(100% - 40px,760px);margin:var(--espace) auto 0;text-align:center}
+.cr-appel h2,.cr-billetterie h2,.cr-infos h2{margin-bottom:30px;font-size:clamp(28px,3.4vw,40px)}
+.cr-radio{margin:0 auto;max-width:30em;padding:18px 20px;border:1px dashed var(--filet);font:400 13px/1.9 "Special Elite","Courier New",monospace;letter-spacing:.02em;color:var(--creme-2);opacity:.85}
+.cr-message{margin:34px auto;font:italic clamp(21px,2.3vw,28px)/1.55 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-message p{margin:0 0 1.1em}.cr-message p:last-child{margin:1.4em 0 0;font-style:normal;letter-spacing:.04em;color:var(--lumiere)}
+.cr-dates{list-style:none;margin:0 auto;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:14px}
+.cr-dates li{flex:1 1 220px;max-width:280px;padding:20px 16px;border:1px solid var(--filet)}
+.cr-dates time{display:block;font:400 clamp(22px,2.2vw,28px)/1.25 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-dates time span{display:block;margin-bottom:6px;font:500 10px/1.6 var(--texte);letter-spacing:.22em;text-transform:uppercase;color:var(--lumiere)}
+.cr-tarif{margin:22px 0 26px;color:var(--creme-2)}.cr-tarif strong{font:400 22px var(--titre);color:var(--creme);margin-left:6px}
+.cr-billetweb{margin:0 auto;padding:30px 20px;border:1px solid var(--filet);background:color-mix(in srgb,var(--nuit-2) 70%,transparent)}
+.cr-billetweb-note{margin:14px 0 0;font-size:13px;color:var(--creme-2)}
+.cr-billetweb.ouverte{padding:0;background:#fff}
+.cr-billetweb-cadre{display:block;width:100%;height:min(1100px,150vh);border:0;background:#fff}
+.cr-secours{margin:14px 0 0;font-size:13px}.cr-secours a{color:var(--lumiere)}
+.cr-infos .cr-liste{text-align:left}
+.cr-infos dd small{font-size:13px;color:var(--creme-2)}
+.cr-infos dd a{color:var(--lumiere)}
+@media (max-width:700px){.cr-billetweb-cadre{height:1200px}.cr-radio{font-size:12px}}
+.cr-devise{max-width:46em}
