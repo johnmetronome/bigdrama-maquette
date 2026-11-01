@@ -63,7 +63,7 @@ def img(m):
     balise = balise.replace(f'src="{src}"', f'src="assets/opt/{e["src"]}"')
     if 'srcset' in e:
         jeu = ', '.join('assets/opt/' + x.strip() for x in e['srcset'].split(','))
-        balise = balise.replace('<img ', f'<img srcset="{jeu}" sizes="100vw" ', 1)
+        balise = balise.replace('<img ', f'<img srcset="{jeu}"' + ('' if 'sizes=' in balise else ' sizes="100vw"') + ' ', 1)
     if 'decoding=' not in balise:
         balise = balise.replace('<img ', '<img decoding="async" ', 1)
     return balise

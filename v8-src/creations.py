@@ -319,13 +319,18 @@ REPONSES = {
 for _c in CREATIONS:
     _c.update(REPONSES.get(_c['slug'], {}))
 
-# La Veillée : page sur le même modèle. Textes, photos et crédits à fournir : rien n'est inventé.
+# La Veillée : page sur le même modèle. Dates, photos de spectacle et crédits à fournir : rien n'est inventé.
 CREATIONS.insert(0, {
     'slug': 'la-veillee', 'id': 'veillee', 'titre': 'La Veillée', 'logo': None,
     'genre': '', 'cadre': 'Nouvelle création', 'quand': '', 'ou': '',
-    'accroche': '', 'texte': [], 'contexte': '', 'chiffres': [], 'credits': [],
-    'photos': ['v8/assets/la-veillee-bandeau.jpg'], 'film': None, 'legende': '',
-    'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-bandeau.jpg',
+    # textes : doc d'Ariane « Contenu com - La Veillée », partie lore (31.10.2026). Visuel : « La veillée sur mur décrépit » (31.10.2026)
+    'accroche': "Aliosha est un reclus. Il vit seul dans son studio, il bidouille des ordinateurs, écrit de la musique. Mais il n’a personne pour les écouter.",
+    'texte': ["Un jour, alors qu’il répare une vieille radio, il capte un signal qui semble venir de très loin. Un appel à l’aide.",
+              "Ils s’appellent 46, 125B et 9001. Leur message n’est pas très clair, mais ils semblent en danger. Ils disent faire partie d’un groupe clandestin appelé la Veillée. Ils parlent d’un gouvernement qui n’a pas de nom, ils semblent être surveillés en permanence.",
+              "Jour après jour, Aliosha décrypte leurs messages. Il devient obsédé par l’idée de les retrouver. Mais leur monde semble très éloigné du nôtre, comme dans une autre dimension. À force d’analyser leurs messages, Aliosha finit par comprendre. Il parle avec notre futur."],
+    'contexte': '', 'chiffres': [], 'credits': [],
+    'photos': ['v8/assets/la-veillee-mur.jpg'], 'film': None, 'legende': '',
+    'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-mur.jpg',
 })
 
 APROPOS = {   # textes d'Ariane, 28.10.2026
@@ -346,6 +351,8 @@ APROPOS = {   # textes d'Ariane, 28.10.2026
 }
 
 # ───────── gabarit ─────────
+ANNEE = 2026
+CONTACT = 'contact@bigdrama.fr'   # adresse de l'ancienne politique de confidentialité : à confirmer
 CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; media-src 'self' blob:; font-src 'self'; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
 
 
@@ -354,27 +361,35 @@ def image(chemin, carte, R):
     return R + ('v8/assets/opt/' + e['src'] if e else chemin)
 
 
+def jeu_images(chemin, carte, R):
+    """srcset des images qui en ont un (bandeaux en deux tailles)."""
+    e = carte.get(chemin)
+    if not e or 'srcset' not in e:
+        return ''
+    return ' srcset="' + ', '.join(R + 'v8/assets/opt/' + x.strip() for x in e['srcset'].split(',')) + '"'
+
+
 def entete(R, actif):
     lien = lambda href, nom, cle: f'<a href="{href}"{" aria-current=\"page\"" if actif == cle else ""}>{nom}</a>'
     return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/" aria-label="Big Drama, accueil"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
-            f'<nav aria-label="Navigation principale">{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/?direct#contact", "Contact", "contact")}</nav></header>')
+            f'<nav aria-label="Navigation principale">{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/contact/", "Contact", "contact")}</nav></header>')
 
 
-def pied(R):
-    return (f'<footer class="cr-pied" id="contact"><p class="cr-pied-titre">Une histoire à raconter ?</p>'
-            f'<a class="cr-bouton" href="{R}v2/contactform.html">Nous contacter</a>'
-            f'<p class="cr-reseaux"><a href="https://www.facebook.com/bigdramaparis">Facebook</a><a href="https://instagram.com/bigdramaparis">Instagram</a><a href="https://www.linkedin.com/company/big-drama/">LinkedIn</a></p>'
-            f'<p class="cr-legal">© Big Drama 2026 · <a href="{R}v2/mentionslegales.html">Mentions légales</a> · <a href="{R}v2/cgv.html">CGV</a> · <a href="{R}v2/politiqueconfidentialite.html">Politique de confidentialité</a></p></footer>')
+def pied(R, appel=True):
+    return (f'<footer class="cr-pied" id="contact">'
+            + (f'<p class="cr-pied-titre">Une histoire à raconter ?</p><a class="cr-bouton" href="{R}v8/contact/">Nous contacter</a>' if appel else '')
+            + f'<p class="cr-reseaux"><a href="https://www.facebook.com/bigdramaparis" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" rel="noopener">LinkedIn</a></p>'
+            f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a></p></footer>')
 
 
-def page(titre, description, R, corps, actif, version, image_og='', slug=''):
+def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=True):
     return f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{CSP}"><meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{E(titre)}</title><meta name="description" content="{E(description)}">
 <meta property="og:type" content="article"><meta property="og:title" content="{E(titre)}"><meta property="og:description" content="{E(description)}">{image_og}
 <link rel="stylesheet" href="{R}v8/fonts/fonts.css"><link rel="stylesheet" href="{R}v8/creations/creations.css?v={version}">
 <link rel="icon" type="image/png" href="{R}v8/favicon.png"><script src="{R}v8/creations/creations.js?v={version}" defer></script></head>
-<body class="cr{(' cr-' + E(slug)) if slug else ''}">{entete(R, actif)}<main id="contenu">{corps}</main>{pied(R)}</body></html>
+<body class="cr{(' cr-' + E(slug)) if slug else ''}">{entete(R, actif)}<main id="contenu">{corps}</main>{pied(R, appel)}</body></html>
 '''
 
 
@@ -413,7 +428,7 @@ def page_creation(c, i, carte, version):
     if c.get('partenaires'):
         partenaires = '<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>' + ''.join(f'<li><img src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>'
     corps = f'''
-{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}" alt="{E(c["titre"])}"></figure>' if c.get("bandeau") else ''}
+{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}"{jeu_images(c["bandeau"], carte, R)} sizes="100vw" alt="{E(c["titre"])}" fetchpriority="high"></figure>' if c.get("bandeau") else ''}
 <section class="cr-tete" style="--fond:url('{fond}')"><div class="cr-tete-voile"></div>
  <div class="cr-tete-contenu"><p class="cr-cadre">{E(c["cadre"])}</p>
   {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
@@ -472,6 +487,30 @@ def page_apropos(carte, version):
     return page('À propos · Big Drama', a['ouverture'][0], R, corps, 'apropos', version, slug='apropos')
 
 
+def tete_simple(cadre, titre):
+    return (f'<section class="cr-tete cr-tete-simple"><div class="cr-tete-contenu"><p class="cr-cadre">{E(cadre)}</p>'
+            f'<h1 class="cr-titre-texte">{E(titre)}</h1></div></section>')
+
+
+def page_contact(version):
+    R = '../../'
+    corps = f'''{tete_simple("Contact", "Une histoire à raconter ?")}
+<article class="cr-corps cr-contact"><p class="cr-accroche">Écrivez-nous.</p>
+<p class="cr-contact-mail"><a href="mailto:{CONTACT}">{CONTACT}</a></p></article>'''
+    return page('Contact · Big Drama', f'Contacter Big Drama : {CONTACT}', R, corps, 'contact', version, slug='simple', appel=False)
+
+
+LEGAL = [('mentions-legales', 'Mentions légales'), ('cgv', 'Conditions générales de vente'), ('confidentialite', 'Politique de confidentialité')]
+
+
+def page_legale(slug, titre, version):
+    R = '../../'
+    texte = (ICI / '_legal' / f'{slug}.html').read_text(encoding='utf-8')
+    corps = f'''{tete_simple("Informations", titre)}
+<article class="cr-corps cr-legal-texte">{texte}</article>'''
+    return page(f'{titre} · Big Drama', f'{titre} du site Big Drama.', R, corps, '', version, slug='simple')
+
+
 def generer(carte, version):
     (OUT / 'creations').mkdir(parents=True, exist_ok=True)
     for i, c in enumerate(CREATIONS):
@@ -479,6 +518,11 @@ def generer(carte, version):
         (d / 'index.html').write_text(page_creation(c, i, carte, version), encoding='utf-8')
     (OUT / 'a-propos').mkdir(exist_ok=True)
     (OUT / 'a-propos' / 'index.html').write_text(page_apropos(carte, version), encoding='utf-8')
+    (OUT / 'contact').mkdir(exist_ok=True)
+    (OUT / 'contact' / 'index.html').write_text(page_contact(version), encoding='utf-8')
+    for slug, titre in LEGAL:
+        (OUT / slug).mkdir(exist_ok=True)
+        (OUT / slug / 'index.html').write_text(page_legale(slug, titre, version), encoding='utf-8')
     shutil.copy2(ICI / '_creations.css', OUT / 'creations' / 'creations.css')
     shutil.copy2(ICI / '_creations.js', OUT / 'creations' / 'creations.js')
     return {c['id']: c['slug'] for c in CREATIONS}

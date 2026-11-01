@@ -168,3 +168,29 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-la-veillee .cr-cadre{background:none;padding:0;border:0;color:var(--lumiere);font-size:14px;letter-spacing:.3em}
 .cr-la-veillee .cr-tete{padding:46px 16px 30px}
 .cr-la-veillee .cr-suite{margin-top:30px}
+
+/* V8.21 · La Veillée : texte lisible sur le mur clair */
+.cr-la-veillee .cr-accroche{color:var(--creme)}
+.cr-la-veillee .cr-texte p{color:var(--creme-2)}
+.cr-la-veillee .cr-bandeau img{object-position:center 45%}
+/* V8.21 · lisibilité et cibles tactiles */
+.cr-suite a span{font-size:10px}
+.cr-reseaux a,.cr-legal a{display:inline-block;padding:10px 2px}
+.cr-reseaux{gap:6px 22px}
+@media (max-width:700px){.cr-entete nav a{font-size:11px;padding:12px 0}.cr-cadre{font-size:10px}.cr-sous{font-size:11px}}
+@media (max-width:370px){.cr-entete nav{gap:10px}.cr-entete nav a{font-size:10px;letter-spacing:.08em}}
+
+/* V8.21 · pages Contact et pages légales */
+.cr-tete-simple{min-height:auto;padding:150px 24px 64px;background:var(--nuit)}
+.cr-tete-simple .cr-titre-texte{font-size:clamp(36px,6vw,72px)}
+.cr-tete-simple .cr-cadre{background:none}
+.cr-contact{text-align:center;padding-bottom:var(--espace)}
+.cr-contact .cr-accroche{margin-bottom:22px}
+.cr-contact-mail a{font:400 clamp(20px,2.4vw,30px)/1.4 "Bodoni Moda",Georgia,serif;color:var(--lumiere);text-decoration:none;border-bottom:1px solid currentColor;padding-bottom:3px;word-break:break-word}
+.cr-contact-mail a:hover{color:var(--creme)}
+.cr-legal-texte{max-width:760px;padding-bottom:var(--espace);font-size:15px;line-height:1.75}
+.cr-legal-texte h3{margin:2.2em 0 .7em;font-size:clamp(20px,2vw,25px);color:var(--creme)}
+.cr-legal-texte h3:first-child{margin-top:0}
+.cr-legal-texte p{margin:0 0 1em;overflow-wrap:anywhere}
+.cr-legal-texte a{color:var(--lumiere)}
+.cr-la-veillee .cr-corps{padding-top:18px}

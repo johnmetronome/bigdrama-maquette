@@ -1,7 +1,7 @@
 import { SILHOUETTES, COULEURS, POLICES, solRue, FENETRES_CLOSE } from './silhouettes.js';
 import { LIEUX, LOREM_LONG } from './lieux.js';
 
-const A = '../';                                   // les médias de la maquette sont à la racine du dépôt
+const A = document.querySelector('meta[name="bd-racine"]')?.content ?? '../';   // racine des médias : ../ dans la maquette, ./ dans la version en ligne (exporter.py)
 const NS = 'http://www.w3.org/2000/svg', $ = s => document.querySelector(s);
 const reduit = matchMedia('(prefers-reduced-motion: reduce)').matches;
 const el = (n, a = {}, p) => { const e = document.createElementNS(NS, n); for (const k in a) e.setAttribute(k, a[k]); if (p) p.appendChild(e); return e; };
@@ -17,7 +17,8 @@ const ACCROCHES = {
 const ANCRES = {cimetiere:[98,606],tour:[278,640],maison:[490,640],serre:[690,670],usine:[820,668],bar:[970,700],creche:[1125,698],arbre:[1240,732]};
 const EDIT_KEY = 'bigdrama-v8-reglages-1';
 let reglages = {};
-try { reglages = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}'); } catch {}
+// V8.21 : l'atelier et ses réglages locaux n'existent qu'avec ?edit. Les visiteurs voient toujours la rue d'origine.
+if (new URLSearchParams(location.search).has('edit')) try { reglages = JSON.parse(localStorage.getItem(EDIT_KEY) || '{}'); } catch {}
 const poses = {}, zones = {}, bases = {}, posesDevant = {};
 let edition = new URLSearchParams(location.search).has('edit'), selection = 'maison';
 for (const l of LIEUX) bases[l.id] = {...l.placement};
@@ -398,10 +399,17 @@ document.querySelectorAll('[data-veillee]').forEach(b => b.onclick = () => { loc
     const montrer = () => { annonce.hidden = false; requestAnimationFrame(() => annonce.classList.add('vu')); };
     const attendre = () => setTimeout(montrer, 2200);
     if ($('#bd-seuil').classList.contains('ouvert')) attendre(); else $('#bd-entrer').addEventListener('click', attendre, { once: true });
+    // sur téléphone, l'annonce se replie quand on descend et revient en haut de page
+    const petit = matchMedia('(max-width:700px), (orientation:landscape) and (max-height:520px)');
+    // partout, elle se replie aussi quand la bande La Veillée est à l'écran : elle ferait doublon
+    let bandeVue = false;
+    const replier = () => annonce.classList.toggle('replie', bandeVue || (petit.matches && scrollY > innerHeight * .6));
+    addEventListener('scroll', replier, { passive: true });
+    if ('IntersectionObserver' in window) { const vues = new Set(); const io = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? vues.add(e.target) : vues.delete(e.target)); bandeVue = vues.size > 0; replier(); }); document.querySelectorAll('.bd-strip.veillee').forEach(b => io.observe(b)); }
     annonce.querySelector('.bd-annonce-fermer').addEventListener('click', () => { annonce.classList.remove('vu'); setTimeout(() => annonce.hidden = true, 600); try { sessionStorage.setItem('bd-annonce-veillee', 'fermee'); } catch {} });
   } }
 $('#bd-veillee button').onclick = () => $('#bd-veillee').close();
-initialiserEditeur();
+if (edition) initialiserEditeur();
 if (/[?&](edit|debug)\b/.test(location.search)) window.__bd = { ouvrirProjet, survoler, boites, entrer, construire, glisserVers, lancerConstruction, allerVersBanniere, chanter }; // outils de test seulement
 
 function choisir(id) {

@@ -893,3 +893,14 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-annonce-fermer:focus-visible{outline:1px solid #7a3b2e}
 @media(max-width:700px){.bd-annonce{top:64px;right:12px;left:12px;width:auto}.bd-annonce-lien{display:grid!important;grid-template-columns:40% 1fr;align-items:stretch}.bd-annonce img{height:100%;min-height:92px;max-height:110px}.bd-annonce-texte{padding:12px 34px 12px 14px}.bd-annonce strong{font-size:21px}}
 @media(prefers-reduced-motion:reduce){.bd-annonce{transition:none}}
+
+/* V8.21 · annonce plus discrète sur téléphone couché, repliée quand on descend sur téléphone */
+@media (orientation:landscape) and (max-height:520px){.bd-annonce{top:58px;right:12px;left:auto;width:320px}.bd-annonce-lien{display:grid!important;grid-template-columns:38% 1fr;align-items:stretch}.bd-annonce img{height:100%;min-height:76px;max-height:96px}.bd-annonce-texte{padding:10px 34px 10px 14px;gap:2px}.bd-annonce strong{font-size:19px}}
+.bd-annonce.vu.replie{opacity:0;transform:translateY(-12px);pointer-events:none}
+.bd-annonce img{object-position:20% 50%}
+/* V8.21 · lisibilité et cibles tactiles sur téléphone */
+@media (max-width:600px){body.media-home #site-navigation{gap:12px!important}body.media-home #site-navigation a{font-size:10px!important;letter-spacing:.08em!important;padding-block:14px!important}}
+@media (max-width:400px){body.media-home #site-navigation{gap:8px!important}body.media-home #site-navigation a{font-size:9px!important;letter-spacing:.04em!important}}
+@media (max-width:350px){body.media-home #masthead .archive-nav{grid-template-columns:84px minmax(0,1fr)!important;gap:8px!important}body.media-home .custom-logo-link,body.media-home .custom-logo-link img{width:84px!important;max-width:84px!important;height:auto!important}body.media-home #site-navigation{gap:6px!important}body.media-home #site-navigation a{font-size:8.5px!important;letter-spacing:.02em!important}}
+.bd-strips .strip-legende{font-size:clamp(10px,.8vw,12px)!important}
+#bottom-footer a{display:inline-block;padding:10px 2px}

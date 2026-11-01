@@ -218,3 +218,30 @@ python3 rebuild.py     # à chaque modification des sources
 Contenu à fournir : nom de famille et rôle de Rémi, les trois portraits, bios courtes et crédits des créations hors Close. Rien de provisoire n’est inventé dans les pages.
 
 Sauvegarde avant intervention : `../_sauvegardes/v8.18-avant-v8.19/code.tgz`, avec manifeste SHA-256. Aucun commit ni push effectué par Codex.
+
+## V8.21 · 01.11.2026 · La Veillée, repasse, version en ligne
+
+- La Veillée : nouveau visuel « La veillée sur mur décrépit » (Drive, 31.10) sur la bande de l'accueil, l'annonce, la page création et l'À propos. Fichier : `v8/assets/la-veillee-mur.jpg`. L'ancien bandeau reste dans le dépôt, il n'est plus utilisé.
+- La Veillée : texte de la page tiré du doc d'Ariane « Contenu com - La Veillée », partie lore (quatre paragraphes, tels quels). Le reste du doc (déroulé du spectacle, poèmes) n'est pas publié.
+- Annonce : repliée quand la bande La Veillée est à l'écran, repliée sur téléphone dès qu'on descend, compacte sur téléphone couché.
+- Atelier de la rue (bouton « Modifier » de Codex) : visible seulement avec `?edit`. Sans `?edit`, les réglages enregistrés dans le navigateur sont ignorés : tout le monde voit la même rue.
+- Lisibilité téléphone : navigation de l'accueil passée de 8 à 9 et 10 px, cibles tactiles plus hautes, petits libellés agrandis. Testé de 320 à 1920 px, téléphone couché compris.
+- Nouvelles pages : `v8/contact/` (contact@bigdrama.fr, adresse de l'ancienne politique de confidentialité, à confirmer) et `v8/mentions-legales/`, `v8/cgv/`, `v8/confidentialite/`. Le site ne renvoie plus vers les pages v2.
+- Pages légales : texte de l'ancien site, tel quel, dans `v8-src/_legal/*.html`. Remplacer ces trois fichiers par la version validée d'Ariane puis relancer `rebuild.py`.
+- Bandeaux des pages création : deux tailles (900 et 2000 px), le téléphone charge la petite.
+
+### Version en ligne : `exporter.py`
+
+```
+cd v8-src
+python3 rebuild.py
+python3 exporter.py https://www.bigdrama.fr ../../bigdrama-en-ligne
+```
+
+Produit un dossier autonome (environ 260 Mo, 180 fichiers) avec le site à la racine : `/`, `/a-propos/`, `/creations/close/`, `/contact/`. Seuls les fichiers utilisés sont copiés : pas de `v8-src`, pas de notes ni de prompts, pas de v6 ni v7. Ajoute `robots.txt`, `sitemap.xml`, `404.html`, `.nojekyll`, les adresses canoniques et les aperçus de partage en adresse absolue. `--noindex` garde l'interdiction d'indexation pour une préversion. Le script prévient tant que les pages légales sont celles de l'ancien site.
+
+Avant la mise en ligne officielle :
+1. Pages légales validées par Ariane (et relues par un juriste), puis `rebuild.py`.
+2. Adresse contact@bigdrama.fr confirmée, ou changer `CONTACT` dans `creations.py`.
+3. Domaine bigdrama.fr repris chez Gandi, puis DNS vers l'hébergeur choisi.
+4. Publier le dossier exporté, pas le dépôt de la maquette : le dépôt contient les sources, les notes de travail et l'ancien site v2.
