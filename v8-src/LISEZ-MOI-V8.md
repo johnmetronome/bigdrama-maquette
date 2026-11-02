@@ -313,3 +313,15 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - `.htaccess` (audit Mistral) : `AddDefaultCharset UTF-8`, HSTS 2 ans avec `includeSubDomains`, cache 30 jours pour CSS, JS, images et films, polices 1 an immuables. La redirection HTTP vers HTTPS se règle dans le panneau Gandi (une règle derrière Varnish risquerait une boucle).
 - Page 404 : même politique de sécurité que les autres pages. Script v2 de l accueil versionné.
 - Audit Mistral : `AUDIT-MISTRAL-V8.27.md`.
+
+## V8.29 · 02.11.2026 · nouvelle adresse, Burning Bar, Noëlle, Norma, retours Gemini
+
+- Adresse de contact : contact@big-drama.fr partout (`CONTACT` dans `creations.py`, `index.template.html`, pages légales). Les pages légales nomment aussi www.big-drama.fr.
+- Burning Bar : page simple (titre, une image, l'histoire), comme Parfum de Famille et Scatolina.
+- Un Conte de Noëlle : diaporama lent en tête de page, 10 photos de la sélection d'Alex (6 s chacune, fondus de 1,5 s, 60 s en boucle sans à-coup). `assets/films/tete-noelle-720.mp4` (7,4 Mo), `tete-noelle-540.mp4` (3,6 Mo). Copies 2560 px des photos : V3/3-medias-sources/un-conte-de-noelle-diaporama.
+- Norma : photo DSC06981 d'Alessandro Clemenza en tête de galerie (`photos/norma-rosy.jpg`).
+- La Veillée, données structurées : `endDate` et `image` ajoutés (retour Gemini O8). Lieu et prix y étaient déjà.
+- Focus clavier visible sur les bandeaux de l'accueil (retour Gemini O11).
+- Déjà en place, contrairement à l'audit Gemini : `Sitemap:` dans robots.txt (O9), `preload="none"` et `saveData` pour le film d'accueil (O3).
+- `exporter.py` : adresse par défaut https://www.big-drama.fr.
+- À faire : boucle courte de 20 s pour l'accueil sur téléphone, d'après les points de coupe d'Alex. Le film d'accueil se termine sur « www.bigdrama.fr » (ancien domaine).

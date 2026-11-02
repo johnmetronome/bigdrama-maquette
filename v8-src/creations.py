@@ -18,7 +18,7 @@ def V(t):
 
 
 E = html.escape
-CONTACT = 'contact@bigdrama.fr'   # adresse confirmée par le paquet La Veillée de Rémi (01.11.2026)
+CONTACT = 'contact@big-drama.fr'   # boîte du nouveau domaine, créée par Alex le 02.11.2026 (retours Mistral S4 et Gemini)
 BILLETTERIE = 'https://www.billetweb.fr/shop.php?event=la-veillee2'   # La Veillée, Billetweb
 
 # ───────── contenu ─────────
@@ -330,8 +330,13 @@ for _c in CREATIONS:
         _nom = Path(_c['film']).stem.replace('-169', '')
         _c['tete_video'] = {'film': f"v8/assets/films/tete-{_nom}-720.mp4", 'mobile': f"v8/assets/opt/videos/{Path(_c['film']).stem}-540.mp4", 'affiche': f'v8/assets/films/{_nom}-poster.jpg'}
         _c['film'] = None
-    if _c['slug'] in ('parfum-de-famille', 'scatolina'):
-        _c['simple'] = True   # V8.26 · pas de film : page courte (titre, une image, l'histoire, crédits) (Alex, 01.11.2026)
+    if _c['slug'] in ('parfum-de-famille', 'scatolina', 'burning-bar'):
+        _c['simple'] = True   # V8.26 · pas de film : page courte (titre, une image, l'histoire, crédits) (Alex, 01.11.2026). Burning Bar : V8.29
+    if _c['slug'] == 'un-conte-de-noelle':
+        # V8.29 · pas de film : diaporama lent des photos de la sélection d'Alex (10 photos, 6 s chacune, fondus, 60 s en boucle)
+        _c['tete_video'] = {'film': 'v8/assets/films/tete-noelle-720.mp4', 'mobile': 'v8/assets/films/tete-noelle-540.mp4', 'affiche': 'v8/assets/films/un-conte-de-noelle-poster.jpg'}
+    if _c['slug'] == 'norma':
+        _c['photos'] = ['photos/norma-rosy.jpg'] + _c['photos']   # V8.29 · photo d'Alessandro Clemenza (DSC06981, Alex, 02.11.2026)
     if _c['slug'] == 'close':
         _c['photos'] = [x for x in _c['photos'] if x != 'photos/close-04.jpg']   # « la photo du général » (Alex, 01.11.2026)
 
@@ -458,6 +463,7 @@ def evenements(c):
            "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
            "location": {"@type": "Place", "name": "Villa Riberolle", "address": {"@type": "PostalAddress", "streetAddress": "10 Villa Riberolle", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
            "organizer": {"@type": "Organization", "name": "Big Drama"},
+           "endDate": iso, "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + c['tete_video']['affiche']] if c.get('tete_video') else [],
            "offers": {"@type": "Offer", "price": b['prix'], "priceCurrency": "EUR", "url": b['lien']},
            "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for iso in b['dates']]
     return '<script type="application/ld+json">' + json.dumps(ev, ensure_ascii=False).replace('</', '<\\/') + '</script>'

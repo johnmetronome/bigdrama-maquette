@@ -2,8 +2,8 @@
 
     cd bigdrama-maquette/v8-src
     python3 rebuild.py
-    python3 exporter.py                                   # adresse par défaut : https://www.bigdrama.fr
-    python3 exporter.py https://www.bigdrama.fr ../../bigdrama-en-ligne
+    python3 exporter.py                                   # adresse par défaut : https://www.big-drama.fr
+    python3 exporter.py https://www.big-drama.fr ../../bigdrama-en-ligne
 
 Le dossier produit contient seulement les fichiers dont le site a besoin :
 pas de sources, pas de notes, pas d'anciennes versions (v6, v7-src…), pas de fichiers de test.
@@ -18,7 +18,7 @@ import os, re, shutil, sys, posixpath, datetime
 ICI = Path(__file__).resolve().parent
 RACINE = ICI.parent
 args = [a for a in sys.argv[1:] if not a.startswith('--')]
-BASE = (args[0] if args else 'https://www.bigdrama.fr').rstrip('/')
+BASE = (args[0] if args else 'https://www.big-drama.fr').rstrip('/')
 SORTIE = Path(args[1]).resolve() if len(args) > 1 else (RACINE.parent / 'bigdrama-en-ligne')
 NOINDEX = '--noindex' in sys.argv
 if SORTIE == RACINE or RACINE in SORTIE.parents:

@@ -942,3 +942,6 @@ html,body{overflow:visible!important;overflow-x:clip!important}
 .bd-rue:before{height:calc(34vh - clamp(84px,11vw,170px))!important}
 @media (max-width:700px){.cinema-entry{--bande:clamp(76px,22vw,104px)}.bd-rue:before{height:calc(34vh - clamp(76px,22vw,104px))!important}}
 .bd-strip.veillee>img{object-position:0% 45%!important}
+
+/* V8.29 · focus clavier visible sur les bandeaux de l'accueil (retour Gemini O11) */
+.bd-strip:focus-visible{outline:2px solid #c9a35b;outline-offset:-4px}
