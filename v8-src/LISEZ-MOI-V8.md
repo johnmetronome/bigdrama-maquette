@@ -306,3 +306,10 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - `deployer.sh` : envoi sans recopier les droits du NAS (700, illisibles par le serveur : erreur 403 sur tout le site), puis droits de lecture remis sur tout le dossier. Nouveau mode `bash deployer.sh droits`.
 - Vidéos de tête des pages création : versions muettes et légères `v8/assets/films/tete-*-720.mp4` (29 Mo pour les six au lieu de 59).
 - `.htaccess` : interdiction d affichage dans le cadre d un autre site (CSP frame-ancestors), HTTPS imposé au navigateur (HSTS 6 mois), isolation de la fenêtre, compression des textes, cache des médias ramené à 7 jours.
+
+## V8.28 · 02.11.2026 · page Billetterie, retours de Mistral
+
+- Nouvelle page `v8/billetterie/` dans l univers de La Veillée : film en tête, les deux séances avec un bouton « Choisir ses places » chacune (lien direct Billetweb, nouvel onglet), tarif, infos pratiques. Le menu Billetterie, la bande de l accueil et le bouton Réserver de La Veillée y mènent.
+- `.htaccess` (audit Mistral) : `AddDefaultCharset UTF-8`, HSTS 2 ans avec `includeSubDomains`, cache 30 jours pour CSS, JS, images et films, polices 1 an immuables. La redirection HTTP vers HTTPS se règle dans le panneau Gandi (une règle derrière Varnish risquerait une boucle).
+- Page 404 : même politique de sécurité que les autres pages. Script v2 de l accueil versionné.
+- Audit Mistral : `AUDIT-MISTRAL-V8.27.md`.

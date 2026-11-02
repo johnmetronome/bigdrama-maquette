@@ -279,3 +279,16 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-simple-image{width:min(100% - 40px,1100px);margin:0 auto;border:1px solid var(--filet)}
 .cr-simple-image img{width:100%;height:auto;max-height:78vh;object-fit:cover}
 .cr-corps--simple{padding-top:clamp(40px,5vw,64px)}
+
+/* V8.28 · page Billetterie (univers La Veillée) */
+.cr-tete--billetterie{min-height:min(70svh,640px)!important}
+.cr-billet{text-align:center}
+.cr-seances{list-style:none;margin:10px auto 0;padding:0;display:flex;flex-wrap:wrap;justify-content:center;gap:16px}
+.cr-seances li{flex:1 1 260px;max-width:330px;padding:26px 20px 24px;border:1px solid var(--filet);background:color-mix(in srgb,var(--nuit) 80%,#000)}
+.cr-seance-jour{margin:0 0 6px;font:400 13px/1.6 "Special Elite","Courier New",monospace;letter-spacing:.2em;text-transform:uppercase;color:var(--lumiere)}
+.cr-seance-date{margin:0 0 20px;font:400 clamp(24px,2.4vw,30px)/1.25 "Bodoni Moda",Georgia,serif;color:var(--creme)}
+.cr-la-veillee .cr-seance-bouton{padding:14px 26px;background:var(--lumiere);border-color:var(--lumiere);color:#140f0a;letter-spacing:.22em}
+.cr-la-veillee .cr-seance-bouton:hover{background:var(--creme);border-color:var(--creme)}
+.cr-billet .cr-tarif{margin:30px 0 6px}
+.cr-billet-note{margin:0;font-size:13px;color:var(--creme-2)}
+.cr-billet-lien{margin:26px 0 0}.cr-billet-lien a{color:var(--lumiere);text-underline-offset:4px}

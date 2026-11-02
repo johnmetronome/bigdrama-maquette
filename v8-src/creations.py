@@ -412,7 +412,7 @@ def jeu_images(chemin, carte, R):
 def entete(R, actif):
     lien = lambda href, nom, cle, plus='': f'<a href="{href}" class="cr-nav-{cle}"{" aria-current=\"page\"" if actif == cle else ""}{plus}>{nom}</a>'
     return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/?direct#content" aria-label="Big Drama, retour aux créations"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
-            f'<nav aria-label="Navigation principale">{lien(BILLETTERIE, "Billetterie", "billetterie", " target=\"_blank\" rel=\"noopener\"")}'
+            f'<nav aria-label="Navigation principale">{lien(R + "v8/billetterie/", "Billetterie", "billetterie")}'
             f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
 
 
@@ -511,7 +511,7 @@ def page_creation(c, i, carte, version):
  <div class="cr-tete-contenu">{f'<p class="cr-cadre">{E(c["cadre"])}</p>' if c.get("cadre") else ''}
   {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
   {f'<p class="cr-sous">{E(c["dates_courtes"]) if c.get("dates_courtes") else sous}</p>' if sous or c.get("dates_courtes") else ''}
-  {f'<a class="cr-bouton cr-reserver" href="{c["reserver"]}" target="_blank" rel="noopener">Réserver</a>' if c.get('reserver') else ''}</div>
+  {f'<a class="cr-bouton cr-reserver" href="{R}v8/billetterie/">Réserver</a>' if c.get('reserver') else ''}</div>
  <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
 <article class="cr-corps">
  {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
@@ -598,6 +598,39 @@ def page_legale(slug, titre, version):
     return page(f'{titre} · Big Drama', f'{titre} du site Big Drama.', R, corps, '', version, slug='simple')
 
 
+# V8.28 · page Billetterie dans l'univers de La Veillée. Le paiement reste chez Billetweb (lien direct, aucun script tiers).
+SEANCES = [("Jeudi", "26 novembre 2026"), ("Vendredi", "27 novembre 2026")]   # horaires : à fournir
+INFOS_VEILLEE = [("Lieu", "Villa Riberolle, 10 Villa Riberolle, 75020 Paris<br><small>Entrée de l’impasse au 35 rue de Bagnolet</small>"),
+                 ("Accès", "Métro Alexandre Dumas (ligne 2)<br>Bus 76, arrêts Charonne-Bagnolet ou La Réunion"),
+                 ("Durée", "1 h 30"),
+                 ("Public", "À partir de 12 ans"),
+                 ("Accessibilité", "Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue, nous organiserons votre accueil.")]
+
+
+def page_billetterie(carte, version):
+    R = '../../'
+    v = next(c for c in CREATIONS if c['slug'] == 'la-veillee')
+    seances = ''.join(f'''<li><p class="cr-seance-jour">{E(j)}</p><p class="cr-seance-date">{E(d)}</p>
+<a class="cr-bouton cr-seance-bouton" href="{BILLETTERIE}" target="_blank" rel="noopener">Choisir ses places</a></li>''' for j, d in SEANCES)
+    infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in INFOS_VEILLEE)
+    infos += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
+    corps = f'''
+<section class="cr-tete cr-tete--video cr-tete--billetterie" style="--fond:url('{image(v['tete_video']['affiche'], carte, R)}')">{tete_video(v, carte, R)}<div class="cr-tete-voile"></div>
+ <div class="cr-tete-contenu"><p class="cr-cadre">Billetterie</p><h1 class="cr-titre-texte">La Veillée</h1>
+  <p class="cr-sous">{E(v["dates_courtes"])}</p></div></section>
+<article class="cr-corps cr-billet">
+ <p class="cr-accroche">{E(v["accroche"])}</p>
+ <ul class="cr-seances">{seances}</ul>
+ <p class="cr-tarif">Tarif unique <strong>25 €</strong></p>
+ <p class="cr-billet-note">La réservation et le paiement se font sur Billetweb, dans un nouvel onglet.</p>
+ <p class="cr-billet-lien"><a href="../creations/la-veillee/">Découvrir le spectacle</a></p>
+</article>
+<section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{infos}</dl></section>
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
+    return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Villa Riberolle, Paris 20e.',
+                R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee')
+
+
 def generer(carte, version):
     (OUT / 'creations').mkdir(parents=True, exist_ok=True)
     for i, c in enumerate(CREATIONS):
@@ -605,6 +638,8 @@ def generer(carte, version):
         (d / 'index.html').write_text(page_creation(c, i, carte, version), encoding='utf-8')
     (OUT / 'a-propos').mkdir(exist_ok=True)
     (OUT / 'a-propos' / 'index.html').write_text(page_apropos(carte, version), encoding='utf-8')
+    (OUT / 'billetterie').mkdir(exist_ok=True)
+    (OUT / 'billetterie' / 'index.html').write_text(page_billetterie(carte, version), encoding='utf-8')
     for slug, titre in LEGAL:
         (OUT / slug).mkdir(exist_ok=True)
         (OUT / slug / 'index.html').write_text(page_legale(slug, titre, version), encoding='utf-8')
