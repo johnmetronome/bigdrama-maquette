@@ -305,3 +305,10 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 .cr-bw{display:block;width:100%;min-height:360px;border:0}
 .cr-bw.cr-plein{position:fixed;inset:0;width:100%;height:100%!important;z-index:2147483646;border-radius:0}
 .cr-module .cr-billet-note{margin-top:16px}.cr-module .cr-billet-note a{color:var(--lumiere);text-underline-offset:4px}
+
+/* V8.31 · page FAQ et renvoi depuis La Veillée */
+.cr-faq-renvoi{text-align:center}.cr-faq-renvoi p{margin:0 0 22px;color:var(--creme-2)}
+.cr-faq+.cr-faq{margin-top:clamp(40px,6vw,70px)}
+@media (max-width:700px){.cr-entete nav a.cr-nav-faq{display:none}}
+.cr-la-veillee .cr-tete.cr-tete-simple{padding:clamp(56px,8vw,96px) 16px clamp(30px,4vw,48px)}
+.cr-la-veillee .cr-tete.cr-tete-simple h1{position:static;width:auto;height:auto;overflow:visible;clip:auto;margin-top:10px}

@@ -358,8 +358,8 @@ CREATIONS.insert(0, {
     # Horaires et tarifs : Rémi, 02.11.2026 (portes 19 h 30, spectacle 20 h, durée 1 h 30, 20 € sans consommation, 25 € avec)
     'evenement': {'dates': ['2026-11-26', '2026-11-27'], 'portes': '19:30', 'debut': '20:00', 'fin': '21:30', 'prix': ['20', '25'], 'lien': BILLETTERIE},
     # FAQ : questions de la FAQ Norma (Ariane, 2023) dont la réponse est connue pour La Veillée (paquet de Rémi, 01.11.2026)
-    'faq': [("Où se joue le spectacle ?", "À la Villa Riberolle, 10 Villa Riberolle, 75020 Paris. L’entrée de l’impasse est au 35 rue de Bagnolet."),
-            ("Comment y aller ?", "Métro Alexandre Dumas (ligne 2). Bus 76, arrêts Charonne-Bagnolet ou La Réunion."),
+    # V8.31 · lieu public : « Paris 20e » seulement, ni nom ni adresse ni accès (Alex, 02.11.2026)
+    'faq': [("Où se joue le spectacle ?", "À Paris, dans le 20e arrondissement."),
             ("Combien de temps dure l’expérience ?", "Le spectacle dure 1 h 30."),
             ("À partir de quel âge peut-on venir ?", "Nous recommandons le spectacle à partir de 12 ans."),
             ("À quelle heure ?", "Ouverture des portes à 19 h 30, début du spectacle à 20 h."),
@@ -380,6 +380,12 @@ CREATIONS.insert(0, {
     'photos': ['v8/assets/la-veillee-mur-v2.jpg'], 'film': None, 'legende': '',
     'type': 'public', 'da': 'la-veillee', 'marque': '', 'bandeau': 'v8/assets/la-veillee-mur-v2.jpg',
 })
+# V8.31 · ordre des créations (accueil, précédent / suivant) : les pages les plus riches en images d'abord,
+# Parfum de Famille en dernier (retour de Rémi, 02.11.2026).
+ORDRE = ['la-veillee', 'norma', 'close', 'un-conte-de-noelle', 'better-together', 'la-prophetie-del-coco',
+         'viva-barbessia', 'eros-en-russie', 'scatolina', 'burning-bar', 'parfum-de-famille']
+CREATIONS.sort(key=lambda c: ORDRE.index(c['slug']))
+
 
 APROPOS = {   # textes d'Ariane, 28.10.2026
     'ouverture': ["Depuis 2017, nous écrivons et produisons nos propres spectacles de façon indépendante. Nous fabriquons des mondes de toutes pièces, dans des lieux qui n’étaient pas faits pour ça, pour y inviter le public et retrouver le plaisir de jouer ensemble."],
@@ -420,13 +426,13 @@ def entete(R, actif):
     lien = lambda href, nom, cle, plus='': f'<a href="{href}" class="cr-nav-{cle}"{" aria-current=\"page\"" if actif == cle else ""}{plus}>{nom}</a>'
     return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/?direct#content" aria-label="Big Drama, retour aux créations"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
             f'<nav aria-label="Navigation principale">{lien(R + "v8/billetterie/", "Billetterie", "billetterie")}'
-            f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
+            f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/faq/", "FAQ", "faq")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
 
 
 def pied(R, appel=False):
     return (f'<footer class="cr-pied" id="contact">'
-            f'<p class="cr-reseaux"><a href="mailto:{CONTACT}">Email</a><a href="https://www.facebook.com/bigdramaparis" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" rel="noopener">LinkedIn</a></p>'
-            f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a></p></footer>')
+            f'<p class="cr-reseaux"><a href="mailto:{CONTACT}">Email</a><a href="https://www.facebook.com/bigdramaparis" target="_blank" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" target="_blank" rel="noopener">LinkedIn</a></p>'
+            f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a> · <a href="{R}v8/faq/">FAQ</a></p></footer>')
 
 
 def typo(h):
@@ -449,11 +455,38 @@ def page(titre, description, R, corps, actif, version, image_og='', slug='', app
 ''')
 
 
-def faq(c):
+def faq(c, R='../../'):
+    """V8.31 · les questions sont sur la page FAQ (retour de Rémi) : ici, un renvoi."""
     if not c.get('faq'):
         return ''
-    q = ''.join(f'<details><summary>{E(k)}</summary><p>{v}</p></details>' for k, v in c['faq'])
-    return f'<section class="cr-faq" aria-label="Questions fréquentes"><h2>Questions fréquentes</h2>{q}</section>'
+    return (f'<section class="cr-faq cr-faq-renvoi" aria-label="Questions fréquentes"><h2>Questions fréquentes</h2>'
+            f'<p>Le théâtre immersif, la participation, les horaires, l’accès : toutes les réponses.</p>'
+            f'<a class="cr-bouton" href="{R}v8/faq/">Lire la FAQ</a></section>')
+
+
+# V8.31 · page FAQ. Réponses reprises des FAQ d'Ariane (Close 2019, Norma 2023) pour le théâtre immersif,
+# et des infos de Rémi pour La Veillée. Rien d'inventé : à relire par Ariane.
+FAQ_IMMERSIF = [
+    ("Qu’est-ce que le théâtre immersif ?",
+     "Les spectateurs ne sont pas assis face à une scène : ils évoluent librement au sein des décors et parmi les personnages. Ils n’ont pas de place attitrée et font partie de l’histoire."),
+    ("Suis-je obligé de participer ?",
+     "Non. Les spectateurs sont intégrés à l’action, mais ils ne sont jamais obligés de faire quoi que ce soit. Ils peuvent interagir et vivre des moments privilégiés avec les personnages, ou rester en simple position d’observateur s’ils le souhaitent. Les interactions sont toujours proposées, jamais imposées."),
+]
+
+
+def page_faq(carte, version):
+    R = '../../'
+    v = next(c for c in CREATIONS if c['slug'] == 'la-veillee')
+    bloc = lambda titre, qs: (f'<section class="cr-faq" aria-label="{E(titre)}"><h2>{E(titre)}</h2>'
+                              + ''.join(f'<details><summary>{E(k)}</summary><p>{x}</p></details>' for k, x in qs) + '</section>')
+    veillee = [(k, x.replace('href="../../billetterie/"', f'href="{R}v8/billetterie/"')) for k, x in v['faq'] if not k.startswith('Nous n')]
+    corps = f'''{tete_simple("Questions fréquentes", "FAQ")}
+{bloc("Le théâtre immersif", FAQ_IMMERSIF)}
+{bloc("La Veillée", veillee)}
+<section class="cr-faq cr-faq-renvoi"><h2>Nous n’avons pas répondu à votre question ?</h2><a class="cr-bouton" href="mailto:{CONTACT}">Écrivez-nous</a></section>
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
+    return page('FAQ · Big Drama', 'Questions fréquentes : le théâtre immersif, la participation des spectateurs, La Veillée (horaires, billets, accès).',
+                R, corps, 'faq', version, slug='la-veillee')
 
 
 def evenements(c):
@@ -464,7 +497,7 @@ def evenements(c):
     h = lambda d, k: f"{d}T{b[k]}:00+01:00" if b.get(k) else d
     ev = [{"@context": "https://schema.org", "@type": "TheaterEvent", "name": c['titre'], "startDate": h(iso, 'debut'), "doorTime": h(iso, 'portes'),
            "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
-           "location": {"@type": "Place", "name": "Villa Riberolle", "address": {"@type": "PostalAddress", "streetAddress": "10 Villa Riberolle", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
+           "location": {"@type": "Place", "name": "Paris 20e", "address": {"@type": "PostalAddress", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
            "organizer": {"@type": "Organization", "name": "Big Drama"},
            "endDate": h(iso, 'fin'), "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + c['tete_video']['affiche']] if c.get('tete_video') else [],
            "offers": [{"@type": "Offer", "price": x, "priceCurrency": "EUR", "url": b['lien']} for x in b['prix']],
@@ -533,7 +566,7 @@ def page_creation(c, i, carte, version):
 {presse}
 {film}
 <section class="cr-galerie" aria-label="Photos"{' hidden' if c.get("bandeau") else ''}><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
-{faq(c)}
+{faq(c, R)}
 {section_credits}
 {partenaires}
 <nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>
@@ -615,8 +648,7 @@ HORAIRES = "Portes 19 h 30 · Spectacle 20 h"   # proposition de Rémi, 02.11.20
 TARIFS = [("Sans consommation", "20 €"), ("Avec consommation", "25 €")]   # Rémi, 02.11.2026
 BILLETWEB_ID = 'la-veillee-bigdrama'
 CSP_BILLETTERIE = CSP.replace("object-src 'none'", "frame-src https://www.billetweb.fr; object-src 'none'")
-INFOS_VEILLEE = [("Lieu", "Villa Riberolle, 10 Villa Riberolle, 75020 Paris<br><small>Entrée de l’impasse au 35 rue de Bagnolet</small>"),
-                 ("Accès", "Métro Alexandre Dumas (ligne 2)<br>Bus 76, arrêts Charonne-Bagnolet ou La Réunion"),
+INFOS_VEILLEE = [("Lieu", "Paris 20e"),
                  ("Durée", "1 h 30"),
                  ("Public", "À partir de 12 ans"),
                  ("Accessibilité", "Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue, nous organiserons votre accueil.")]
@@ -647,7 +679,7 @@ def page_billetterie(carte, version):
 </section>
 <section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{infos}</dl></section>
 <nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
-    return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Villa Riberolle, Paris 20e.',
+    return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Paris 20e.',
                 R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee', csp=CSP_BILLETTERIE)
 
 
@@ -658,6 +690,8 @@ def generer(carte, version):
         (d / 'index.html').write_text(page_creation(c, i, carte, version), encoding='utf-8')
     (OUT / 'a-propos').mkdir(exist_ok=True)
     (OUT / 'a-propos' / 'index.html').write_text(page_apropos(carte, version), encoding='utf-8')
+    (OUT / 'faq').mkdir(exist_ok=True)
+    (OUT / 'faq' / 'index.html').write_text(page_faq(carte, version), encoding='utf-8')
     (OUT / 'billetterie').mkdir(exist_ok=True)
     (OUT / 'billetterie' / 'index.html').write_text(page_billetterie(carte, version), encoding='utf-8')
     for slug, titre in LEGAL:

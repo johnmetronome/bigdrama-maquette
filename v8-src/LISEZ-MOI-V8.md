@@ -335,3 +335,14 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Le code « pop-up » de Rémi n'est pas repris : il demande du JavaScript dans la page (bloqué par la CSP) et devient un simple onglet sur téléphone. Le lien de secours fait la même chose.
 - La Veillée : FAQ « À quelle heure ? », « Où acheter les billets ? » renvoie vers la page Billetterie. Données structurées : heure de début, d'ouverture des portes, de fin (21 h 30), deux offres.
 - Visuels Billetweb (carré 2160 px, affiche A3 2480 × 3508 px) : V3/3-medias-sources/la-veillee/billetweb/.
+
+## V8.31 · 02.11.2026 · retours de Rémi
+
+- Lieu de La Veillée : « Paris 20e » seulement (Alex). Nom du lieu, adresse, entrée de l'impasse, métro et bus retirés de la FAQ, des infos pratiques, de la description et des données structurées.
+- Page FAQ à part (`/faq/`) : « Le théâtre immersif » (Qu'est-ce que le théâtre immersif ?, Suis-je obligé de participer ?, réponses reprises des FAQ d'Ariane pour Close et Norma) et « La Veillée ». La page La Veillée renvoie vers la FAQ. Lien FAQ dans le menu (masqué sur téléphone, comme Créations), le pied de page et la page 404.
+- Accueil : menu fixe en haut, fond sombre dès qu'on défile (`bd-defile` dans `_app.js`).
+- Bandeau La Veillée : dates en clair sur plaque sombre, en gras, visibles aussi sur tablette et téléphone.
+- Ordre des créations (accueil, précédent / suivant) : La Veillée, Norma, Close, Un Conte de Noëlle, Better Together, La Prophétie del Coco, Viva Barbessia, Eros en Russie, Scatolina, Burning Bar, Parfum de Famille (`ORDRE` dans `creations.py`, bandeaux de `index.template.html`).
+- Réseaux sociaux : ouverture dans un nouvel onglet (accueil et pages).
+- 404 : menu à jour (l'ancien lien /contact/ menait à une page supprimée).
+- Visuels Billetweb refaits avec « Paris 20ᵉ ». Fonds sans texte (PNG) : V3/3-medias-sources/la-veillee/billetweb/sans-texte/.

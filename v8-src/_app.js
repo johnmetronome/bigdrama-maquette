@@ -258,6 +258,7 @@ let heroLance = true, attenteCadre = 0;
 const entreeBas = document.querySelector('.entry-bottom'), masthead = document.querySelector('#masthead');
 addEventListener('scroll', () => { if (!attenteCadre) attenteCadre = requestAnimationFrame(() => { attenteCadre = 0; suivreDefilement(); }); }, { passive: true });
 function suivreDefilement() {
+  document.body.classList.toggle('bd-defile', scrollY > 40);   // V8.31 · fond du menu fixe
   const r = (sansRue() ? $('#content') : rue).getBoundingClientRect();
   if (!sansRue() && r.top < innerHeight * .2 && !glisseEnCours) lancerConstruction();
   const kd = 1 - doux(scrollY / (innerHeight * .25)); if (entreeBas) { entreeBas.style.opacity = kd; entreeBas.style.visibility = kd < 0.02 ? 'hidden' : ''; }
