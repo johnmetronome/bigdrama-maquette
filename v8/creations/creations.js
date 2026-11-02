@@ -18,3 +18,27 @@
   if (matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); return; }
   const p = v.play(); if (p) p.catch(() => {});
 })();
+
+// V8.30 · module de vente Billetweb (page Billetterie). Pas de script Billetweb sur le site : on écoute seulement les
+// messages envoyés par le cadre billetweb.fr (hauteur, défilement, plein écran sur téléphone), même protocole que leur export.js.
+(() => {
+  const ORIGINE = 'https://www.billetweb.fr';
+  addEventListener('message', (e) => {
+    if (e.origin !== ORIGINE || typeof e.data !== 'string') return;
+    const m = e.data.split('_');
+    if (m[0].startsWith('event')) {
+      const f = document.getElementById(m[0]);
+      const h = parseFloat(m[1]);
+      if (f && f.tagName === 'IFRAME' && h > 0 && h < 20000) f.style.height = Math.round(h) + 'px';
+      return;
+    }
+    const f = document.getElementById(m[2] || '');
+    if (!f || f.tagName !== 'IFRAME' || !f.classList.contains('cr-bw')) return;
+    if (m[0] === 'scroll') {
+      if (m[1] === 'widget') f.scrollIntoView();
+      else if (!isNaN(parseFloat(m[1]))) scrollTo(0, f.getBoundingClientRect().top + scrollY + parseFloat(m[1]) - innerHeight / 2);
+    } else if (m[0] === 'fullscreen') {
+      f.classList.toggle('cr-plein', m[1] === 'on');
+    }
+  });
+})();

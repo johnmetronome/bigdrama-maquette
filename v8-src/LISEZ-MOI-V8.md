@@ -325,3 +325,13 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Déjà en place, contrairement à l'audit Gemini : `Sitemap:` dans robots.txt (O9), `preload="none"` et `saveData` pour le film d'accueil (O3).
 - `exporter.py` : adresse par défaut https://www.big-drama.fr.
 - À faire : boucle courte de 20 s pour l'accueil sur téléphone, d'après les points de coupe d'Alex. Le film d'accueil se termine sur « www.bigdrama.fr » (ancien domaine).
+
+## V8.30 · 02.11.2026 · module de vente Billetweb dans la page Billetterie
+
+- Événement Billetweb de Rémi : `la-veillee-bigdrama` (remplace `la-veillee2`). `BILLETTERIE` dans `creations.py`.
+- Page Billetterie : séances avec horaires (portes 19 h 30, spectacle 20 h, proposition de Rémi), deux tarifs (20 € sans consommation, 25 € avec), module de vente Billetweb dans la page, lien de secours vers Billetweb dans un nouvel onglet.
+- Le module est un cadre (iframe) vers billetweb.fr, comme le code d'intégration de Rémi, mais sans leur script `export.js` : aucun script tiers ne tourne sur big-drama.fr (leur script lit aussi les cookies Facebook et Google Analytics). `creations.js` reçoit seulement les messages du cadre (hauteur, défilement, plein écran), origine vérifiée.
+- CSP : `frame-src https://www.billetweb.fr` sur la seule page Billetterie. `.htaccess` : `payment` autorisé pour billetweb.fr (paiement dans le cadre). `.htaccess` testé dans Apache 2.4 (Syntax OK, pages 200, PHP 403).
+- Le code « pop-up » de Rémi n'est pas repris : il demande du JavaScript dans la page (bloqué par la CSP) et devient un simple onglet sur téléphone. Le lien de secours fait la même chose.
+- La Veillée : FAQ « À quelle heure ? », « Où acheter les billets ? » renvoie vers la page Billetterie. Données structurées : heure de début, d'ouverture des portes, de fin (21 h 30), deux offres.
+- Visuels Billetweb (carré 2160 px, affiche A3 2480 × 3508 px) : V3/3-medias-sources/la-veillee/billetweb/.

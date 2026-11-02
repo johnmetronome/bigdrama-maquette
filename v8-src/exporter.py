@@ -206,7 +206,7 @@ AddType image/webp .webp
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
-  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set Permissions-Policy 'camera=(), microphone=(), geolocation=(), payment=(self "https://www.billetweb.fr")'
 </IfModule>
 
 # Le site n'utilise aucun script côté serveur : tout fichier de ce type est refusé (protection si un ancien fichier traîne).

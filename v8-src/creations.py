@@ -19,7 +19,7 @@ def V(t):
 
 E = html.escape
 CONTACT = 'contact@big-drama.fr'   # boîte du nouveau domaine, créée par Alex le 02.11.2026 (retours Mistral S4 et Gemini)
-BILLETTERIE = 'https://www.billetweb.fr/shop.php?event=la-veillee2'   # La Veillée, Billetweb
+BILLETTERIE = 'https://www.billetweb.fr/shop.php?event=la-veillee-bigdrama'   # La Veillée, Billetweb (événement de Rémi, 02.11.2026)
 
 # ───────── contenu ─────────
 # ordre = ordre des bannières de l'accueil (sert au précédent / suivant)
@@ -355,13 +355,15 @@ CREATIONS.insert(0, {
     'tete_video': {'film': 'v8/assets/films/la-veillee-1080.mp4', 'mobile': 'v8/assets/films/la-veillee-540.mp4', 'affiche': 'v8/assets/films/la-veillee-poster.jpg'},
     'reserver': BILLETTERIE,
     'dates_courtes': '26 et 27 novembre 2026 · Paris 20e',
-    'evenement': {'dates': ['2026-11-26', '2026-11-27'], 'prix': '25', 'lien': BILLETTERIE},
+    # Horaires et tarifs : Rémi, 02.11.2026 (portes 19 h 30, spectacle 20 h, durée 1 h 30, 20 € sans consommation, 25 € avec)
+    'evenement': {'dates': ['2026-11-26', '2026-11-27'], 'portes': '19:30', 'debut': '20:00', 'fin': '21:30', 'prix': ['20', '25'], 'lien': BILLETTERIE},
     # FAQ : questions de la FAQ Norma (Ariane, 2023) dont la réponse est connue pour La Veillée (paquet de Rémi, 01.11.2026)
     'faq': [("Où se joue le spectacle ?", "À la Villa Riberolle, 10 Villa Riberolle, 75020 Paris. L’entrée de l’impasse est au 35 rue de Bagnolet."),
             ("Comment y aller ?", "Métro Alexandre Dumas (ligne 2). Bus 76, arrêts Charonne-Bagnolet ou La Réunion."),
             ("Combien de temps dure l’expérience ?", "Le spectacle dure 1 h 30."),
             ("À partir de quel âge peut-on venir ?", "Nous recommandons le spectacle à partir de 12 ans."),
-            ("Où acheter les billets ?", f'En ligne, sur <a href="{BILLETTERIE}" target="_blank" rel="noopener">la billetterie Billetweb</a>.'),
+            ("À quelle heure ?", "Ouverture des portes à 19 h 30, début du spectacle à 20 h."),
+            ("Où acheter les billets ?", 'En ligne, sur <a href="../../billetterie/">notre page Billetterie</a>.'),
             ("Qu’en est-il des personnes à mobilité réduite ?", f"Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue à <a href=\"mailto:{CONTACT}\">{CONTACT}</a>, nous organiserons votre accueil."),
             ("Nous n’avons pas répondu à votre question ?", f'<a href="mailto:{CONTACT}">Écrivez-nous</a>.')],
     'contexte': '', 'chiffres': [],
@@ -436,9 +438,9 @@ def typo(h):
     return ''.join(morceaux)
 
 
-def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=False):
+def page(titre, description, R, corps, actif, version, image_og='', slug='', appel=False, csp=CSP):
     return typo(f'''<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{CSP}"><meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="robots" content="noindex,nofollow"><meta http-equiv="Content-Security-Policy" content="{csp}"><meta name="referrer" content="strict-origin-when-cross-origin">
 <title>{E(titre)}</title><meta name="description" content="{E(description)}">
 <meta property="og:type" content="article"><meta property="og:title" content="{E(titre)}"><meta property="og:description" content="{E(description)}">{image_og}
 <link rel="stylesheet" href="{R}v8/fonts/fonts.css"><link rel="stylesheet" href="{R}v8/creations/creations.css?v={version}">
@@ -459,12 +461,13 @@ def evenements(c):
     b = c.get('evenement')
     if not b:
         return ''
-    ev = [{"@context": "https://schema.org", "@type": "TheaterEvent", "name": c['titre'], "startDate": iso,
+    h = lambda d, k: f"{d}T{b[k]}:00+01:00" if b.get(k) else d
+    ev = [{"@context": "https://schema.org", "@type": "TheaterEvent", "name": c['titre'], "startDate": h(iso, 'debut'), "doorTime": h(iso, 'portes'),
            "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
            "location": {"@type": "Place", "name": "Villa Riberolle", "address": {"@type": "PostalAddress", "streetAddress": "10 Villa Riberolle", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
            "organizer": {"@type": "Organization", "name": "Big Drama"},
-           "endDate": iso, "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + c['tete_video']['affiche']] if c.get('tete_video') else [],
-           "offers": {"@type": "Offer", "price": b['prix'], "priceCurrency": "EUR", "url": b['lien']},
+           "endDate": h(iso, 'fin'), "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + c['tete_video']['affiche']] if c.get('tete_video') else [],
+           "offers": [{"@type": "Offer", "price": x, "priceCurrency": "EUR", "url": b['lien']} for x in b['prix']],
            "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for iso in b['dates']]
     return '<script type="application/ld+json">' + json.dumps(ev, ensure_ascii=False).replace('</', '<\\/') + '</script>'
 
@@ -604,8 +607,14 @@ def page_legale(slug, titre, version):
     return page(f'{titre} · Big Drama', f'{titre} du site Big Drama.', R, corps, '', version, slug='simple')
 
 
-# V8.28 · page Billetterie dans l'univers de La Veillée. Le paiement reste chez Billetweb (lien direct, aucun script tiers).
-SEANCES = [("Jeudi", "26 novembre 2026"), ("Vendredi", "27 novembre 2026")]   # horaires : à fournir
+# V8.28 · page Billetterie dans l'univers de La Veillée.
+# V8.30 · module de vente Billetweb intégré dans la page (cadre, comme le code d'intégration de Rémi) mais sans leur
+# script export.js : aucun script tiers ne s'exécute sur big-drama.fr. Le redimensionnement du cadre est fait par creations.js.
+SEANCES = [("Jeudi", "26 novembre 2026"), ("Vendredi", "27 novembre 2026")]
+HORAIRES = "Portes 19 h 30 · Spectacle 20 h"   # proposition de Rémi, 02.11.2026
+TARIFS = [("Sans consommation", "20 €"), ("Avec consommation", "25 €")]   # Rémi, 02.11.2026
+BILLETWEB_ID = 'la-veillee-bigdrama'
+CSP_BILLETTERIE = CSP.replace("object-src 'none'", "frame-src https://www.billetweb.fr; object-src 'none'")
 INFOS_VEILLEE = [("Lieu", "Villa Riberolle, 10 Villa Riberolle, 75020 Paris<br><small>Entrée de l’impasse au 35 rue de Bagnolet</small>"),
                  ("Accès", "Métro Alexandre Dumas (ligne 2)<br>Bus 76, arrêts Charonne-Bagnolet ou La Réunion"),
                  ("Durée", "1 h 30"),
@@ -617,8 +626,9 @@ def page_billetterie(carte, version):
     R = '../../'
     v = next(c for c in CREATIONS if c['slug'] == 'la-veillee')
     seances = ''.join(f'''<li><p class="cr-seance-jour">{E(j)}</p><p class="cr-seance-date">{E(d)}</p>
-<a class="cr-bouton cr-seance-bouton" href="{BILLETTERIE}" target="_blank" rel="noopener">Choisir ses places</a></li>''' for j, d in SEANCES)
-    infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in INFOS_VEILLEE)
+<p class="cr-seance-heure">{E(HORAIRES)}</p><a class="cr-bouton cr-seance-bouton" href="#reserver">Réserver</a></li>''' for j, d in SEANCES)
+    tarifs = ''.join(f'<li><span>{E(k)}</span><strong>{E(p)}</strong></li>' for k, p in TARIFS)
+    infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in [("Horaires", "Ouverture des portes à 19 h 30<br>Début du spectacle à 20 h")] + INFOS_VEILLEE)
     infos += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
     corps = f'''
 <section class="cr-tete cr-tete--video cr-tete--billetterie" style="--fond:url('{image(v['tete_video']['affiche'], carte, R)}')">{tete_video(v, carte, R)}<div class="cr-tete-voile"></div>
@@ -627,14 +637,18 @@ def page_billetterie(carte, version):
 <article class="cr-corps cr-billet">
  <p class="cr-accroche">{E(v["accroche"])}</p>
  <ul class="cr-seances">{seances}</ul>
- <p class="cr-tarif">Tarif unique <strong>25 €</strong></p>
- <p class="cr-billet-note">La réservation et le paiement se font sur Billetweb, dans un nouvel onglet.</p>
- <p class="cr-billet-lien"><a href="../creations/la-veillee/">Découvrir le spectacle</a></p>
+ <ul class="cr-tarifs" aria-label="Tarifs">{tarifs}</ul>
 </article>
+<section class="cr-module" id="reserver" aria-label="Réserver ses places">
+ <h2>Réserver</h2>
+ <div class="cr-module-cadre"><iframe id="event{BILLETWEB_ID}" class="cr-bw" title="Billetterie Billetweb, La Veillée" src="{BILLETTERIE}&amp;ref={BILLETWEB_ID}" height="600" loading="lazy" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
+ <p class="cr-billet-note">Paiement sécurisé par Billetweb. Le module ne s’affiche pas ? <a href="{BILLETTERIE}" target="_blank" rel="noopener">Ouvrir la billetterie dans un nouvel onglet</a>.</p>
+ <p class="cr-billet-lien"><a href="../creations/la-veillee/">Découvrir le spectacle</a></p>
+</section>
 <section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{infos}</dl></section>
 <nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
     return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Villa Riberolle, Paris 20e.',
-                R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee')
+                R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee', csp=CSP_BILLETTERIE)
 
 
 def generer(carte, version):
