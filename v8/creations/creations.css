@@ -400,3 +400,7 @@ body.cr[class]::before{display:none}
  .cr-media .cr-tete-film.cr-film-portrait{aspect-ratio:4/5;max-height:82svh}
 }
 
+
+/* V8.36 · infos pratiques fermées par défaut, ouvertes par un bouton (billetterie et La Veillée) */
+.cr-infos-tout dd a{color:var(--lumiere)}
+.cr-infos-tout dd small{font-size:13px;color:var(--creme-2)}

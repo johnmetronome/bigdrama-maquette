@@ -426,12 +426,12 @@ for _c in CREATIONS:
     if _s in ('burning-bar', 'parfum-de-famille'):
         _c['tete_photo'] = _c['photos'][0]
     if _s == 'la-veillee':
-        _c['boucle'] = False   # le packshot se joue une fois et se fige sur sa dernière image
+        _c['boucle'] = True   # V8.36 · boucle sur la partie jaune du packshot (Alex, 04.11.2026), la partie bleue est retirée
         # V8.35 · texte canon (Alex, 04.11.2026) : titre, sous-titre, citation, synopsis à la première personne
         _c['accroche'] = ''
         _c['devise'] = []
         _c['citation_avant'] = True
-        _c['synopsis_titre'] = 'Synopsis'
+        _c['synopsis_titre'] = ''   # V8.36 · titre « Synopsis » retiré (Alex)
         _c['texte'] = [
             "Depuis que les machines ont pris le pouvoir et interdit toute forme de fiction, nous nous retrouvons dans un refuge clandestin pour faire revivre les histoires qui ont fait l’humanité.",
             "Mais comment raconter nos plus grandes œuvres, de Shakespeare à <em>Retour vers le futur</em>, quand tous les livres et les films ont été détruits ?",
@@ -440,8 +440,8 @@ for _c in CREATIONS:
         _c['og'] = 'v8/assets/la-veillee-partage.jpg'   # image de partage 1200 × 630 tirée du packshot
         _c['description'] = "La Veillée, théâtre musical clandestin de Big Drama : 26 et 27 novembre 2026, Paris 20e. Depuis que les machines ont interdit toute fiction, nous nous retrouvons pour faire revivre les histoires."
         # packshot V23 : 16:9 sur grand écran, 4:5 pris dans la version verticale sur téléphone tenu droit
-        _c['tete_video'] = {'film': 'v8/assets/films/la-veillee-v23-1080.mp4', 'mobile': 'v8/assets/films/la-veillee-v23-540.mp4',
-                            'portrait': 'v8/assets/films/la-veillee-v23-portrait.mp4', 'affiche': 'v8/assets/films/la-veillee-v23-poster.jpg',
+        _c['tete_video'] = {'film': 'v8/assets/films/la-veillee-v23-boucle-1080.mp4', 'mobile': 'v8/assets/films/la-veillee-v23-boucle-540.mp4',
+                            'portrait': 'v8/assets/films/la-veillee-v23-boucle-portrait.mp4', 'affiche': 'v8/assets/films/la-veillee-v23-poster.jpg',
                             'affiche_portrait': 'v8/assets/films/la-veillee-v23-portrait-poster.jpg'}
         _c['faq_billetterie'] = _c['faq']   # gardée pour une future FAQ sur la billetterie
         _c['faq'] = []         # pas de FAQ sur le site vitrine (Ariane)
@@ -657,6 +657,7 @@ def page_creation(c, i, carte, version):
  {citation_html(c) if not c.get('citation_avant') else ''}
  {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
 </article>
+{infos_veillee() if c['slug'] == 'la-veillee' else ''}
 {presse}
 {f'<section class="cr-galerie" aria-label="Photos"><ul>{galerie}</ul>' + (f'<p class="cr-legende">{E(legende)}</p>' if legende else '') + '</section>' if galerie and not c.get('bandeau') else (f'<p class="cr-legende">{E(legende)}</p>' if legende else '')}
 {section_credits}
@@ -717,26 +718,30 @@ INFOS_VEILLEE = [("Lieu", "Paris 20e"),
                  ("Accessibilité", "Le lieu est accessible aux personnes à mobilité réduite, à l’exception de deux marches à l’entrée. Écrivez-nous avant votre venue, nous organiserons votre accueil.")]
 
 
+def infos_veillee():
+    """V8.36 · infos pratiques fermées par défaut, un bouton les ouvre (Alex). Billetterie et page La Veillée."""
+    infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in [("Horaires", "Ouverture des portes à 19 h 30<br>Début du spectacle à 20 h")] + INFOS_VEILLEE)
+    infos += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
+    return f'<details class="cr-credits-tout cr-infos-tout"><summary>Infos pratiques</summary><dl class="cr-liste">{infos}</dl></details>'
+
+
 def page_billetterie(carte, version):
     """V8.33 · film, titre dessous, module Billetweb, infos pratiques. Plus de cartes de séances (redondantes avec le module)."""
     R = '../../'
     v = next(c for c in CREATIONS if c['slug'] == 'la-veillee')
     tarifs = ''.join(f'<li><span>{E(k)}</span><strong>{E(p)}</strong></li>' for k, p in TARIFS)
-    infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in [("Horaires", "Ouverture des portes à 19 h 30<br>Début du spectacle à 20 h")] + INFOS_VEILLEE)
-    infos += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
     corps = f'''
 {media_tete(v, carte, R)}
 {bloc_titre(v, carte, R, f'<p class="cr-dates-ligne">{E(v["dates_courtes"])}</p>')}
 <article class="cr-corps cr-billet-synopsis">
  {citation_html(v)}
- <h2 class="cr-synopsis-titre">Synopsis</h2>
  <div class="cr-texte">{"".join(f"<p>{x}</p>" for x in v["texte"])}</div>
 </article>
 <section class="cr-module" id="reserver" aria-label="Réserver ses places">
  <div class="cr-module-cadre"><iframe id="event{BILLETWEB_ID}" class="cr-bw" title="Billetterie Billetweb, La Veillée" src="{BILLETTERIE}&amp;ref={BILLETWEB_ID}" height="600" loading="lazy" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
  <p class="cr-billet-note">Paiement sécurisé par Billetweb. Le module ne s’affiche pas ? <a href="{BILLETTERIE}" target="_blank" rel="noopener">Ouvrir la billetterie dans un nouvel onglet</a>.</p>
 </section>
-<section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{infos}</dl></section>
+{infos_veillee()}
 <nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#creations">Retour</a></nav>'''
     return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Paris 20e.',
                 R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v.get("og") or v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee', csp=CSP_BILLETTERIE)

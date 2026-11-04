@@ -42,6 +42,10 @@
   "src": "bandeaux/norma-alessandro-clemenza.webp",
   "srcset": "bandeaux/norma-alessandro-clemenza-900.webp 900w, bandeaux/norma-alessandro-clemenza.webp 2000w"
  },
+ "v8/assets/la-veillee-bande-haut.jpg": {
+  "src": "bandeaux/la-veillee-bande-haut.webp",
+  "srcset": "bandeaux/la-veillee-bande-haut-900.webp 900w, bandeaux/la-veillee-bande-haut.webp 1600w"
+ },
  "v8/assets/la-veillee-bande-v23.jpg": {
   "src": "bandeaux/la-veillee-bande-v23.webp",
   "srcset": "bandeaux/la-veillee-bande-v23-900.webp 900w, bandeaux/la-veillee-bande-v23.webp 2000w"

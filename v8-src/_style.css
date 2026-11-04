@@ -967,3 +967,15 @@ body.media-home.bd-defile #masthead{background:rgba(12,10,8,.82)!important;-webk
 .bd-devant[data-id="arbre"] .bd-coco-signal{pointer-events:auto;cursor:pointer}
 /* V8.33 · ancre Créations sous le menu fixe */
 .bd-strips{scroll-margin-top:90px}
+
+/* V8.36 · bandeau La Veillée en haut du film, sous le menu (Alex, 04.11.2026) : titre lisible en entier, dates sans cadre au-dessus du bouton */
+.cinema-entry{--bande:clamp(96px,12vw,190px);--entete:90px}
+.bd-bande-veillee{top:var(--entete)!important;bottom:auto!important;background:#050403;border-top:0;border-bottom:1px solid #00000059;box-shadow:0 14px 40px rgba(0,0,0,.45)}
+.bd-bande-veillee img{left:clamp(0px,6vw,120px);right:auto;width:auto!important;height:100%!important;object-fit:contain!important;object-position:left center!important}
+.bd-bande-texte{flex-direction:column;align-items:center;gap:clamp(8px,.9vw,12px)}
+.bd-bande-dates,.bd-bande-veillee .bd-bande-dates{display:block!important;background:none!important;padding:0!important;color:#f3ead7;font:600 clamp(11px,1.1vw,16px)/1.2 var(--bd-texte);letter-spacing:.2em;text-transform:uppercase;text-shadow:0 1px 8px #000}
+.cinema-entry .entry-bottom{bottom:28px!important}
+.bd-rue:before{height:34vh!important}
+@media (max-width:700px){.cinema-entry{--bande:clamp(88px,26vw,112px);--entete:70px}.bd-bande-veillee img{left:0}.bd-bande-texte{right:12px;gap:6px}.bd-bande-dates,.bd-bande-veillee .bd-bande-dates{font-size:10px!important;letter-spacing:.14em;padding:0!important}.bd-bande-billet{padding:8px 10px;font-size:9px;letter-spacing:.14em}.bd-rue:before{height:34vh!important}}
+.bd-bande-veillee img{-webkit-mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent);mask-image:linear-gradient(to right,transparent,#000 14%,#000 86%,transparent)}
+@media (max-width:700px){.bd-bande-veillee img{left:-9vw}.bd-bande-billet{padding:8px 9px;font-size:8.5px;letter-spacing:.1em}.bd-bande-texte{right:10px}}

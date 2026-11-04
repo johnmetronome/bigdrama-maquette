@@ -375,3 +375,10 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Film de tête : packshot Blender V23 (240 images, 24 i/s, 10 s), joué une fois puis figé sur sa dernière image. Ordinateur `la-veillee-v23-1080.mp4` (3,9 Mo), tablette `la-veillee-v23-540.mp4` (0,7 Mo), téléphone tenu droit `la-veillee-v23-portrait.mp4` (4:5 tiré de la version 9:16, 2,3 Mo). Master 16:9 et rendus dans V3/3-medias-sources/la-veillee/v23-video.
 - Images tirées du packshot : affiche 16:9 et 4:5, image de partage 1200 × 630 (`assets/la-veillee-partage.jpg`), bandeau d'accueil `assets/la-veillee-bande-v23.jpg`.
 - Visuels Billetweb V23 (carré 2160, A3 web, A3 impression 300 dpi) : V3/3-medias-sources/la-veillee/billetweb/v23/.
+
+## V8.36 · 04.11.2026 · retours d'Alex après la mise en ligne
+
+- Accueil : bandeau La Veillée déplacé en haut du film, juste sous le menu. Nouvelle image `v8/assets/la-veillee-bande-haut.jpg` (image 100 du packshot V23, titre entier). Dates « 26 et 27 nov » sans cadre, au-dessus du bouton « Infos & réservations ».
+- Billetterie et page La Veillée : titre « Synopsis » retiré. Infos pratiques fermées par défaut, ouvertes par un bouton (fonction `infos_veillee()` dans creations.py).
+- Packshot en boucle sur la partie jaune seulement (images 1 à 141, fondu de 0,5 s pour raccorder) : `la-veillee-v23-boucle-1080.mp4`, `-540.mp4`, `-portrait.mp4`, 5,4 s. La partie bleue est retirée, une version 16:9 propre est prévue.
+- exporter.py : l'attribut `data-affiche-portrait` est réécrit et son image exportée (l'image d'attente du film portrait manquait en ligne).
