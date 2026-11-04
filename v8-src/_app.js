@@ -141,6 +141,11 @@ function dessiner() {
     g.addEventListener('pointerleave', e => { if (!promenadeMobile()&&e.pointerType !== 'touch') survoler(null); });
     g.addEventListener('focus', () => survoler(l.id)); g.addEventListener('blur', () => survoler(null));
     g.addEventListener('click', e => { if (edition) { choisir(l.id); return; } if (!vivante || glisse.bouge) return; if (e.pointerType === 'touch' && arme !== l.id) { arme = l.id; survoler(l.id); return; } allerVersBanniere(l.id); });
+    if (l.id === 'arbre') {   // V8.33 · le titre et la chauve-souris du signal mènent aussi à la création (Ariane)
+      gDevant.addEventListener('pointerenter', e => { if (!promenadeMobile() && e.pointerType !== 'touch') survoler(l.id); });
+      gDevant.addEventListener('pointerleave', e => { if (!promenadeMobile() && e.pointerType !== 'touch') survoler(null); });
+      gDevant.addEventListener('click', e => { if (edition) { choisir(l.id); return; } if (!vivante || glisse.bouge) return; if (e.pointerType === 'touch' && arme !== l.id) { arme = l.id; survoler(l.id); return; } allerVersBanniere(l.id); });
+    }
     g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); if(edition) choisir(l.id); else allerVersBanniere(l.id); } });
   });
   tmp.remove();
@@ -266,6 +271,10 @@ function suivreDefilement() {
 }
 
 /* ── survol : la musique, le logo, les personnages qui dansent ── */
+// V8.33 · sous-titres communs à l'accueil et aux pages (récapitulatif d'Ariane)
+const SOUS_TITRES = { cimetiere: 'Comédie musicale noire et immersive', maison: 'Spectacle immersif dans un cabaret de 1918', creche: 'Fable immersive',
+  scatolina: 'Création privée Hermès & Apple', bar: 'Création privée Pernod Ricard', arbre: 'Création privée Bacardí', tour: 'Création privée My Little Paris',
+  lune: 'Création privée The Family', usine: 'Création privée Grimbergen', serre: 'Enquête en ligne immersive' };
 let survole = null;
 const ratios = {}; LIEUX.forEach(l => { const im = new Image(); im.onload = () => ratios[l.id] = im.naturalWidth / im.naturalHeight; im.src = A + l.logo; });
 function survoler(id) {
@@ -277,10 +286,10 @@ function survoler(id) {
   const c = config(id);
   logo.replaceChildren();
   const titre=document.createElement('span');titre.className='bd-hover-logo';titre.setAttribute('role','img');titre.setAttribute('aria-label',c.titre);
-  const ratio=ratios[id]||2, largeur=Math.min(260,Math.sqrt(9000*ratio),70*ratio);
+  const ratio=ratios[id]||2, largeur=Math.min(260,Math.sqrt(9000*ratio),70*ratio)*(id==='arbre'?1.45:1);   // V8.33 · titre de la Prophétie plus grand (Ariane)
   titre.style.width=largeur+'px';titre.style.height=(largeur/ratio)+'px';titre.style.setProperty('--masque',`url('${A+parId[id].logo}')`);
-  const phrase=document.createElement('span');phrase.className='bd-hover-phrase';phrase.textContent=c.phrase;
-  logo.append(titre); if (edition) logo.append(phrase);   // V8.23 · dans la rue, les logos seuls (le sous-titre reste visible dans l'atelier)
+  const phrase=document.createElement('span');phrase.className='bd-hover-phrase';phrase.textContent=edition?c.phrase:(SOUS_TITRES[id]||'');
+  logo.append(titre); if (phrase.textContent) logo.append(phrase);   // V8.33 · sous-titre de chaque spectacle sous le logo (Ariane)
   logo.classList.remove('vu'); void logo.offsetWidth; logo.classList.add('vu');
 }
 
@@ -471,6 +480,13 @@ function defilerVers(top,hash) {
 document.querySelectorAll('.entry-enter').forEach(lien=>lien.addEventListener('click',e=>{
  e.preventDefault();if(!deverrouille)entrer();history.replaceState(null,'',sansRue()?'#histoire':'#rue');glisserVers(etape2());
 }));
+function versCreations(e) {   // V8.33 · l'ancre tombe pile sur les bandeaux (Ariane)
+ const bandes = [...document.querySelectorAll('.bd-strips')].find(x => x.offsetParent !== null); if (!bandes) return;
+ e?.preventDefault(); if (!deverrouille) entrer();
+ defilerVers(bandes.getBoundingClientRect().top + scrollY - (masthead?.offsetHeight || 0), '#creations');
+}
+document.querySelectorAll('#site-navigation a[href="#creations"]').forEach(lien => lien.addEventListener('click', versCreations));
+if (location.hash === '#creations' || location.hash === '#content') { const aller = () => { const b = [...document.querySelectorAll('.bd-strips')].find(x => x.offsetParent !== null); if (b) scrollTo({ top: b.getBoundingClientRect().top + scrollY - (masthead?.offsetHeight || 0), behavior: 'instant' }); }; setTimeout(aller, 350); addEventListener('load', () => setTimeout(aller, 50), { once: true }); }
 document.querySelectorAll('#site-navigation a[href="#contact"]').forEach(lien=>lien.addEventListener('click',e=>{
  e.preventDefault();defilerVers($('#contact').getBoundingClientRect().top+scrollY-32,'#contact');
 }));
@@ -503,11 +519,11 @@ function mettreAJourFil(){
 // v8 · passage forcé : depuis le film, un geste vers le bas fait monter la rue en entier. Depuis le haut de la rue, un geste vers le haut rend le film.
 let glisseEnCours = false, verrou = 0;
 function glisserVers(cible) {
-  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 2100, t0 = performance.now();
+  const depart = scrollY, dist = cible - depart, duree = reduit ? 0 : 1500, t0 = performance.now();   // V8.33 · 2,1 s -> 1,5 s
   document.documentElement.classList.toggle('bd-vers-rue', cible > depart);   // v8.14 · le film s'assombrit et s'estompe pendant qu'on descend
   if (cible > depart && !sansRue()) setTimeout(lancerConstruction, reduit ? 0 : duree * .3);
   document.documentElement.classList.add('bd-glisse'); setTimeout(() => document.documentElement.classList.remove('bd-glisse'), duree + 60);
-  glisseEnCours = true; verrou = performance.now() + duree + 450;
+  glisseEnCours = true; verrou = performance.now() + duree + 350;
   if (!duree) { scrollTo({ top: cible, behavior: 'instant' }); glisseEnCours = false; return; }
   const pas = t => { const k = Math.min(1, (t - t0) / duree), e = .5 - Math.cos(Math.PI * k) / 2; scrollTo({ top: depart + dist * e, behavior: 'instant' }); if (k < 1) requestAnimationFrame(pas); else glisseEnCours = false; };
   requestAnimationFrame(pas);
@@ -518,7 +534,9 @@ const dansLeSas = () => !reduit && !edition && !projet.classList.contains('ouver
 function decider(sens, e) {
   if (!dansLeSas()) return false;
   const haut = etape2(), y = scrollY;
-  if (glisseEnCours || performance.now() < verrou) { if (y < haut + 4) { e?.preventDefault(); return true; } return false; }
+  if (glisseEnCours) { if (y < haut + 4) { e?.preventDefault(); return true; } return false; }
+  // V8.33 · après l'arrivée, l'élan du pavé tactile ne renvoie plus vers le film, mais la descente reste libre (Ariane : « il faut forcer »)
+  if (performance.now() < verrou) { if (sens < 0 && y <= haut + 4) { e?.preventDefault(); return true; } return false; }
   if (sens > 0 && y < haut - 4) { e?.preventDefault(); glisserVers(haut); return true; }
   if (sens < 0 && y > 4 && y <= haut + 4) { e?.preventDefault(); glisserVers(0); return true; }
   return false;

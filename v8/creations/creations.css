@@ -312,3 +312,91 @@ a:focus-visible,button:focus-visible,summary:focus-visible{outline:2px solid var
 @media (max-width:700px){.cr-entete nav a.cr-nav-faq{display:none}}
 .cr-la-veillee .cr-tete.cr-tete-simple{padding:clamp(56px,8vw,96px) 16px clamp(30px,4vw,48px)}
 .cr-la-veillee .cr-tete.cr-tete-simple h1{position:static;width:auto;height:auto;overflow:visible;clip:auto;margin-top:10px}
+
+/* ═════════ V8.33 · DA unifiée (retours d'Ariane, 02.11.2026) ═════════
+   Fond noir partout, une seule typo neutre (Montserrat), pas d'italique ni de serif, pas de fioritures ni de filets,
+   titre et sous-titre sous l'image, crédits dans un seul menu. Les couleurs propres à chaque spectacle sont neutralisées. */
+body.cr[class]{--nuit:#000;--nuit-2:#000;--creme:#f2ede4;--creme-2:#bdb6ab;--lumiere:#e6c483;--filet:#ffffff1c;--titre:Montserrat,"Helvetica Neue",Arial,sans-serif;--motif:none;color-scheme:dark;background:#000;color:var(--creme-2)}
+body.cr[class]::before{display:none}
+.cr h1,.cr h2,.cr h3{font-family:var(--texte);font-style:normal}
+/* entête : logo à la taille de l'accueil */
+.cr .cr-entete{background:#000e;border-bottom-color:#ffffff14;padding:16px clamp(16px,3vw,48px)}
+.cr .cr-marque img{height:58px;filter:none}
+.cr .cr-entete nav a{font-size:12px;color:var(--chrome-texte)}
+.cr .cr-entete nav a[aria-current]{color:#FFE34D}
+.cr .cr-entete nav a.cr-nav-billetterie{color:#f0c987}
+/* média de tête : pleine largeur, rien par-dessus */
+.cr-media{position:relative;margin:0;padding-top:90px;background:#000}
+.cr-media .cr-tete-film{position:static;display:block;width:100%;height:auto;max-height:78svh;aspect-ratio:16/9;object-fit:cover;z-index:auto}
+.cr-media--photo img{display:block;width:100%;height:auto;max-height:78svh;object-fit:cover}
+/* titre et sous-titre sous l'image */
+.cr-titre-bloc{width:min(100% - 40px,900px);margin:0 auto;padding:clamp(34px,5vw,56px) 0 0;text-align:center}
+.cr-titre-bloc h1{margin:0}
+.cr-titre-bloc .cr-logo{display:block;width:min(440px,74vw);max-height:170px;margin:0 auto;object-fit:contain;filter:brightness(0) invert(1)}
+.cr-titre-bloc .cr-logo-norma{filter:none!important;width:min(420px,72vw);max-height:180px}
+.cr-h1-texte,.cr-h1-nav{font:500 clamp(22px,3vw,34px)/1.3 var(--texte)!important;letter-spacing:.32em;text-transform:uppercase;color:var(--creme)}
+.cr .cr-sous{display:block;margin:18px auto 0;padding:0;background:none;font:500 clamp(12px,1.1vw,14px)/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:#fff;max-width:none}
+.cr-dates-ligne{margin:10px 0 0;font:400 13px/1.6 var(--texte);letter-spacing:.14em;text-transform:uppercase;color:var(--creme-2)}
+.cr-titre-bloc .cr-reserver{margin-top:24px;background:var(--lumiere);color:#140f0a;border:0;letter-spacing:.24em}
+.cr-titre-bloc .cr-reserver:hover{background:var(--creme)}
+/* corps : neutre, pas d'italique, pas d'ornement, pas de filet */
+.cr .cr-corps{padding-top:clamp(30px,4vw,48px)}
+.cr .cr-accroche{max-width:40em;margin:0 auto 26px;font:500 clamp(16px,1.5vw,19px)/1.6 var(--texte);font-style:normal;color:var(--creme);text-wrap:balance;padding:0;border:0}
+.cr .cr-accroche::before{display:none}
+.cr .cr-texte{font-size:15px;line-height:1.8}
+.cr .cr-contexte{border:0;padding-top:0;margin-top:22px;font:400 15px/1.8 var(--texte);font-style:normal;color:var(--creme-2)}
+.cr .cr-devise{font-family:var(--texte)!important;letter-spacing:.18em}
+.cr .cr-citation{border:0;padding-top:0}
+.cr .cr-citation blockquote{font:italic 400 clamp(17px,1.6vw,20px)/1.6 Georgia,"Times New Roman",serif}
+.cr .cr-trait,.cr .cr-cadre{display:none}
+/* presse : citations en italique de presse, source en capitales */
+.cr .cr-presse ul{border:0;padding:0;gap:28px 44px}
+.cr .cr-presse blockquote{font:italic 400 clamp(16px,1.4vw,19px)/1.55 Georgia,"Times New Roman",serif;color:var(--creme)}
+.cr .cr-presse cite{margin-top:10px;font:600 11px/1.6 var(--texte);letter-spacing:.16em;color:#fff}
+/* galerie : chaque photo entière, jamais agrandie au-delà de sa définition */
+.cr .cr-galerie ul{display:block;columns:2 340px;column-gap:20px}
+.cr .cr-galerie li{break-inside:avoid;margin:0 auto 20px;max-width:var(--max,100%);grid-column:auto!important;width:auto!important}
+.cr .cr-galerie img{aspect-ratio:auto!important;height:auto;object-fit:contain}
+.cr .cr-galerie button{border:0}
+.cr .cr-legende{color:var(--creme-2)}
+/* crédits : un seul menu à dérouler */
+.cr-credits-tout{width:min(100% - 40px,860px);margin:var(--espace) auto 0;text-align:center}
+.cr-credits-tout>summary{cursor:pointer;display:inline-block;list-style:none;padding:14px 26px;border:1px solid var(--filet);font:500 11px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--creme);transition:background .25s,color .25s}
+.cr-credits-tout>summary::-webkit-details-marker{display:none}
+.cr-credits-tout>summary:hover,.cr-credits-tout[open]>summary{background:var(--creme);color:#000}
+.cr-credits-tout .cr-liste{margin-top:26px;text-align:left}
+.cr-credits-tout h3{margin:34px 0 10px;font:500 12px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--creme)}
+.cr .cr-liste div{border-bottom-color:var(--filet)}
+/* partenaires */
+.cr .cr-partenaires h2{font:500 12px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--creme-2);margin-bottom:24px}
+.cr .cr-partenaires img{filter:grayscale(1) brightness(0) invert(1)}
+.cr .cr-partenaires img.cr-part-bacardi{filter:none;max-height:90px}
+.cr .cr-partenaires img.cr-part-apple{max-height:74px;max-width:230px}
+/* retour, infos, billetterie */
+.cr .cr-suite{border-top:0}
+.cr .cr-retour{border-color:#ffffff40}
+.cr .cr-infos h2{font:500 13px/1.6 var(--texte);letter-spacing:.2em;text-transform:uppercase;color:var(--creme)}
+.cr .cr-module{padding-top:clamp(28px,4vw,44px)}
+.cr .cr-tarifs{margin:0 auto 22px}.cr .cr-tarifs strong{font:500 18px var(--texte)}
+/* À propos */
+.cr-apropos-texte{text-align:center;padding-bottom:10px}
+.cr .cr-chapeau{max-width:40em;margin:0 auto;font:400 clamp(15px,1.3vw,17px)/1.8 var(--texte);font-style:normal;color:var(--creme)}
+@media (max-width:700px){
+ .cr .cr-marque img{height:42px}
+ .cr .cr-entete{padding:12px 16px}
+ .cr-media{padding-top:66px}
+ .cr-media .cr-tete-film,.cr-media--photo img{max-height:62svh}
+ .cr .cr-galerie ul{columns:1}
+}
+.cr-parfum-de-famille .cr-media--photo img{aspect-ratio:21/9;object-position:50% 100%}   /* l'affiche porte déjà le titre : on garde la troupe */
+.cr .cr-entete nav a{white-space:nowrap}
+@media (max-width:700px){.cr .cr-entete nav{gap:12px}.cr .cr-entete nav a{font-size:10px;letter-spacing:.1em}}
+@media (max-width:370px){.cr .cr-marque img{height:34px}.cr .cr-entete nav{gap:9px}.cr .cr-entete nav a{font-size:9px;letter-spacing:.06em}}
+
+/* V8.35 · La Veillée, page canon : citation, puis « Synopsis », packshot V23 (vertical 4:5 sur téléphone tenu droit) */
+.cr .cr-synopsis-titre{margin:clamp(30px,4vw,44px) 0 16px;text-align:center;font:500 12px/1.6 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:var(--lumiere)}
+.cr .cr-billet-synopsis .cr-citation,.cr-la-veillee .cr-corps>.cr-citation:first-of-type{margin-top:0}
+@media (max-width:700px) and (orientation:portrait){
+ .cr-media .cr-tete-film.cr-film-portrait{aspect-ratio:4/5;max-height:82svh}
+}
+

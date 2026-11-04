@@ -382,9 +382,69 @@ CREATIONS.insert(0, {
 })
 # V8.31 · ordre des créations (accueil, précédent / suivant) : les pages les plus riches en images d'abord,
 # Parfum de Famille en dernier (retour de Rémi, 02.11.2026).
-ORDRE = ['la-veillee', 'norma', 'close', 'un-conte-de-noelle', 'better-together', 'la-prophetie-del-coco',
-         'viva-barbessia', 'eros-en-russie', 'scatolina', 'burning-bar', 'parfum-de-famille']
+ORDRE = ['la-veillee', 'norma', 'close', 'un-conte-de-noelle', 'scatolina', 'better-together', 'la-prophetie-del-coco',
+         'viva-barbessia', 'eros-en-russie', 'burning-bar', 'parfum-de-famille']   # V8.33 · Scatolina après Noëlle (Ariane)
 CREATIONS.sort(key=lambda c: ORDRE.index(c['slug']))
+
+# ───────── V8.33 · retours d'Ariane (02.11.2026) ─────────
+# Sous-titres : mêmes textes sur l'accueil (bandeaux, rue) et en tête de chaque page. Plus d'année ni de lieu.
+SOUS_TITRES = {
+    'la-veillee': 'Théâtre musical clandestin',   # texte canon du 04.11.2026
+    'norma': 'Comédie musicale noire et immersive',
+    'close': 'Spectacle immersif dans un cabaret de 1918',
+    'un-conte-de-noelle': 'Fable immersive',
+    'scatolina': 'Création privée Hermès & Apple',
+    'better-together': 'Création privée Pernod Ricard',
+    'la-prophetie-del-coco': 'Création privée Bacardí',
+    'viva-barbessia': 'Création privée My Little Paris',
+    'eros-en-russie': 'Création privée The Family',
+    'burning-bar': 'Création privée Grimbergen',
+    'parfum-de-famille': 'Enquête en ligne immersive',
+}
+PARTENAIRE_MLP = 'v2/assets/original/wp-content/uploads/2018/01/LogoMLP.png'
+PARTENAIRE_MA = 'v2/assets/original/wp-content/uploads/2018/10/mercialfreddfull.png'
+for _c in CREATIONS:
+    _c['sous_titre'] = SOUS_TITRES[_c['slug']]
+    _s = _c['slug']
+    if _s == 'norma':
+        _c['logo'] = 'logos/norma-neon.png'   # logo néon officiel (fichier « Norma - Nom en solo - 04 typo 1 »)
+    if _s in ('norma', 'close', 'viva-barbessia', 'eros-en-russie', 'la-prophetie-del-coco') and _c.get('tete_video'):
+        # films de tête remontés sans les cartons titres ni les sous-titres incrustés
+        _nom = Path(_c['tete_video']['film']).stem.replace('tete-', '').replace('-720', '')
+        _c['tete_video']['mobile'] = f'v8/assets/films/tete-{_nom}-540.mp4'
+    if _s == 'better-together':
+        _c['accroche'] = "Quatre colocataires, une mystérieuse invitation et une soirée pour célébrer une amitié."
+        _c['photos'] = [x for x in _c['photos'] if x != 'photos/better-show-04.jpg']   # « brand show » retirée
+    if _s == 'la-prophetie-del-coco':
+        _c['alcool'] = False
+        _c['partenaires'] = ['v8/assets/partenaires/bacardi.png', PARTENAIRE_MA, PARTENAIRE_MLP]
+    if _s == 'eros-en-russie':
+        _c['partenaires'] = []
+    if _s == 'scatolina':
+        _c['tete_photo'] = 'photos/hermes-03.jpg'   # « la photo d'Anthony »
+        _c['partenaires'] = ['v8/assets/partenaires/hermes.png', 'v8/assets/partenaires/apple.png']
+    if _s in ('burning-bar', 'parfum-de-famille'):
+        _c['tete_photo'] = _c['photos'][0]
+    if _s == 'la-veillee':
+        _c['boucle'] = False   # le packshot se joue une fois et se fige sur sa dernière image
+        # V8.35 · texte canon (Alex, 04.11.2026) : titre, sous-titre, citation, synopsis à la première personne
+        _c['accroche'] = ''
+        _c['devise'] = []
+        _c['citation_avant'] = True
+        _c['synopsis_titre'] = 'Synopsis'
+        _c['texte'] = [
+            "Depuis que les machines ont pris le pouvoir et interdit toute forme de fiction, nous nous retrouvons dans un refuge clandestin pour faire revivre les histoires qui ont fait l’humanité.",
+            "Mais comment raconter nos plus grandes œuvres, de Shakespeare à <em>Retour vers le futur</em>, quand tous les livres et les films ont été détruits ?",
+            "Il ne nous reste que nos souvenirs incertains, un piano et votre imagination pour réinventer, soir après soir, ce cabaret brinquebalant, qui ne cesse de changer et que nous appelons La Veillée.",
+        ]
+        _c['og'] = 'v8/assets/la-veillee-partage.jpg'   # image de partage 1200 × 630 tirée du packshot
+        _c['description'] = "La Veillée, théâtre musical clandestin de Big Drama : 26 et 27 novembre 2026, Paris 20e. Depuis que les machines ont interdit toute fiction, nous nous retrouvons pour faire revivre les histoires."
+        # packshot V23 : 16:9 sur grand écran, 4:5 pris dans la version verticale sur téléphone tenu droit
+        _c['tete_video'] = {'film': 'v8/assets/films/la-veillee-v23-1080.mp4', 'mobile': 'v8/assets/films/la-veillee-v23-540.mp4',
+                            'portrait': 'v8/assets/films/la-veillee-v23-portrait.mp4', 'affiche': 'v8/assets/films/la-veillee-v23-poster.jpg',
+                            'affiche_portrait': 'v8/assets/films/la-veillee-v23-portrait-poster.jpg'}
+        _c['faq_billetterie'] = _c['faq']   # gardée pour une future FAQ sur la billetterie
+        _c['faq'] = []         # pas de FAQ sur le site vitrine (Ariane)
 
 
 APROPOS = {   # textes d'Ariane, 28.10.2026
@@ -424,15 +484,15 @@ def jeu_images(chemin, carte, R):
 
 def entete(R, actif):
     lien = lambda href, nom, cle, plus='': f'<a href="{href}" class="cr-nav-{cle}"{" aria-current=\"page\"" if actif == cle else ""}{plus}>{nom}</a>'
-    return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/?direct#content" aria-label="Big Drama, retour aux créations"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
+    return (f'<header class="cr-entete"><a class="cr-marque" href="{R}v8/?direct#creations" aria-label="Big Drama, retour aux créations"><img src="{R}v2/assets/brand-white.svg" alt="Big Drama"></a>'
             f'<nav aria-label="Navigation principale">{lien(R + "v8/billetterie/", "Billetterie", "billetterie")}'
-            f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#content", "Créations", "creations")}{lien(R + "v8/faq/", "FAQ", "faq")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
+            f'{lien(R + "v8/a-propos/", "À propos", "apropos")}{lien(R + "v8/?direct#creations", "Créations", "creations")}{lien("mailto:" + CONTACT, "Contact", "contact")}</nav></header>')
 
 
 def pied(R, appel=False):
     return (f'<footer class="cr-pied" id="contact">'
             f'<p class="cr-reseaux"><a href="mailto:{CONTACT}">Email</a><a href="https://www.facebook.com/bigdramaparis" target="_blank" rel="noopener">Facebook</a><a href="https://instagram.com/bigdramaparis" target="_blank" rel="noopener">Instagram</a><a href="https://www.linkedin.com/company/big-drama/" target="_blank" rel="noopener">LinkedIn</a></p>'
-            f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a> · <a href="{R}v8/faq/">FAQ</a></p></footer>')
+            f'<p class="cr-legal">© Big Drama {ANNEE} · <a href="{R}v8/mentions-legales/">Mentions légales</a> · <a href="{R}v8/cgv/">CGV</a> · <a href="{R}v8/confidentialite/">Politique de confidentialité</a></p></footer>')
 
 
 def typo(h):
@@ -484,7 +544,7 @@ def page_faq(carte, version):
 {bloc("Le théâtre immersif", FAQ_IMMERSIF)}
 {bloc("La Veillée", veillee)}
 <section class="cr-faq cr-faq-renvoi"><h2>Nous n’avons pas répondu à votre question ?</h2><a class="cr-bouton" href="mailto:{CONTACT}">Écrivez-nous</a></section>
-<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#creations">Retour</a></nav>'''
     return page('FAQ · Big Drama', 'Questions fréquentes : le théâtre immersif, la participation des spectateurs, La Veillée (horaires, billets, accès).',
                 R, corps, 'faq', version, slug='la-veillee')
 
@@ -499,7 +559,7 @@ def evenements(c):
            "eventStatus": "https://schema.org/EventScheduled", "eventAttendanceMode": "https://schema.org/OfflineEventAttendanceMode",
            "location": {"@type": "Place", "name": "Paris 20e", "address": {"@type": "PostalAddress", "postalCode": "75020", "addressLocality": "Paris", "addressCountry": "FR"}},
            "organizer": {"@type": "Organization", "name": "Big Drama"},
-           "endDate": h(iso, 'fin'), "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + c['tete_video']['affiche']] if c.get('tete_video') else [],
+           "endDate": h(iso, 'fin'), "image": ['https://johnmetronome.github.io/bigdrama-maquette/' + (c.get('og') or c['tete_video']['affiche'])] if c.get('tete_video') else [],
            "offers": [{"@type": "Offer", "price": x, "priceCurrency": "EUR", "url": b['lien']} for x in b['prix']],
            "description": re.sub(r'<[^>]+>', '', c['texte'][0])} for iso in b['dates']]
     return '<script type="application/ld+json">' + json.dumps(ev, ensure_ascii=False).replace('</', '<\\/') + '</script>'
@@ -510,118 +570,121 @@ def tete_video(c, carte, R):
     v = c.get('tete_video')
     if not v:
         return ''
-    return (f'<video class="cr-tete-film" autoplay muted loop playsinline disablepictureinpicture preload="auto" poster="{image(v["affiche"], carte, R)}" aria-hidden="true">'
-            f'<source media="(max-width:900px)" src="{R}{v["mobile"]}" type="video/mp4"><source src="{R}{v["film"]}" type="video/mp4"></video>')
+    boucle = ' loop' if c.get('boucle', True) else ''
+    portrait = f' data-affiche-portrait="{image(v["affiche_portrait"], carte, R)}"' if v.get('affiche_portrait') else ''
+    return (f'<video class="cr-tete-film{" cr-film-portrait" if v.get("portrait") else ""}" autoplay muted{boucle} playsinline disablepictureinpicture preload="auto" poster="{image(v["affiche"], carte, R)}"{portrait} aria-hidden="true">'
+            + (f'<source media="(max-width:700px) and (orientation:portrait)" src="{R}{v["portrait"]}" type="video/mp4">' if v.get('portrait') else '')
+            + f'<source media="(max-width:900px)" src="{R}{v["mobile"]}" type="video/mp4"><source src="{R}{v["film"]}" type="video/mp4"></video>')
+
+
+def dimensions(chemin):
+    """Taille réelle d'une photo (pour ne jamais l'agrandir au-delà de sa définition)."""
+    try:
+        from PIL import Image as _Im
+        with _Im.open(Path(__file__).resolve().parent.parent / chemin) as im:
+            return im.size
+    except Exception:
+        return (1200, 800)
+
+
+def bloc_titre(c, carte, R, plus=''):
+    """V8.33 · titre et sous-titre sous l'image, jamais par-dessus (Ariane)."""
+    logo = (f'<img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}">' if c.get('logo')
+            else E(c['titre']))
+    return (f'<header class="cr-titre-bloc"><h1 class="{"cr-h1-logo" if c.get("logo") else "cr-h1-texte"}">{logo}</h1>'
+            + (f'<p class="cr-sous">{E(c["sous_titre"])}</p>' if c.get("sous_titre") else '') + f'{plus}</header>')
+
+
+def media_tete(c, carte, R):
+    """Film de tête (muet) ou photo de tête, en pleine largeur, sans texte par-dessus."""
+    if c.get('tete_video'):
+        return f'<section class="cr-media cr-media--film" aria-hidden="true">{tete_video(c, carte, R)}</section>'
+    p = c.get('tete_photo')
+    if p:
+        return f'<section class="cr-media cr-media--photo"><img src="{image(p, carte, R)}" alt="" fetchpriority="high" decoding="async"></section>'
+    return ''
+
+
+def citation_html(c):
+    if not c.get('citation'):
+        return ''
+    return f'<figure class="cr-citation"><blockquote>« {E(c["citation"][0])} »</blockquote><figcaption><cite>{E(c["citation"][1])}</cite></figcaption></figure>'
 
 
 def page_creation(c, i, carte, version):
     R = '../../../'
     photos = c['photos']
-    fond = image(photos[0], carte, R)
-    sous = ' · '.join(x for x in (c['genre'], c['quand'], c['ou']) if x)
     texte = ''.join(f'<p>{t}</p>' for t in c['texte'])
-    chiffres = ''.join(f'<div><dt>{E(k)}</dt><dd>{v}</dd></div>' for k, v in c['chiffres'])
-    film = ''
-    if c.get('film'):
-        f540 = 'v8/assets/opt/videos/' + Path(c['film']).stem + '-540.mp4'
-        film = (f'<section class="cr-film" aria-label="Film"><video controls muted playsinline preload="none" poster="{image(photos[1] if len(photos) > 1 else photos[0], carte, R)}">'
-                f'<source media="(max-width:900px)" src="{R}{f540}" type="video/mp4"><source src="{R}{c["film"]}" type="video/mp4"></video></section>')
-    galerie = ''.join(f'<li><button type="button" data-grand="{image(p, carte, R)}" aria-label="Agrandir la photo {k + 1}"><img src="{image(p, carte, R)}" alt="" loading="lazy" decoding="async"></button></li>' for k, p in enumerate(photos))
+    galerie = ''
+    for k, p in enumerate(x for x in photos if x != c.get('tete_photo')):
+        w, h = dimensions(p)
+        galerie += (f'<li class="{"cr-portrait-photo" if h > w else "cr-paysage-photo"}" style="--max:{w}px">'
+                    f'<button type="button" data-grand="{image(p, carte, R)}" aria-label="Agrandir la photo {k + 1}">'
+                    f'<img src="{image(p, carte, R)}" alt="" loading="lazy" decoding="async" width="{w}" height="{h}"></button></li>')
     legende = c.get('legende', '')
     if c.get('alcool'):
         legende += (' ' if legende else '') + "L'abus d'alcool est dangereux pour la santé. À consommer avec modération."
-    # Une attribution à Big Drama ou au client ne justifie pas à elle seule un bloc Crédits.
     lignes_credits = [(k, v) for k, v in c.get('credits', [])
                       if k.strip().casefold() not in ('une création', 'pour', 'avec') and v.strip()]
     credits = ''.join(f'<div><dt>{E(k)}</dt><dd>{E(v)}</dd></div>' for k, v in lignes_credits)
+    blocs = ''.join(f'<h3>{E(t)}</h3><dl class="cr-liste">' + ''.join(f'<div><dt>{E(a)}</dt><dd>{E(b)}</dd></div>' for a, b in lignes) + '</dl>'
+                    for t, lignes in c.get('distribution', []))
+    # V8.33 · tous les crédits dans un seul menu à dérouler (Ariane)
+    section_credits = (f'<details class="cr-credits-tout"><summary>Crédits</summary>'
+                       f'{f"<dl class=cr-liste>{credits}</dl>" if credits else ""}{blocs}</details>') if credits or blocs else ''
     presse = ''
     if c.get('presse'):
-        presse = '<section class="cr-presse" aria-label="La presse"><ul>' + ''.join(f'<li><blockquote>« {E(q)} »</blockquote><cite>{E(src)}</cite></li>' for q, src in c['presse']) + '</ul></section>'
-    distribution = ''
-    if c.get('distribution'):
-        blocs = ''.join(f'<h3>{E(t)}</h3><dl class="cr-liste">' + ''.join(f'<div><dt>{E(a)}</dt><dd>{E(b)}</dd></div>' for a, b in lignes) + '</dl>' for t, lignes in c['distribution'])
-        distribution = f'<details class="cr-distribution"><summary>Distribution et équipe complètes</summary>{blocs}</details>'
-    liste_credits = f'<dl class="cr-liste">{credits}</dl>' if credits else ''
-    section_credits = (f'<section class="cr-credits" aria-label="Crédits"><h2>Crédits</h2>'
-                      f'{liste_credits}{distribution}</section>') if credits or distribution else ''
+        presse = ('<section class="cr-presse" aria-label="La presse"><ul>'
+                  + ''.join(f'<li><blockquote>« {E(q)} »</blockquote><cite>{E(src)}</cite></li>' for q, src in c['presse']) + '</ul></section>')
     partenaires = ''
     if c.get('partenaires'):
-        partenaires = '<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>' + ''.join(f'<li><img src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>'
+        partenaires = ('<section class="cr-partenaires" aria-label="Partenaires"><h2>Avec</h2><ul>'
+                       + ''.join(f'<li><img class="cr-part-{Path(p).stem.lower()}" src="{R}{p}" alt="" loading="lazy"></li>' for p in c['partenaires']) + '</ul></section>')
+    plus = ''
+    if c.get('dates_courtes'):
+        plus += f'<p class="cr-dates-ligne">{E(c["dates_courtes"])}</p>'
+    if c.get('reserver'):
+        plus += f'<a class="cr-bouton cr-reserver" href="{R}v8/billetterie/">Réserver</a>'
     corps = f'''
-{f'<figure class="cr-bandeau"><img src="{image(c["bandeau"], carte, R)}"{jeu_images(c["bandeau"], carte, R)} sizes="100vw" alt="{E(c["titre"])}" fetchpriority="high"></figure>' if c.get("bandeau") and not c.get("tete_video") else ''}
-<section class="cr-tete{' cr-tete--video' if c.get('tete_video') else ' cr-tete--sobre'}"{f" style=\"--fond:url('{image(c['tete_video']['affiche'], carte, R)}')\"" if c.get('tete_video') else ''}>{tete_video(c, carte, R)}<div class="cr-tete-voile"></div>
- <div class="cr-tete-contenu">{f'<p class="cr-cadre">{E(c["cadre"])}</p>' if c.get("cadre") else ''}
-  {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
-  {f'<p class="cr-sous">{E(c["dates_courtes"]) if c.get("dates_courtes") else sous}</p>' if sous or c.get("dates_courtes") else ''}
-  {f'<a class="cr-bouton cr-reserver" href="{R}v8/billetterie/">Réserver</a>' if c.get('reserver') else ''}</div>
- <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
+{media_tete(c, carte, R)}
+{bloc_titre(c, carte, R, plus)}
 <article class="cr-corps">
  {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
  {('<p class="cr-devise">' + '<br>'.join(E(x) for x in c['devise']) + '</p>') if c.get('devise') else ''}
+ {citation_html(c) if c.get('citation_avant') else ''}
+ {f'<h2 class="cr-synopsis-titre">{E(c["synopsis_titre"])}</h2>' if c.get('synopsis_titre') else ''}
  {f'<div class="cr-texte">{texte}</div>' if texte else ''}
- {f'<figure class="cr-citation"><blockquote>« {E(c["citation"][0])} »</blockquote><figcaption><cite>{E(c["citation"][1])}</cite></figcaption></figure>' if c.get('citation') else ''}
+ {citation_html(c) if not c.get('citation_avant') else ''}
  {f'<p class="cr-contexte">{c["contexte"]}</p>' if c.get('contexte') else ''}
- {f'<dl class="cr-chiffres">{chiffres}</dl>' if chiffres else ''}
 </article>
 {presse}
-{film}
-<section class="cr-galerie" aria-label="Photos"{' hidden' if c.get("bandeau") else ''}><ul>{galerie}</ul>{f'<p class="cr-legende">{E(legende)}</p>' if legende else ''}</section>
-{faq(c, R)}
+{f'<section class="cr-galerie" aria-label="Photos"><ul>{galerie}</ul>' + (f'<p class="cr-legende">{E(legende)}</p>' if legende else '') + '</section>' if galerie and not c.get('bandeau') else (f'<p class="cr-legende">{E(legende)}</p>' if legende else '')}
 {section_credits}
 {partenaires}
-<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#creations">Retour</a></nav>
 <div class="cr-visionneuse" hidden><button type="button" class="cr-fermer" aria-label="Fermer">×</button><img alt=""></div>'''
-    if c.get('simple'):
-        corps = f'''
-<section class="cr-tete cr-tete--sobre"><div class="cr-tete-contenu">
-  {f'<h1><img class="cr-logo cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="{E(c["titre"])}"></h1>' if c.get("logo") else f'<h1 class="cr-titre-texte">{E(c["titre"])}</h1>'}
-  {f'<p class="cr-sous">{sous}</p>' if sous else ''}</div></section>
-<figure class="cr-simple-image"><img src="{image(photos[0], carte, R)}" alt="" decoding="async"></figure>
-<article class="cr-corps cr-corps--simple">
- {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
- {f'<div class="cr-texte">{texte}</div>' if texte else ''}
-</article>
-{section_credits}
-{partenaires}
-<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
-    desc = re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
-    desc = (desc).replace('<span class="a-verifier" title="À vérifier">', '').replace('</span>', '')
-    og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{photos[0]}">'
+    desc = c.get('description') or re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
+    og_img = c.get('og') or c.get('tete_photo') or (c['tete_video']['affiche'] if c.get('tete_video') else photos[0])
+    og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{og_img}">'
     return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og + evenements(c), slug=c['da'])
+
+
+# V8.33 · À propos : le texte d'Ariane seul. Le paragraphe APROPOS_PLUS est prêt si Rémi le juge utile.
+APROPOS_TEXTE = "Depuis 2017, nous écrivons et produisons nos propres spectacles de façon indépendante. Nous fabriquons des mondes de toutes pièces, dans des lieux qui n’étaient pas faits pour ça, pour y inviter le public et retrouver le plaisir de jouer ensemble."
+APROPOS_PLUS = None   # ("À la croisée du collectif d’artistes et de la maison de production, Big Drama réinvente la façon de raconter les histoires.", "Nous avons créé Big Drama en 2017 pour inventer un modèle indépendant pour le spectacle vivant. Écriture, mise en scène, scénographie, musique : nous rassemblons tous les métiers nécessaires à la création d’un spectacle, puis nous le produisons et le diffusons nous-mêmes, dans des lieux éphémères et exceptionnels.")
 
 
 def page_apropos(carte, version):
     R = '../../'
-    a = APROPOS
-    equipe = ''
-    for n, r, b in a['equipe']:
-        portrait = a['portraits'].get(n)
-        initiales = ''.join(mot[0] for mot in n.split())
-        visuel = (f'<img src="{image(portrait, carte, R)}" alt="{E(n)}" loading="lazy">' if portrait
-                  else f'<span aria-hidden="true">{E(initiales)}</span>')
-        role = f'<p class="cr-role">{E(r)}</p>' if r else ''
-        bio = f'<p>{b}</p>' if b else ''
-        equipe += f'<li><h3>{E(n)}</h3>{role}{bio}</li>'   # pas de portrait (Ariane, 29.10)
-    def liste_creations(type_creation):
-        liste = ''
-        for c in CREATIONS:
-            if c['type'] != type_creation:
-                continue
-            marque = f'<strong>{E(c["marque"])}</strong>' if c['marque'] else ''
-            liste += (f'<li><a href="../creations/{c["slug"]}/"><div class="cr-case-logo">'
-                      + (f'<img class="cr-logo-{c["slug"]}" src="{image(c["logo"], carte, R)}" alt="">' if c.get("logo") else f'<img class="cr-vignette-bandeau" src="{image(c["bandeau"], carte, R)}" alt="">') + '</div>'
-                      f'<span>{E(c["titre"])}</span>{marque}<small>{c["quand"]}</small></a></li>')
-        return liste
+    plus = ''
+    if APROPOS_PLUS:
+        plus = f'<p class="cr-chapeau">{APROPOS_PLUS[0]}</p><div class="cr-texte"><p>{APROPOS_PLUS[1]}</p></div>'
     corps = f'''
-<section class="cr-tete cr-tete-apropos" style="--fond:url('{image("photos/close-teaser-07.jpg", carte, R)}')"><div class="cr-tete-voile"></div>
- <div class="cr-tete-contenu"><p class="cr-cadre">À propos</p><h1 class="cr-titre-texte">Big Drama</h1><p class="cr-sous">Conception et production de spectacles immersifs · Paris</p></div>
- <svg class="cr-trait" viewBox="0 0 1600 40" preserveAspectRatio="none" aria-hidden="true"><path d="M0 30 L420 22 L800 30 L1180 18 L1600 28"/></svg></section>
-<article class="cr-corps cr-ouverture">{"".join(f'<p class="cr-accroche">{t}</p>' for t in a["ouverture"])}</article>
-<article class="cr-corps"><h2 class="cr-h2">{E(a["titre2"])}</h2><p class="cr-chapeau">{a["chapeau"]}</p><div class="cr-texte">{"".join(f"<p>{t}</p>" for t in a["texte"])}</div></article>
-<section class="cr-equipe" aria-label="Équipe"><h2>L'équipe</h2><ul>{equipe}</ul></section>
-<section class="cr-toutes cr-toutes--public" aria-label="Créations grand public"><h2>Créations</h2><ul>{liste_creations('public')}</ul></section>
-<section class="cr-toutes cr-toutes--marques" aria-label="Partenariats avec des marques"><h2>Partenariats avec des marques</h2><ul>{liste_creations('marque')}</ul></section>'''
-    return page('À propos · Big Drama', a['ouverture'][0], R, corps, 'apropos', version, slug='apropos')
+<section class="cr-media cr-media--photo"><img src="{image("photos/close-teaser-07.jpg", carte, R)}" alt="" fetchpriority="high"></section>
+<header class="cr-titre-bloc"><h1 class="cr-h1-nav">Big Drama</h1></header>
+<article class="cr-corps cr-apropos-texte"><p class="cr-chapeau">{APROPOS_TEXTE}</p>{plus}</article>
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#creations">Retour</a></nav>'''
+    return page('À propos · Big Drama', APROPOS_TEXTE, R, corps, 'apropos', version, slug='apropos')
 
 
 def tete_simple(cadre, titre):
@@ -655,32 +718,28 @@ INFOS_VEILLEE = [("Lieu", "Paris 20e"),
 
 
 def page_billetterie(carte, version):
+    """V8.33 · film, titre dessous, module Billetweb, infos pratiques. Plus de cartes de séances (redondantes avec le module)."""
     R = '../../'
     v = next(c for c in CREATIONS if c['slug'] == 'la-veillee')
-    seances = ''.join(f'''<li><p class="cr-seance-jour">{E(j)}</p><p class="cr-seance-date">{E(d)}</p>
-<p class="cr-seance-heure">{E(HORAIRES)}</p><a class="cr-bouton cr-seance-bouton" href="#reserver">Réserver</a></li>''' for j, d in SEANCES)
     tarifs = ''.join(f'<li><span>{E(k)}</span><strong>{E(p)}</strong></li>' for k, p in TARIFS)
     infos = ''.join(f'<div><dt>{E(k)}</dt><dd>{val}</dd></div>' for k, val in [("Horaires", "Ouverture des portes à 19 h 30<br>Début du spectacle à 20 h")] + INFOS_VEILLEE)
     infos += f'<div><dt>Contact</dt><dd><a href="mailto:{CONTACT}">{CONTACT}</a></dd></div>'
     corps = f'''
-<section class="cr-tete cr-tete--video cr-tete--billetterie" style="--fond:url('{image(v['tete_video']['affiche'], carte, R)}')">{tete_video(v, carte, R)}<div class="cr-tete-voile"></div>
- <div class="cr-tete-contenu"><p class="cr-cadre">Billetterie</p><h1 class="cr-titre-texte">La Veillée</h1>
-  <p class="cr-sous">{E(v["dates_courtes"])}</p></div></section>
-<article class="cr-corps cr-billet">
- <p class="cr-accroche">{E(v["accroche"])}</p>
- <ul class="cr-seances">{seances}</ul>
- <ul class="cr-tarifs" aria-label="Tarifs">{tarifs}</ul>
+{media_tete(v, carte, R)}
+{bloc_titre(v, carte, R, f'<p class="cr-dates-ligne">{E(v["dates_courtes"])}</p>')}
+<article class="cr-corps cr-billet-synopsis">
+ {citation_html(v)}
+ <h2 class="cr-synopsis-titre">Synopsis</h2>
+ <div class="cr-texte">{"".join(f"<p>{x}</p>" for x in v["texte"])}</div>
 </article>
 <section class="cr-module" id="reserver" aria-label="Réserver ses places">
- <h2>Réserver</h2>
  <div class="cr-module-cadre"><iframe id="event{BILLETWEB_ID}" class="cr-bw" title="Billetterie Billetweb, La Veillée" src="{BILLETTERIE}&amp;ref={BILLETWEB_ID}" height="600" loading="lazy" allow="payment" referrerpolicy="strict-origin-when-cross-origin"></iframe></div>
  <p class="cr-billet-note">Paiement sécurisé par Billetweb. Le module ne s’affiche pas ? <a href="{BILLETTERIE}" target="_blank" rel="noopener">Ouvrir la billetterie dans un nouvel onglet</a>.</p>
- <p class="cr-billet-lien"><a href="../creations/la-veillee/">Découvrir le spectacle</a></p>
 </section>
 <section class="cr-infos" aria-label="Infos pratiques"><h2>Infos pratiques</h2><dl class="cr-liste">{infos}</dl></section>
-<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#content">Retour</a></nav>'''
+<nav class="cr-suite cr-suite--seule" aria-label="Retour aux créations"><a class="cr-retour" href="{R}v8/?direct#creations">Retour</a></nav>'''
     return page('Billetterie · La Veillée · Big Drama', 'Réserver La Veillée, nouvelle création de Big Drama : 26 et 27 novembre 2026, Paris 20e.',
-                R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee', csp=CSP_BILLETTERIE)
+                R, corps, 'billetterie', version, f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{v.get("og") or v["tete_video"]["affiche"]}">' + evenements(v), slug='la-veillee', csp=CSP_BILLETTERIE)
 
 
 def generer(carte, version):
@@ -690,8 +749,6 @@ def generer(carte, version):
         (d / 'index.html').write_text(page_creation(c, i, carte, version), encoding='utf-8')
     (OUT / 'a-propos').mkdir(exist_ok=True)
     (OUT / 'a-propos' / 'index.html').write_text(page_apropos(carte, version), encoding='utf-8')
-    (OUT / 'faq').mkdir(exist_ok=True)
-    (OUT / 'faq' / 'index.html').write_text(page_faq(carte, version), encoding='utf-8')
     (OUT / 'billetterie').mkdir(exist_ok=True)
     (OUT / 'billetterie' / 'index.html').write_text(page_billetterie(carte, version), encoding='utf-8')
     for slug, titre in LEGAL:

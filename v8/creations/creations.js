@@ -42,3 +42,9 @@
     }
   });
 })();
+
+// V8.35 · affiche verticale pour le film de tête vertical (téléphone tenu droit)
+(() => {
+  const v = document.querySelector('.cr-tete-film[data-affiche-portrait]'); if (!v) return;
+  if (matchMedia('(max-width:700px) and (orientation:portrait)').matches) v.poster = v.dataset.affichePortrait;
+})();

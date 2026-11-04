@@ -346,3 +346,32 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Réseaux sociaux : ouverture dans un nouvel onglet (accueil et pages).
 - 404 : menu à jour (l'ancien lien /contact/ menait à une page supprimée).
 - Visuels Billetweb refaits avec « Paris 20ᵉ ». Fonds sans texte (PNG) : V3/3-medias-sources/la-veillee/billetweb/sans-texte/.
+
+## V8.32 · 02.11.2026 · film d'accueil allégé sur téléphone, visuels HD
+
+- Le film d'accueil reste le teaser d'Alex (93 s). Sur téléphone tenu droit, nouvelle version `assets/films/hero-portrait-640.mp4` : cadrage vertical 3:4 pris au centre de l'image (là où le téléphone affiche le film), 480 × 640, léger débruitage, deux passes à 250 kb/s. 2,95 Mo au lieu de 5,4 Mo (−45 %), image plus nette à l'écran. `hero-540.mp4` reste pour les petits écrans en paysage.
+- Visuels Billetweb refaits sur les fonds agrandis par Alex (Topaz) et optimisés : carré 2160 (0,4 Mo), A3 web 2480 × 3508 (1 Mo), A3 impression 3508 × 4961 à 300 dpi (3,2 Mo). Fonds sans texte en JPEG : carré 3456 (1,1 Mo au lieu de 13,5), A3 2916 × 4125 (1,6 au lieu de 16,7), 8K (2,5 au lieu de 35), 4K (0,65). Dans __REFS/Banners/optimise/ et V3/3-medias-sources/la-veillee/billetweb/.
+
+## V8.33 · 02.11.2026 · retours d'Ariane (document « Doc Retour Site internet 2026 »)
+
+- DA unifiée sur toutes les pages : fond noir, Montserrat seule (plus de serif ni d'italique, sauf les citations de presse), plus d'ornements ni de filets, couleurs propres aux spectacles neutralisées (bloc V8.33 de `_creations.css`).
+- Pages spectacles : film ou photo de tête en pleine largeur, titre et sous-titre dessous (plus rien par-dessus l'image). Sous-titres du récapitulatif d'Ariane (`SOUS_TITRES`), sans année. Accroche plus petite. Crédits dans un seul menu « Crédits ». Galerie : chaque photo entière, jamais agrandie au-delà de sa définition.
+- Films de tête remontés sans cartons ni incrustations : Norma (teaser V3 0:00–0:11 + plans bleus du cimetière), Close (6 plans), Viva Barbessia (5,0–21,5 s), Eros en Russie (0,4–9,8 s, avant les paroles incrustées), Prophétie (sans le titre du début). Versions 540p dédiées.
+- Norma : logo néon officiel (`logos/norma-neon.png`) en tête, sur l'accueil ; tracé du néon pour la rue (`logos/norma.png`, ancien gardé en `norma-ancien.png`).
+- Better Together : nouvelle accroche, deux photos remises à l'endroit, photo « brand show » retirée. Prophétie : mention sanitaire retirée, logo Bacardí ajouté (version blanche). Eros : « Avec » retiré. Scatolina : photo d'Anthony en tête, logos Hermès et Apple recadrés (Apple plus grand). Burning Bar, Parfum de Famille : photo en tête.
+- La Veillée : sous-titre « Théâtre musical clandestin », film coupé à 7,2 s, sans boucle : l'ampoule s'allume et l'image se fige sur le titre. Billetterie : cartes de séances et « Découvrir le spectacle » retirés.
+- FAQ retirée du site vitrine (questions gardées dans `faq_billetterie` pour la billetterie).
+- À propos : le texte d'Ariane seul, titre dans la typo du menu. Paragraphe supplémentaire prêt dans `APROPOS_PLUS`.
+- Accueil : bandeaux refaits sur un seul modèle (logo + sous-titre en texte, même taille), Scatolina après Noëlle, ancre « Créations » pile sur les bandeaux, sous-titres dans la rue, titre et signal de la Prophétie plus grands et cliquables, glissement film → rue plus court et sans blocage à l'arrivée. Logo des pages à la taille de l'accueil.
+- Reste à fournir : crédits (Better Together, Prophétie, Barbessia, Eros, Scatolina, Burning Bar, Parfum de Famille), logo Grimbergen, logos des médias cités, nouvelles photos (Eros, Barbessia, Scatolina, Norma, Close).
+
+## V8.34 · 02.11.2026 · billetterie
+
+- Synopsis de La Veillée (accroche et texte d'Ariane) sous le titre de la page Billetterie. Tarifs retirés du texte : ils sont dans le module Billetweb (Alex).
+
+## V8.35 · 04.11.2026 · La Veillée canon, packshot V23
+
+- Texte canon d'Alex (04.11.2026) : titre, « Théâtre musical clandestin », citation de Fahrenheit 451, puis « Synopsis » à la première personne. Accroche et devise retirées de la page. Même bloc sur la Billetterie.
+- Film de tête : packshot Blender V23 (240 images, 24 i/s, 10 s), joué une fois puis figé sur sa dernière image. Ordinateur `la-veillee-v23-1080.mp4` (3,9 Mo), tablette `la-veillee-v23-540.mp4` (0,7 Mo), téléphone tenu droit `la-veillee-v23-portrait.mp4` (4:5 tiré de la version 9:16, 2,3 Mo). Master 16:9 et rendus dans V3/3-medias-sources/la-veillee/v23-video.
+- Images tirées du packshot : affiche 16:9 et 4:5, image de partage 1200 × 630 (`assets/la-veillee-partage.jpg`), bandeau d'accueil `assets/la-veillee-bande-v23.jpg`.
+- Visuels Billetweb V23 (carré 2160, A3 web, A3 impression 300 dpi) : V3/3-medias-sources/la-veillee/billetweb/v23/.

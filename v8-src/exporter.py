@@ -92,7 +92,7 @@ def traiter_html(f, t):
             return f'{nom}="{", ".join(morceaux)}"'
         p = noter(f, val)
         return f'{nom}="{relatif(f, p, val)}"' if p else m.group(0)
-    t = re.sub(r'\b(src|href|srcset|poster|data-src|data-grand|data-href)="([^"]*)"', attr, t)
+    t = re.sub(r'\b(src|href|srcset|poster|data-src|data-grand|data-href|data-affiche-portrait)="([^"]*)"', attr, t)
     for m in re.findall(r'https://johnmetronome\.github\.io/bigdrama-maquette/([\w./-]+)', t):   # images d'aperçu de partage
         if (RACINE / m).is_file() and m not in vus:
             vus.add(m); file.append(m)
@@ -247,7 +247,7 @@ CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; 
 <meta name="robots" content="noindex"><meta http-equiv="Content-Security-Policy" content="{CSP}"><title>Page introuvable · Big Drama</title>
 <link rel="stylesheet" href="/fonts/fonts.css"><link rel="stylesheet" href="/creations/creations.css"><link rel="icon" type="image/png" href="/favicon.png"></head>
 <body class="cr cr-simple"><header class="cr-entete"><a class="cr-marque" href="/" aria-label="Big Drama, accueil"><img src="/v2/assets/brand-white.svg" alt="Big Drama"></a>
-<nav aria-label="Navigation principale"><a href="/billetterie/">Billetterie</a><a href="/a-propos/">À propos</a><a href="/?direct#content">Créations</a><a href="/faq/">FAQ</a><a href="mailto:contact@big-drama.fr">Contact</a></nav></header>
+<nav aria-label="Navigation principale"><a href="/billetterie/">Billetterie</a><a href="/a-propos/">À propos</a><a href="/?direct#creations">Créations</a><a href="mailto:contact@big-drama.fr">Contact</a></nav></header>
 <main id="contenu"><section class="cr-tete cr-tete-simple"><div class="cr-tete-contenu"><p class="cr-cadre">Erreur 404</p><h1 class="cr-titre-texte">Cette porte ne mène nulle part</h1></div></section>
 <article class="cr-corps cr-contact"><p class="cr-contact-mail"><a href="/">Revenir dans la rue</a></p></article></main></body></html>
 ''', encoding='utf-8')

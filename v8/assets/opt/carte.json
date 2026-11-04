@@ -1,4 +1,7 @@
 {
+ "logos/norma-neon.png": {
+  "src": "logos/norma-neon.webp"
+ },
  "v2/assets/original/wp-content/uploads/2018/11/BarbessiaA.jpg": {
   "src": "bandeaux/BarbessiaA.webp",
   "srcset": "bandeaux/BarbessiaA-900.webp 900w, bandeaux/BarbessiaA.webp 1600w"
@@ -23,43 +26,25 @@
   "src": "bandeaux/PDF-Ad.webp",
   "srcset": "bandeaux/PDF-Ad-900.webp 900w, bandeaux/PDF-Ad.webp 1600w"
  },
- "v2/assets/original/wp-content/uploads/2022/11/BarbessiaC.png": {
-  "src": "bandeaux/BarbessiaC-titre.webp"
- },
  "v2/assets/original/wp-content/uploads/2022/11/BetterNew2.jpg": {
   "src": "bandeaux/BetterNew2.webp",
   "srcset": "bandeaux/BetterNew2-900.webp 900w, bandeaux/BetterNew2.webp 1600w"
- },
- "v2/assets/original/wp-content/uploads/2022/11/BetterNew2.png": {
-  "src": "bandeaux/BetterNew2-titre.webp"
- },
- "v2/assets/original/wp-content/uploads/2022/11/ErosC.png": {
-  "src": "bandeaux/ErosC-titre.webp"
- },
- "v2/assets/original/wp-content/uploads/2022/11/GrimC.png": {
-  "src": "bandeaux/GrimC-titre.webp"
  },
  "v2/assets/original/wp-content/uploads/2022/11/NoelleNew.jpg": {
   "src": "bandeaux/NoelleNew.webp",
   "srcset": "bandeaux/NoelleNew-900.webp 900w, bandeaux/NoelleNew.webp 1600w"
  },
- "v2/assets/original/wp-content/uploads/2022/11/ProphetieC.png": {
-  "src": "bandeaux/ProphetieC-titre.webp"
- },
  "v2/assets/original/wp-content/uploads/2022/11/ScatolinaHomeNew.jpg": {
   "src": "bandeaux/ScatolinaHomeNew.webp",
   "srcset": "bandeaux/ScatolinaHomeNew-900.webp 900w, bandeaux/ScatolinaHomeNew.webp 1600w"
- },
- "v2/assets/original/wp-content/uploads/2022/11/ScatolinaNew.png": {
-  "src": "bandeaux/ScatolinaNew-titre.webp"
  },
  "v7/assets/norma-alessandro-clemenza.jpg": {
   "src": "bandeaux/norma-alessandro-clemenza.webp",
   "srcset": "bandeaux/norma-alessandro-clemenza-900.webp 900w, bandeaux/norma-alessandro-clemenza.webp 2000w"
  },
- "v8/assets/la-veillee-bande.jpg": {
-  "src": "bandeaux/la-veillee-bande.webp",
-  "srcset": "bandeaux/la-veillee-bande-900.webp 900w, bandeaux/la-veillee-bande.webp 2000w"
+ "v8/assets/la-veillee-bande-v23.jpg": {
+  "src": "bandeaux/la-veillee-bande-v23.webp",
+  "srcset": "bandeaux/la-veillee-bande-v23-900.webp 900w, bandeaux/la-veillee-bande-v23.webp 2000w"
  },
  "logos/arbre.png": {
   "src": "logos/arbre.webp"
@@ -90,6 +75,12 @@
  },
  "logos/maison.png": {
   "src": "logos/maison.webp"
+ },
+ "logos/norma-ancien.png": {
+  "src": "logos/norma-ancien.webp"
+ },
+ "logos/norma-trace.png": {
+  "src": "logos/norma-trace.webp"
  },
  "logos/norma.png": {
   "src": "logos/norma.webp"

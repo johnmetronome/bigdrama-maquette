@@ -604,7 +604,7 @@ const rue = {
       {devant:true,classe:'bd-coco-signal',groupe:[
         {d:'M1232 724L1210 352A75 75 0 1 1 1360 352L1242 724Z',fill:'lumiere',opacite:.16},
         {d:'M1235 340Q1250 316 1268 337L1278 324L1285 332L1292 324L1302 337Q1320 316 1335 340Q1318 333 1310 353Q1293 344 1285 368Q1277 344 1260 353Q1252 333 1235 340Z',fill:'noir'},
-        {texte:'LA PROPHÉTIE',x:1285,y:386,taille:12,fill:'lumiere',police:'enseigne',espacement:.5},{texte:'DEL COCO',x:1285,y:402,taille:12,fill:'lumiere',police:'enseigne',espacement:.5}
+        {texte:'LA PROPHÉTIE',x:1285,y:390,taille:17,fill:'lumiere',police:'enseigne',espacement:.5},{texte:'DEL COCO',x:1285,y:411,taille:17,fill:'lumiere',police:'enseigne',espacement:.5}
       ]},
       N(R(1228,721,17,11)+P([[1225,722],[1235,708],[1246,718],[1241,727]])),L(E(1236,714,6,2)),
 
