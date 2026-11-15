@@ -6,10 +6,10 @@
 #   bash securite-gandi.sh voir <site>         montre le dossier du site et sa racine web. Ne modifie rien.
 #   bash securite-gandi.sh isoler <site>       met l'ancien site hors ligne sans rien effacer :
 #                                              htdocs est renommé htdocs-pirate-<date> (plus servi par le web),
-#                                              un htdocs neuf redirige tout vers https://www.big-drama.fr/
+#                                              un htdocs neuf redirige vers https://www.big-drama.fr/ (même chemin)
 #   bash securite-gandi.sh retablir <site> <dossier>   annule un isolement (remet le dossier renommé en htdocs)
 #
-# Le site big-drama.fr est protégé : le script refuse d'y toucher.
+# Le site www.big-drama.fr est protégé : le script refuse d'y toucher. big-drama.fr (sans www) peut être isolé : il ne fait que rediriger.
 set -euo pipefail
 ICI="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1090
@@ -26,7 +26,7 @@ if [ "$MODE" = voir ]; then
 fi
 if [ "$MODE" = isoler ] || [ "$MODE" = retablir ]; then
   [ -n "$SITE_CIBLE" ] || { echo "Indique le site, par exemple : bash securite-gandi.sh $MODE www.bigdrama.fr"; exit 1; }
-  case "$SITE_CIBLE" in *big-drama.fr) echo "Refusé : $SITE_CIBLE est le nouveau site."; exit 1 ;; esac
+  case "$SITE_CIBLE" in www.big-drama.fr) echo "Refusé : $SITE_CIBLE est le nouveau site."; exit 1 ;; esac
   case "$SITE_CIBLE" in */*|.*) echo "Nom de site invalide."; exit 1 ;; esac
 fi
 
@@ -51,7 +51,7 @@ case "$MODE" in
     read -r -p "Tape ISOLER pour continuer : " R; [ "$R" = ISOLER ] || { echo "Annulé."; exit 1; }
     T="$(mktemp -d)"
     printf '%s\n' "# Ancien site retiré le $DATE après piratage. Tout part vers le nouveau site." \
-      "RedirectMatch 301 ^ https://www.big-drama.fr/" > "$T/.htaccess"
+      "RedirectMatch 301 ^/(.*)$ https://www.big-drama.fr/\$1" > "$T/.htaccess"
     printf '%s\n' '<!doctype html><meta charset="utf-8"><meta http-equiv="refresh" content="0;url=https://www.big-drama.fr/"><a href="https://www.big-drama.fr/">Big Drama</a>' > "$T/index.html"
     lancer "mv $VH/$SITE_CIBLE/htdocs $VH/$SITE_CIBLE/htdocs-pirate-$DATE; mkdir $VH/$SITE_CIBLE/htdocs; put -O $VH/$SITE_CIBLE/htdocs $T/.htaccess $T/index.html; chmod -R 755 $VH/$SITE_CIBLE/htdocs; cls -la $VH/$SITE_CIBLE/ $VH/$SITE_CIBLE/htdocs/"
     rm -rf "$T"
