@@ -253,6 +253,22 @@ CSP = "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; 
 ''', encoding='utf-8')
 
 taille = sum(p.stat().st_size for p in SORTIE.rglob('*') if p.is_file())
+# V8.37 · empreintes SRI sur nos scripts : un fichier .js modifié sur le serveur (piratage du 15.11.2026) ne s'exécute plus.
+import base64 as _b64, hashlib as _hl
+def _sri(m):
+    balise, src = m.group(0), m.group(1)
+    if 'integrity=' in balise or '://' in src or src.startswith('//'):
+        return balise
+    js = (_page.parent / src.split('?')[0].split('#')[0]).resolve()
+    if not js.is_file():
+        return balise
+    h = 'sha384-' + _b64.b64encode(_hl.sha384(js.read_bytes()).digest()).decode()
+    return balise[:-1] + f' integrity="{h}">'
+for _page in SORTIE.rglob('*.html'):
+    _t = _page.read_text(encoding='utf-8')
+    _n = re.sub(r'<script\b[^>]*\bsrc="([^"]+)"[^>]*>', _sri, _t)
+    if _n != _t:
+        _page.write_text(_n, encoding='utf-8')
 print(f'{len(a_copier)} fichiers · {taille / 1e6:.0f} Mo · {SORTIE}')
 print('adresse :', BASE, '· indexation', 'interdite' if NOINDEX else 'autorisée')
 if manquants:

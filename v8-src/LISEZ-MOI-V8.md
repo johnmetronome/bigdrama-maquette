@@ -382,3 +382,9 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Billetterie et page La Veillée : titre « Synopsis » retiré. Infos pratiques fermées par défaut, ouvertes par un bouton (fonction `infos_veillee()` dans creations.py).
 - Packshot en boucle sur la partie jaune seulement (images 1 à 141, fondu de 0,5 s pour raccorder) : `la-veillee-v23-boucle-1080.mp4`, `-540.mp4`, `-portrait.mp4`, 5,4 s. La partie bleue est retirée, une version 16:9 propre est prévue.
 - exporter.py : l'attribut `data-affiche-portrait` est réécrit et son image exportée (l'image d'attente du film portrait manquait en ligne).
+
+## V8.37 · 15.11.2026 · cartouche La Veillée et sécurité
+
+- Piratage constaté le 15.11.2026 sur le serveur : `creations/creations.js` redirigeait les téléphones vers un lien raccourci externe, `app.js` modifié et cassé. Dates des fichiers maquillées. Nettoyage : `deployer.sh sauvegarde` puis `envoi-propre`.
+- exporter.py : empreinte SRI (`integrity="sha384-…"`) ajoutée à chaque `<script src>` local. Un script modifié sur le serveur est refusé par le navigateur.
+- Accueil : le bandeau devient un cartouche (`v8/assets/la-veillee-titre.jpg`, titre entier). Ordinateur : en bas à gauche du film. Téléphone : en haut à gauche sous le menu. La vidéo reste visible.

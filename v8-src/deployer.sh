@@ -6,6 +6,7 @@
 #   bash deployer.sh sauvegarde    copie tout le serveur actuel dans ../../sauvegarde-serveur-AAAA-MM-JJ-HHMM
 #   bash deployer.sh essai         montre ce qui serait envoyé, sans rien envoyer
 #   bash deployer.sh envoi         envoie le site (ajoute et remplace, ne supprime rien sur le serveur)
+#   bash deployer.sh liste         liste tous les fichiers de l'instance (lecture seule)
 #   bash deployer.sh droits        rend tous les fichiers du site lisibles par le serveur web (erreur 403)
 #   bash deployer.sh envoi-propre  envoie le site ET supprime du serveur tout ce qui n'en fait pas partie
 #                                  (ancien WordPress, fichiers PHP). Demande une sauvegarde et une confirmation.
@@ -74,9 +75,14 @@ case "$MODE" in
     lancer "mirror --reverse --no-perms --delete --parallel=4 --verbose=1 $EXCLUS '$SITE' '$DOSSIER'"
     lancer "chmod -R 755 '$DOSSIER'"
     echo "Site envoyé, anciens fichiers retirés du serveur." ;;
+  liste)
+    # V8.37 · inventaire de toute l'instance (tous les sites), pour repérer les fichiers piratés. Lecture seule.
+    LISTE="$ICI/../../gandi-fichiers-$(date +%Y-%m-%d-%H%M).txt"
+    lancer "find -l /lamp0/web/vhosts" > "$LISTE"
+    echo "$(wc -l < "$LISTE") lignes · $LISTE" ;;
   droits)
     lancer "chmod -R 755 '$DOSSIER'"
     echo "Droits de lecture rétablis sur $DOSSIER" ;;
-  *) echo "Mode inconnu : $MODE (test, sauvegarde, essai, envoi, envoi-propre, droits)"; exit 1 ;;
+  *) echo "Mode inconnu : $MODE (test, sauvegarde, essai, envoi, envoi-propre, liste, droits)"; exit 1 ;;
 esac
 unset LFTP_PASSWORD
