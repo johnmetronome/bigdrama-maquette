@@ -416,3 +416,11 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Grain argentique : tuile `grain.png` en overlay sur tout le bloc. Le filtre SVG proposé par Mistral est remplacé (Safari applique mal `filter:url()` sur du HTML).
 - Accueil : bande photo détourée `bande-complet.webp` sur le cartouche.
 - Préparation des images : `v8-src/complet-images.py`. Les fichiers V8.39 générés par code sont retirés.
+
+## V8.41 · 19.11.2026 · COMPLET, maquette A validée
+
+- Alex juge la V8.40 pas plus belle. Trois maquettes faites hors du site (`2026_10_Laveillée_Visuels/_Maquettes_Complet/`), Alex valide la A.
+- Le mur COMPLET en photo fond dans le noir. Dessous, une colonne sur le noir : accroche Bodoni Moda, texte et champs en Montserrat, labels en petites capitales, champs réduits à un trait, bouton en scotch.
+- Grain fort sur tout le bloc : trois couches de `grain-fort.png` (overlay, soft-light, screen), bords fondus.
+- Retirés : feuille de journal, scotch qui la tenait, Caveat, ancien grain.
+- Accueil inchangé depuis la V8.40 (bande photo détourée).

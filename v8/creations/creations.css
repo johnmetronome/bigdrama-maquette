@@ -406,43 +406,40 @@ body.cr[class]::before{display:none}
 .cr-infos-tout dd small{font-size:13px;color:var(--creme-2)}
 
 /* V8.38 · La Veillée complète (19.11.2026) : liste d'attente.
-   V8.40 · direction « Scotchée au mur » (retour Mistral, 19.11.2026). COMPLET vit dans la photo du mur,
-   la feuille et les bouts de scotch sont des photos. Images : v8/assets/complet/, préparées par v8-src/complet-images.py.
-   Grain : tuile grain.png en overlay (pas de filtre SVG, mal rendu par Safari sur du HTML). */
-.cr-complet-zone{--papier:#d9cba8;--encre:#1d1712;--rouge:#7a2318;--scotch:#1e1711;
-  position:relative;isolation:isolate;max-width:1100px;margin:clamp(26px,5vw,56px) auto;padding:clamp(250px,31vw,350px) 16px clamp(44px,7vw,84px);background:#050403}
-.cr-complet-zone::before{content:"";position:absolute;z-index:-1;inset:0 0 auto 0;aspect-ratio:1672/941;background:url("../assets/complet/mur-complet-16x9.jpg") center/cover no-repeat;
-  -webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 100%),linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);-webkit-mask-composite:source-in;
-  mask-image:linear-gradient(to bottom,#000 58%,transparent 100%),linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);mask-composite:intersect}
+   V8.41 · maquette A validée par Alex (19.11.2026, 19 h 42) : le mur COMPLET en photo, qui fond dans le noir,
+   puis le formulaire posé sur le noir. Deux polices (Bodoni Moda, Montserrat), un seul objet : le bouton en scotch.
+   Grain argentique : trois couches de grain-fort.png (overlay, soft-light, screen), bords fondus pour ne pas dessiner de cadre.
+   Images : v8/assets/complet/. */
+.cr-complet-zone{position:relative;margin:clamp(20px,4vw,48px) 0 0;padding:0 0 clamp(70px,9vw,110px)}
+.cr-complet-mur{position:relative;z-index:0;max-width:1100px;margin:0 auto;aspect-ratio:1672/941;background:url("../assets/complet/mur-complet-16x9.jpg") center/cover no-repeat;filter:contrast(1.08) saturate(.85) brightness(.92);
+  -webkit-mask-image:linear-gradient(#000 62%,transparent),linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(#000 62%,transparent),linear-gradient(90deg,transparent,#000 9%,#000 91%,transparent);mask-composite:intersect}
 .cr-complet-sro{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-.cr-complet-feuille{position:relative;max-width:640px;margin:0 auto;transform:rotate(-.5deg);filter:drop-shadow(0 26px 30px rgba(0,0,0,.7)) drop-shadow(0 4px 9px rgba(0,0,0,.45))}
-.cr-complet{position:relative;color:var(--encre);padding:clamp(44px,7vw,64px) clamp(26px,6vw,56px) clamp(30px,5vw,44px);
-  border:1px solid transparent;border-image:url("../assets/complet/feuille-journal.webp") 26% fill / clamp(90px,16vw,170px) stretch}
-.cr-complet::before{content:"";position:absolute;z-index:2;left:50%;top:-22px;width:clamp(130px,24vw,210px);aspect-ratio:640/132;transform:translateX(-58%) rotate(-3deg);
-  background:url("../assets/complet/scotch-1.webp") center/100% 100% no-repeat;pointer-events:none}
-.cr-complet-accroche{margin:0 0 12px;font:600 clamp(27px,4.4vw,42px)/1.08 "Bodoni Moda",serif;color:var(--encre);text-wrap:balance}
-.cr-complet-texte{max-width:34em;margin:0 0 26px;font:500 16px/1.65 var(--texte);color:#2a231b}
-.cr-attente .cr-champs{display:grid;grid-template-columns:1fr 1fr;gap:16px 26px}
-.cr-attente label span{display:inline-block;font:600 clamp(20px,2.6vw,23px)/1.2 "Caveat",var(--texte);color:var(--encre);transform:rotate(-.5deg)}
-.cr-attente .cr-champs label:nth-child(2) span{transform:rotate(.6deg) translateX(2px)}
-.cr-attente .cr-champs label:nth-child(3) span{transform:rotate(-.3deg)}
-.cr-attente input{width:100%;box-sizing:border-box;padding:6px 2px;border:0;border-bottom:1px solid rgba(29,23,18,.55);border-radius:0;background:transparent;color:var(--encre);font:400 16px/1.4 var(--texte)}
-.cr-attente input:focus{outline:none;border-bottom:2px solid var(--encre);background:rgba(255,246,224,.3)}
+.cr-complet{position:relative;z-index:2;max-width:560px;margin:-60px auto 0;padding:0 24px}
+.cr .cr-complet-accroche{margin:0 0 14px;font:600 clamp(30px,4.6vw,46px)/1.05 "Bodoni Moda",serif;color:#efe4cc;text-wrap:balance}
+.cr-complet-texte{max-width:30em;margin:0 0 34px;font:400 16px/1.6 var(--texte);color:#cbbfa6}
+.cr-attente .cr-champs{display:grid;grid-template-columns:1fr 1fr;gap:22px 28px}
+.cr-attente label span{display:block;margin-bottom:6px;font:500 10.5px/1 var(--texte);letter-spacing:.24em;text-transform:uppercase;color:#a99d86}
+.cr-attente input{width:100%;box-sizing:border-box;padding:8px 0 7px;border:0;border-bottom:1px solid rgba(239,228,204,.38);border-radius:0;background:transparent;color:#efe4cc;font:400 16px/1.4 var(--texte)}
+.cr-attente input:focus{outline:none;border-bottom-color:#efe4cc}
+.cr-attente input:-webkit-autofill{-webkit-text-fill-color:#efe4cc;-webkit-box-shadow:0 0 0 40px #050403 inset;caret-color:#efe4cc}
 .cr-champ-large{grid-column:1 / -1}
 .cr-piege{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.cr-attente button{margin-top:26px;padding:15px 40px 17px;border:0;cursor:pointer;color:#eadcbc;letter-spacing:.04em;background:url("../assets/complet/scotch-2.webp") center/100% 100% no-repeat;
-  transform:rotate(-1.2deg);font:700 clamp(21px,2.8vw,24px)/1 "Caveat",var(--texte);text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.cr-attente button{margin-top:34px;padding:17px 44px 18px;border:0;cursor:pointer;background:url("../assets/complet/scotch-2.webp") center/100% 100% no-repeat;color:#efe4cc;
+  font:500 12px/1 var(--texte);letter-spacing:.26em;text-transform:uppercase;transform:rotate(-1deg)}
 .cr-attente button:hover{filter:brightness(1.25)}
-.cr-attente button:active{transform:rotate(-1.8deg) translateY(1px)}
 .cr-attente button:disabled{opacity:.55;cursor:wait}
-.cr-attente button:focus-visible,.cr-attente a:focus-visible{outline:2px solid var(--rouge);outline-offset:4px}
-.cr-attente-retour{min-height:1.5em;margin:14px 0 0;font:700 clamp(20px,2.6vw,23px)/1.3 "Caveat",var(--texte);color:var(--rouge)}
-.cr-attente-mention{margin:12px 0 0;font:500 12px/1.6 var(--texte);color:#2a231b}
-.cr-attente-mention a{color:var(--encre)}
+.cr-attente button:focus-visible,.cr-attente a:focus-visible{outline:2px solid #efe4cc;outline-offset:4px}
+.cr-attente-retour{min-height:1.5em;margin:16px 0 0;font:400 15px/1.5 var(--texte);color:#e3c79a}
+.cr-attente-mention{margin:22px 0 0;font:400 11.5px/1.6 var(--texte);color:#8a806e}
+.cr-attente-mention a{color:#a99d86}
 .cr-attente.cr-envoye .cr-champs,.cr-attente.cr-envoye button{display:none}
-.cr-attente.cr-envoye .cr-attente-retour{font-size:clamp(23px,3vw,28px)}
-.cr-grainel{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:overlay;background:url("../assets/complet/grain.png") 0 0/240px 240px}
-@media (max-width:700px){.cr-complet-zone{padding-top:clamp(200px,58vw,250px)}.cr-complet-zone::before{aspect-ratio:1122/1402;background-image:url("../assets/complet/mur-complet-4x5.jpg");
-  -webkit-mask-image:linear-gradient(to bottom,#000 52%,transparent 92%);mask-image:linear-gradient(to bottom,#000 52%,transparent 92%)}}
-@media (max-width:620px){.cr-attente .cr-champs{grid-template-columns:1fr}.cr-complet-zone{padding-left:12px;padding-right:12px}}
-@media (prefers-reduced-motion:reduce){.cr-complet-feuille,.cr-complet::before,.cr-attente button,.cr-attente label span,.cr-attente .cr-champs label:nth-child(2) span,.cr-attente .cr-champs label:nth-child(3) span{transform:none}}
+.cr .cr-attente.cr-envoye .cr-attente-retour{font:600 clamp(22px,3vw,28px)/1.2 "Bodoni Moda",serif;color:#efe4cc}
+.cr-grain,.cr-complet-zone::before,.cr-complet-zone::after{content:"";position:absolute;inset:0;z-index:3;pointer-events:none;background:url("../assets/complet/grain-fort.png") 0 0/320px;
+  -webkit-mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 8%,#000 90%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 8%,#000 90%,transparent);mask-composite:intersect}
+.cr-grain{mix-blend-mode:overlay;opacity:.32}
+.cr-complet-zone::before{background-position:97px 41px;background-size:480px;mix-blend-mode:soft-light;opacity:.25}
+.cr-complet-zone::after{background-position:13px 77px;background-size:260px;mix-blend-mode:screen;opacity:.085}
+@media (max-width:700px){.cr-complet-mur{aspect-ratio:1122/1402;background-image:url("../assets/complet/mur-complet-4x5.jpg");-webkit-mask-image:linear-gradient(#000 62%,transparent);mask-image:linear-gradient(#000 62%,transparent)}
+  .cr-complet{margin-top:-120px}.cr-attente .cr-champs{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){.cr-attente button{transform:none}}

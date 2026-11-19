@@ -1,4 +1,4 @@
-"""V8.40 · préparation des images COMPLET (retours ChatGPT images via Alex, direction A de Mistral)."""
+"""V8.40 · préparation des images COMPLET (images ChatGPT fournies par Alex). V8.41 : maquette A, grain fort."""
 import numpy as np
 from PIL import Image, ImageFilter
 from scipy import ndimage
@@ -27,12 +27,11 @@ def detoure(src, dst, w, seuil=14, doux=10, remplir=False, q=82):
 
 jpg('49bf1037-image.png', 'mur-complet-16x9.jpg', 80)
 jpg('fd097924-image.png', 'mur-complet-4x5.jpg', 80)
-detoure('906061dc-image.png', 'feuille-journal.webp', 1254, seuil=32, doux=1, remplir=True, q=80)  # feuille détourée de son fond sombre
-detoure('4bc46eaf-image.png', 'scotch-1.webp', 640)
 detoure('4d1cafca-image.png', 'scotch-2.webp', 640)
 detoure('d036df95-image.png', 'bande-complet.webp', 1000, remplir=True)
-# grain argentique en tuile (remplace le filtre SVG : Safari applique mal filter:url() sur du HTML)
-rng = np.random.default_rng(840)
-g = rng.normal(128, 38, (240, 240)).clip(0, 255).astype(np.uint8)
-Image.fromarray(g).filter(ImageFilter.GaussianBlur(.45)).save(O + 'grain.png', optimize=True)
+# grain argentique fort, deux échelles (grain fin + amas), tuile 320 px (V8.41)
+rng = np.random.default_rng(7)
+fin = rng.normal(0, 1, (320, 320))
+amas = np.array(Image.fromarray((rng.normal(0, 1, (160, 160)) * 40 + 128).clip(0, 255).astype(np.uint8)).resize((320, 320), Image.BICUBIC), np.float32) - 128
+Image.fromarray((fin * 34 + amas * .9 + 128).clip(0, 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(.6)).save(O + 'grain-fort.png', optimize=True)
 print('ok')
