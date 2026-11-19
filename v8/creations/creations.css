@@ -406,37 +406,43 @@ body.cr[class]::before{display:none}
 .cr-infos-tout dd small{font-size:13px;color:var(--creme-2)}
 
 /* V8.38 · La Veillée complète (19.11.2026) : liste d'attente.
-   V8.39 · COMPLET en bouts de scotch (langage du packshot), mur de journaux, feuille de journal salie.
-   Images : v8/assets/complet/, générées par v8-src/complet-scotch.py (frame du packshot v23 + textures CC0 ambientCG). */
-.cr-complet-zone{--papier:#d9cba8;--encre:#1d1712;--rouge:#8f2a1d;position:relative;isolation:isolate;max-width:1100px;margin:clamp(26px,5vw,56px) auto;padding:clamp(34px,6vw,70px) 16px clamp(44px,7vw,84px)}
-.cr-complet-zone::before{content:"";position:absolute;inset:0;z-index:-1;background:#0b0806 url("../assets/complet/mur-journaux.jpg") center 22%/cover no-repeat;
-  -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 42%,#000 52%,transparent 100%);mask-image:radial-gradient(ellipse 72% 68% at 50% 42%,#000 52%,transparent 100%)}
-.cr .cr-complet-mot{max-width:min(660px,94%);margin:0 auto clamp(18px,3vw,30px);line-height:0}
-.cr-complet-mot img{display:block;width:100%;height:auto;transform:rotate(-1.4deg)}
-.cr-complet-feuille{position:relative;max-width:620px;margin:0 auto;filter:drop-shadow(0 18px 26px rgba(0,0,0,.65))}
-.cr-complet-feuille::before,.cr-complet-feuille::after{content:"";position:absolute;z-index:2;top:-10px;width:clamp(96px,17vw,136px);aspect-ratio:420/120;background:url("../assets/complet/scotch.webp") center/100% 100% no-repeat;pointer-events:none}
-.cr-complet-feuille::before{left:-34px;transform:rotate(-34deg)}
-.cr-complet-feuille::after{right:-34px;transform:rotate(31deg)}
-.cr-complet{position:relative;padding:clamp(34px,5vw,50px) clamp(22px,5vw,50px) 26px;background:var(--papier) url("../assets/complet/journal-sale.jpg") center/cover;color:var(--encre);transform:rotate(.7deg);
-  clip-path:polygon(0 1.4%,7% .2%,14% 1.2%,24% .1%,35% 1.5%,46% .4%,58% 1.3%,70% 0,82% 1.2%,93% .3%,100% 1.6%,99.4% 24%,100% 49%,99.2% 74%,100% 98%,90% 100%,79% 98.8%,66% 100%,54% 98.9%,41% 100%,28% 98.6%,16% 100%,6% 98.9%,0 100%,.6% 76%,0 51%,.8% 26%)}
-.cr-complet-accroche{margin:0 0 10px;font:400 clamp(25px,3.6vw,36px)/1.15 "Special Elite","Courier New",monospace;color:var(--encre);text-wrap:balance}
-.cr-complet-texte{max-width:32em;margin:0 0 24px;font:500 16px/1.6 var(--texte);color:#2a231b}
-.cr-attente .cr-champs{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
-.cr-attente label span{display:block;font:400 13px/1.4 "Special Elite","Courier New",monospace;letter-spacing:.06em;text-transform:uppercase;color:#2f281f}
-.cr-attente input{width:100%;box-sizing:border-box;padding:8px 2px 6px;border:0;border-bottom:2px dashed var(--encre);border-radius:0;background:transparent;color:var(--encre);font:400 17px/1.4 var(--texte)}
-.cr-attente input:focus{outline:none;border-bottom-style:solid;background:rgba(255,248,230,.35)}
+   V8.40 · direction « Scotchée au mur » (retour Mistral, 19.11.2026). COMPLET vit dans la photo du mur,
+   la feuille et les bouts de scotch sont des photos. Images : v8/assets/complet/, préparées par v8-src/complet-images.py.
+   Grain : tuile grain.png en overlay (pas de filtre SVG, mal rendu par Safari sur du HTML). */
+.cr-complet-zone{--papier:#d9cba8;--encre:#1d1712;--rouge:#7a2318;--scotch:#1e1711;
+  position:relative;isolation:isolate;max-width:1100px;margin:clamp(26px,5vw,56px) auto;padding:clamp(250px,31vw,350px) 16px clamp(44px,7vw,84px);background:#050403}
+.cr-complet-zone::before{content:"";position:absolute;z-index:-1;inset:0 0 auto 0;aspect-ratio:1672/941;background:url("../assets/complet/mur-complet-16x9.jpg") center/cover no-repeat;
+  -webkit-mask-image:linear-gradient(to bottom,#000 58%,transparent 100%),linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);-webkit-mask-composite:source-in;
+  mask-image:linear-gradient(to bottom,#000 58%,transparent 100%),linear-gradient(to right,transparent,#000 7%,#000 93%,transparent);mask-composite:intersect}
+.cr-complet-sro{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.cr-complet-feuille{position:relative;max-width:640px;margin:0 auto;transform:rotate(-.5deg);filter:drop-shadow(0 26px 30px rgba(0,0,0,.7)) drop-shadow(0 4px 9px rgba(0,0,0,.45))}
+.cr-complet{position:relative;color:var(--encre);padding:clamp(44px,7vw,64px) clamp(26px,6vw,56px) clamp(30px,5vw,44px);
+  border:1px solid transparent;border-image:url("../assets/complet/feuille-journal.webp") 26% fill / clamp(90px,16vw,170px) stretch}
+.cr-complet::before{content:"";position:absolute;z-index:2;left:50%;top:-22px;width:clamp(130px,24vw,210px);aspect-ratio:640/132;transform:translateX(-58%) rotate(-3deg);
+  background:url("../assets/complet/scotch-1.webp") center/100% 100% no-repeat;pointer-events:none}
+.cr-complet-accroche{margin:0 0 12px;font:600 clamp(27px,4.4vw,42px)/1.08 "Bodoni Moda",serif;color:var(--encre);text-wrap:balance}
+.cr-complet-texte{max-width:34em;margin:0 0 26px;font:500 16px/1.65 var(--texte);color:#2a231b}
+.cr-attente .cr-champs{display:grid;grid-template-columns:1fr 1fr;gap:16px 26px}
+.cr-attente label span{display:inline-block;font:600 clamp(20px,2.6vw,23px)/1.2 "Caveat",var(--texte);color:var(--encre);transform:rotate(-.5deg)}
+.cr-attente .cr-champs label:nth-child(2) span{transform:rotate(.6deg) translateX(2px)}
+.cr-attente .cr-champs label:nth-child(3) span{transform:rotate(-.3deg)}
+.cr-attente input{width:100%;box-sizing:border-box;padding:6px 2px;border:0;border-bottom:1px solid rgba(29,23,18,.55);border-radius:0;background:transparent;color:var(--encre);font:400 16px/1.4 var(--texte)}
+.cr-attente input:focus{outline:none;border-bottom:2px solid var(--encre);background:rgba(255,246,224,.3)}
 .cr-champ-large{grid-column:1 / -1}
 .cr-piege{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
-.cr-attente button{margin-top:24px;padding:15px 30px 14px;border:0;background:#231b14;color:#eadcbc;cursor:pointer;transform:rotate(-.8deg);
-  font:400 16px/1 "Special Elite","Courier New",monospace;letter-spacing:.12em;text-transform:uppercase;
-  clip-path:polygon(1.5% 0,99% 3%,100% 22%,98.6% 41%,100% 62%,98.8% 83%,99.6% 100%,1% 97%,0 78%,1.6% 57%,0 36%,1.2% 18%)}
-.cr-attente button:hover{background:#3a2a1e;transform:rotate(.5deg)}
+.cr-attente button{margin-top:26px;padding:15px 40px 17px;border:0;cursor:pointer;color:#eadcbc;letter-spacing:.04em;background:url("../assets/complet/scotch-2.webp") center/100% 100% no-repeat;
+  transform:rotate(-1.2deg);font:700 clamp(21px,2.8vw,24px)/1 "Caveat",var(--texte);text-shadow:0 1px 0 rgba(0,0,0,.6)}
+.cr-attente button:hover{filter:brightness(1.25)}
+.cr-attente button:active{transform:rotate(-1.8deg) translateY(1px)}
 .cr-attente button:disabled{opacity:.55;cursor:wait}
 .cr-attente button:focus-visible,.cr-attente a:focus-visible{outline:2px solid var(--rouge);outline-offset:4px}
-.cr-attente-retour{min-height:1.6em;margin:14px 0 0;font:400 15px/1.5 "Special Elite","Courier New",monospace;color:var(--rouge)}
-.cr-attente-mention{margin:10px 0 0;font:500 12px/1.6 var(--texte);color:#3d352a}
+.cr-attente-retour{min-height:1.5em;margin:14px 0 0;font:700 clamp(20px,2.6vw,23px)/1.3 "Caveat",var(--texte);color:var(--rouge)}
+.cr-attente-mention{margin:12px 0 0;font:500 12px/1.6 var(--texte);color:#2a231b}
 .cr-attente-mention a{color:var(--encre)}
 .cr-attente.cr-envoye .cr-champs,.cr-attente.cr-envoye button{display:none}
-.cr-attente.cr-envoye .cr-attente-retour{font-size:clamp(18px,2.4vw,22px)}
-@media (max-width:620px){.cr-attente .cr-champs{grid-template-columns:1fr}.cr-complet-zone{padding-left:12px;padding-right:12px}.cr-complet-feuille::before{left:-22px}.cr-complet-feuille::after{right:-22px}.cr-complet{transform:rotate(.4deg)}}
-@media (prefers-reduced-motion:reduce){.cr-attente button,.cr-attente button:hover{transform:none}}
+.cr-attente.cr-envoye .cr-attente-retour{font-size:clamp(23px,3vw,28px)}
+.cr-grainel{position:absolute;inset:0;z-index:3;pointer-events:none;opacity:.13;mix-blend-mode:overlay;background:url("../assets/complet/grain.png") 0 0/240px 240px}
+@media (max-width:700px){.cr-complet-zone{padding-top:clamp(200px,58vw,250px)}.cr-complet-zone::before{aspect-ratio:1122/1402;background-image:url("../assets/complet/mur-complet-4x5.jpg");
+  -webkit-mask-image:linear-gradient(to bottom,#000 52%,transparent 92%);mask-image:linear-gradient(to bottom,#000 52%,transparent 92%)}}
+@media (max-width:620px){.cr-attente .cr-champs{grid-template-columns:1fr}.cr-complet-zone{padding-left:12px;padding-right:12px}}
+@media (prefers-reduced-motion:reduce){.cr-complet-feuille,.cr-complet::before,.cr-attente button,.cr-attente label span,.cr-attente .cr-champs label:nth-child(2) span,.cr-attente .cr-champs label:nth-child(3) span{transform:none}}

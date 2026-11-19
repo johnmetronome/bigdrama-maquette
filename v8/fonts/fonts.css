@@ -10,3 +10,7 @@
 
 /* Yeseva One : WOFF2 déjà présent et auto-hébergé dans la maquette. */
 @font-face{font-family:"Yeseva One";font-style:normal;font-weight:400;font-display:swap;src:url(v2/google-original-4.woff2) format("woff2")}
+
+/* V8.40 · Caveat (Impallari Type, SIL OFL 1.1, Fontsource 5.3.0) : labels, bouton et message du formulaire COMPLET. */
+@font-face{font-family:"Caveat";font-style:normal;font-weight:600;font-display:swap;src:url(caveat-latin-600-normal.woff2) format("woff2")}
+@font-face{font-family:"Caveat";font-style:normal;font-weight:700;font-display:swap;src:url(caveat-latin-700-normal.woff2) format("woff2")}

@@ -725,11 +725,11 @@ CSP_VEILLEE = CSP.replace("connect-src 'self'", CONNECT_ATTENTE)
 
 
 def complet_html(R, source):
-    """V8.38 · liste d'attente (prénom, nom, e-mail). V8.39 · COMPLET en bouts de scotch sur mur de journaux, feuille de journal salie, nouveau texte."""
+    """V8.38 · liste d'attente (prénom, nom, e-mail). V8.39 · nouveau texte. V8.40 · direction « Scotchée au mur » (Mistral) : COMPLET dans la photo du mur, feuille photo, scotch photo."""
     return f'''<section class="cr-complet-zone" id="attente" aria-labelledby="complet-titre">
- <h2 id="complet-titre" class="cr-complet-mot"><img src="{R}v8/assets/complet/complet-scotch.webp" alt="Complet" width="1395" height="310" decoding="async"></h2>
+ <h2 id="complet-titre" class="cr-complet-sro">Complet</h2>
  <div class="cr-complet-feuille"><div class="cr-complet">
-  <p class="cr-complet-accroche">Plus une chaise de libre.</p>
+  <p class="cr-complet-accroche">La Veillée a fait salle comble.</p>
   <p class="cr-complet-texte">Laissez votre nom à la porte. On vous prévient avant tout le monde quand une nouvelle Veillée s’annonce.</p>
   <form class="cr-attente" data-endpoint="{E(LISTE_ATTENTE)}" data-source="{E(source)}">
    <div class="cr-champs">
@@ -738,11 +738,12 @@ def complet_html(R, source):
     <label class="cr-champ-large"><span>E-mail</span><input type="email" name="email" autocomplete="email" required maxlength="200"></label>
    </div>
    <label class="cr-piege" aria-hidden="true">Site <input name="site" tabindex="-1" autocomplete="off"></label>
-   <button type="submit">Laisser mon nom</button>
+   <button type="submit">S’inscrire</button>
    <p class="cr-attente-retour" role="status" aria-live="polite"></p>
    <p class="cr-attente-mention">Votre adresse sert uniquement à vous prévenir des prochaines dates de Big Drama. Pour être retiré de la liste, écrivez à <a href="mailto:{CONTACT}">{CONTACT}</a>. <a href="{R}v8/confidentialite/">Confidentialité</a></p>
   </form>
  </div></div>
+ <div class="cr-grainel" aria-hidden="true"></div>
 </section>'''
 INFOS_VEILLEE = [("Lieu", "Paris 20e"),
                  ("Durée", "1 h 30"),

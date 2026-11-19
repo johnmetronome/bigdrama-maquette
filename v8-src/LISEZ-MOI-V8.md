@@ -401,6 +401,18 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 
 - Retour d'Alex : trop « IA ». COMPLET refait en bouts de scotch sombre, même langage que le packshot La Veillée (lettres en bandes, une bande rouge).
 - Billetterie et page La Veillée : COMPLET scotché sur un mur de journaux éclairé, formulaire sur une feuille de journal salie tenue par deux bouts de scotch. Titre « Les deux soirs affichent complet » retiré.
-- Nouveau texte : « Plus une chaise de libre. » / « Laissez votre nom à la porte. On vous prévient avant tout le monde quand une nouvelle Veillée s’annonce. » / bouton « Laisser mon nom » / « C’est noté. On vous fait signe pour la prochaine Veillée. »
+- Nouveau texte (validé par Alex le 19.11, 18 h 46) : « La Veillée a fait salle comble. » / « Laissez votre nom à la porte. On vous prévient avant tout le monde quand une nouvelle Veillée s’annonce. » / bouton « S’inscrire » / « C’est noté. On vous fait signe pour la prochaine Veillée. »
 - Accueil : bande de journal déchirée avec COMPLET en scotch, posée au bas du titre du cartouche.
 - Images dans `v8/assets/complet/`, générées par `v8-src/complet-scotch.py` (Python + Pillow + NumPy) à partir d'une image du packshot v23 et des textures CC0 ambientCG de `LaVeillee_V3_3/textures_cc0`. Le faux texte de journal est fait de mots courants tirés au hasard.
+- Rendu encore jugé trop « IA » par Alex : brief de reprise pour Mistral et Google dans `2026_10_Laveillée_Visuels/_Handoff_Complet_V8.39/`.
+
+## V8.40 · 19.11.2026 · COMPLET « Scotchée au mur »
+
+- Direction A du retour Mistral (`_Handoff_Complet_V8.39/retours/mistral/`), images choisies par Claude parmi les retours d'Alex (images ChatGPT). Les bases Mistral sont écartées : « COMPLE » sans T sur les deux murs, faux texte de journal lisible sur la feuille.
+- COMPLET vit dans la photo du mur (`mur-complet-16x9.jpg` desktop, `mur-complet-4x5.jpg` sous 700 px). Le `h2` « Complet » reste en HTML, masqué visuellement.
+- Feuille de journal photo détourée (`feuille-journal.webp`), posée en `border-image` 9 tranches : bords déchirés et coin corné gardés à toutes les largeurs.
+- Un bout de scotch photo tient la feuille (`scotch-1.webp`), le bouton est un autre bout de scotch (`scotch-2.webp`).
+- Typo du bloc : Bodoni Moda 600 (accroche), Caveat (labels, bouton, message), Montserrat (texte, saisie, mention). Special Elite sort du bloc. Caveat : Fontsource 5.3.0, OFL 1.1, fichiers `v8/fonts/caveat-latin-600|700-normal.woff2`.
+- Grain argentique : tuile `grain.png` en overlay sur tout le bloc. Le filtre SVG proposé par Mistral est remplacé (Safari applique mal `filter:url()` sur du HTML).
+- Accueil : bande photo détourée `bande-complet.webp` sur le cartouche.
+- Préparation des images : `v8-src/complet-images.py`. Les fichiers V8.39 générés par code sont retirés.

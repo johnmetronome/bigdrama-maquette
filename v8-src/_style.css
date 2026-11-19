@@ -993,7 +993,7 @@ body.media-home.bd-defile #masthead{background:rgba(12,10,8,.82)!important;-webk
 @media (orientation:landscape) and (max-height:520px){.bd-bande-veillee{top:64px!important;bottom:auto!important;width:170px!important}}
 
 /* V8.38 · La Veillée complète : COMPLET sur le cartouche de l'accueil (19.11.2026).
-   V8.39 · bande de journal sali, lettres en bouts de scotch comme le packshot (assets/complet/complet-bandeau.webp). */
+   V8.40 · bande photo détourée (assets/complet/bande-complet.webp), posée au bas du titre du cartouche. */
 .bd-bande-veillee{container-type:inline-size}
 .bd-complet .bd-bande-texte{margin-top:23cqw}
-.bd-bande-veillee img.bd-tampon{position:absolute!important;z-index:2;left:50%;top:52%;top:39cqw;width:74%!important;height:auto!important;transform:translateX(-50%) rotate(-7deg)!important;pointer-events:none;filter:drop-shadow(0 6px 10px rgba(0,0,0,.65))}
+.bd-bande-veillee img.bd-tampon{position:absolute!important;z-index:2;left:50%;top:56%;top:41cqw;width:80%!important;height:auto!important;transform:translateX(-50%) rotate(-3deg)!important;pointer-events:none;filter:drop-shadow(0 7px 12px rgba(0,0,0,.6))}
