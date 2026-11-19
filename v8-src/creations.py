@@ -643,11 +643,14 @@ def page_creation(c, i, carte, version):
     plus = ''
     if c.get('dates_courtes'):
         plus += f'<p class="cr-dates-ligne">{E(c["dates_courtes"])}</p>'
-    if c.get('reserver'):
+    if c.get('reserver') and c['slug'] == 'la-veillee':
+        plus += '<a class="cr-bouton cr-reserver" href="#attente">Liste d’attente</a>'   # V8.38 · complet
+    elif c.get('reserver'):
         plus += f'<a class="cr-bouton cr-reserver" href="{R}v8/billetterie/">Réserver</a>'
     corps = f'''
 {media_tete(c, carte, R)}
 {bloc_titre(c, carte, R, plus)}
+{complet_html(R, 'la-veillee') if c['slug'] == 'la-veillee' else ''}
 <article class="cr-corps">
  {f'<p class="cr-accroche">{c["accroche"]}</p>' if c["accroche"] else ''}
  {('<p class="cr-devise">' + '<br>'.join(E(x) for x in c['devise']) + '</p>') if c.get('devise') else ''}
@@ -667,7 +670,8 @@ def page_creation(c, i, carte, version):
     desc = c.get('description') or re.sub(r'<[^>]+>', '', c['accroche'] or f"{c['titre']}, une création Big Drama")[:150]
     og_img = c.get('og') or c.get('tete_photo') or (c['tete_video']['affiche'] if c.get('tete_video') else photos[0])
     og = f'<meta property="og:image" content="https://johnmetronome.github.io/bigdrama-maquette/{og_img}">'
-    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og + evenements(c), slug=c['da'])
+    return page(f'{c["titre"]} · Big Drama', desc, R, corps, 'creations', version, og + evenements(c), slug=c['da'],
+                csp=CSP_VEILLEE if c['slug'] == 'la-veillee' else CSP)
 
 
 # V8.33 · À propos : le texte d'Ariane seul. Le paragraphe APROPOS_PLUS est prêt si Rémi le juge utile.
@@ -712,6 +716,34 @@ HORAIRES = "Portes 19 h 30 · Spectacle 20 h"   # proposition de Rémi, 02.11.20
 TARIFS = [("Sans consommation", "20 €"), ("Avec consommation", "25 €")]   # Rémi, 02.11.2026
 BILLETWEB_ID = 'la-veillee-bigdrama'
 CSP_BILLETTERIE = CSP.replace("object-src 'none'", "frame-src https://www.billetweb.fr; object-src 'none'")
+# V8.38 · liste d'attente La Veillée (complet, 19.11.2026) : les inscriptions partent vers la feuille Google
+# « Big Drama · Liste d'attente La Veillée » par son application Apps Script. Aucun script tiers : un simple envoi (fetch).
+LISTE_ATTENTE = 'https://script.google.com/macros/s/AKfycbzsD51lvF-4YFvFrEmPKcJqlps_c4RuJdwSwhooYisx12BX1ipnm3BPf33eZ93nXy2pvg/exec'   # URL de l'application Web Apps Script (finit par /exec)
+CONNECT_ATTENTE = "connect-src 'self' https://script.google.com https://script.googleusercontent.com"
+CSP_BILLETTERIE = CSP_BILLETTERIE.replace("connect-src 'self'", CONNECT_ATTENTE)
+CSP_VEILLEE = CSP.replace("connect-src 'self'", CONNECT_ATTENTE)
+
+
+def complet_html(R, source):
+    """V8.38 · bandeau COMPLET fait main et formulaire de liste d'attente (prénom, nom, e-mail)."""
+    return f'''<section class="cr-complet-zone" id="attente" aria-labelledby="complet-titre">
+ <div class="cr-complet">
+  <p class="cr-tampon" aria-hidden="true">Complet</p>
+  <h2 id="complet-titre" class="cr-complet-titre">Les deux soirs affichent complet</h2>
+  <p class="cr-complet-texte">Laissez-nous votre adresse : vous serez prévenus en premier des prochaines Veillées.</p>
+  <form class="cr-attente" data-endpoint="{E(LISTE_ATTENTE)}" data-source="{E(source)}">
+   <div class="cr-champs">
+    <label><span>Prénom</span><input name="prenom" autocomplete="given-name" required maxlength="100"></label>
+    <label><span>Nom</span><input name="nom" autocomplete="family-name" required maxlength="100"></label>
+    <label class="cr-champ-large"><span>E-mail</span><input type="email" name="email" autocomplete="email" required maxlength="200"></label>
+   </div>
+   <label class="cr-piege" aria-hidden="true">Site <input name="site" tabindex="-1" autocomplete="off"></label>
+   <button type="submit">Me prévenir</button>
+   <p class="cr-attente-retour" role="status" aria-live="polite"></p>
+   <p class="cr-attente-mention">Votre adresse sert uniquement à vous prévenir des prochaines dates de Big Drama. Pour être retiré de la liste, écrivez à <a href="mailto:{CONTACT}">{CONTACT}</a>. <a href="{R}v8/confidentialite/">Confidentialité</a></p>
+  </form>
+ </div>
+</section>'''
 INFOS_VEILLEE = [("Lieu", "Paris 20e"),
                  ("Durée", "1 h 30"),
                  ("Public", "À partir de 12 ans"),
@@ -733,6 +765,7 @@ def page_billetterie(carte, version):
     corps = f'''
 {media_tete(v, carte, R)}
 {bloc_titre(v, carte, R, f'<p class="cr-dates-ligne">{E(v["dates_courtes"])}</p>')}
+{complet_html(R, 'billetterie')}
 <article class="cr-corps cr-billet-synopsis">
  {citation_html(v)}
  <div class="cr-texte">{"".join(f"<p>{x}</p>" for x in v["texte"])}</div>

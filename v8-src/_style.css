@@ -991,3 +991,10 @@ body.media-home.bd-defile #masthead{background:rgba(12,10,8,.82)!important;-webk
   .bd-bande-billet{padding:7px 9px;font-size:8.5px;letter-spacing:.1em}
 }
 @media (orientation:landscape) and (max-height:520px){.bd-bande-veillee{top:64px!important;bottom:auto!important;width:170px!important}}
+
+/* V8.38 · La Veillée complète : tampon COMPLET « fait main » sur le cartouche de l'accueil (19.11.2026) */
+.bd-tampon{position:absolute;z-index:2;left:50%;top:clamp(30px,4.4vw,64px);transform:translateX(-50%) rotate(-9deg);padding:.16em .5em .12em;
+  background:#e7dbbd;color:#b1281f;font:400 clamp(22px,2.4vw,36px)/1 "Special Elite","Courier New",monospace;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap;pointer-events:none;
+  box-shadow:0 4px 10px rgba(0,0,0,.55);clip-path:polygon(0 8%,9% 0,22% 6%,37% 1%,52% 7%,68% 0,83% 5%,100% 2%,98% 50%,100% 96%,86% 100%,70% 94%,54% 100%,38% 95%,22% 100%,8% 94%,0 100%,2% 50%)}
+.bd-tampon::after{content:"";position:absolute;inset:.18em .22em;border:2px solid currentColor;opacity:.75}
+@media (max-width:700px){.bd-tampon{font-size:16px;top:24px}}

@@ -48,3 +48,25 @@
   const v = document.querySelector('.cr-tete-film[data-affiche-portrait]'); if (!v) return;
   if (matchMedia('(max-width:700px) and (orientation:portrait)').matches) v.poster = v.dataset.affichePortrait;
 })();
+
+// V8.38 · liste d'attente La Veillée : l'inscription part vers la feuille Google (application Apps Script). Pas de script tiers.
+(() => {
+  document.querySelectorAll('form.cr-attente').forEach((f) => {
+    const retour = f.querySelector('.cr-attente-retour'), bouton = f.querySelector('button[type=submit]');
+    f.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const url = f.dataset.endpoint;
+      if (!url) { retour.textContent = 'Les inscriptions ouvrent très bientôt.'; return; }
+      bouton.disabled = true; retour.textContent = 'Envoi…';
+      const d = new URLSearchParams(new FormData(f)); d.set('source', f.dataset.source || location.pathname);
+      try {
+        await fetch(url, { method: 'POST', mode: 'no-cors', body: d });
+        f.classList.add('cr-envoye'); f.reset();
+        retour.textContent = 'Merci. Vous êtes sur la liste, on vous écrit dès qu’une nouvelle Veillée s’annonce.';
+      } catch (err) {
+        bouton.disabled = false;
+        retour.textContent = 'L’envoi n’a pas marché. Réessayez, ou écrivez-nous à contact@big-drama.fr.';
+      }
+    });
+  });
+})();

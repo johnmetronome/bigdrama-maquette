@@ -388,3 +388,11 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Piratage constaté le 15.11.2026 sur le serveur : `creations/creations.js` redirigeait les téléphones vers un lien raccourci externe, `app.js` modifié et cassé. Dates des fichiers maquillées. Nettoyage : `deployer.sh sauvegarde` puis `envoi-propre`.
 - exporter.py : empreinte SRI (`integrity="sha384-…"`) ajoutée à chaque `<script src>` local. Un script modifié sur le serveur est refusé par le navigateur.
 - Accueil : le bandeau devient un cartouche (`v8/assets/la-veillee-titre.jpg`, titre entier). Ordinateur : en bas à gauche du film. Téléphone : en haut à gauche sous le menu. La vidéo reste visible.
+
+## V8.38 · 19.11.2026 · La Veillée complète, liste d'attente
+
+- Bandeau COMPLET « fait main » (papier déchiré, ruban adhésif, tampon rouge, police Special Elite) sur la billetterie et sur la page La Veillée, avec un formulaire prénom, nom, e-mail.
+- Accueil : tampon COMPLET sur le cartouche, bouton « Liste d’attente » vers `billetterie/#attente`.
+- Les inscriptions partent vers la feuille Google « Big Drama · Liste d'attente La Veillée » (Drive d'Alex) par une application Web Apps Script. URL dans `creations.py`, constante `LISTE_ATTENTE`. Aucun script tiers : un envoi `fetch` en `no-cors`. CSP des deux pages : `connect-src` ouvert à script.google.com et script.googleusercontent.com.
+- Protection : champ piège anti-robots, adresse vérifiée, cellules protégées contre les formules (côté Apps Script).
+- À faire : ajouter la liste d'attente dans la page Confidentialité quand les pages légales seront validées.

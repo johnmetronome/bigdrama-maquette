@@ -404,3 +404,37 @@ body.cr[class]::before{display:none}
 /* V8.36 · infos pratiques fermées par défaut, ouvertes par un bouton (billetterie et La Veillée) */
 .cr-infos-tout dd a{color:var(--lumiere)}
 .cr-infos-tout dd small{font-size:13px;color:var(--creme-2)}
+
+/* V8.38 · La Veillée complète (19.11.2026) : bandeau COMPLET « fait main » et liste d'attente.
+   Papier déchiré, ruban adhésif, tampon rouge à l'encre usée (masque de grain en SVG, sans fichier ni script). */
+.cr-complet-zone{--papier:#e7dbbd;--encre:#1c1914;--rouge:#b1281f;--grain:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 -2.4 2.05'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  position:relative;max-width:760px;margin:clamp(34px,6vw,64px) auto clamp(30px,5vw,56px);padding:0 16px;filter:drop-shadow(0 18px 30px rgba(0,0,0,.55))}
+.cr-complet-zone::before,.cr-complet-zone::after{content:"";position:absolute;z-index:2;top:-12px;width:118px;height:30px;background:rgba(236,226,196,.62);box-shadow:0 1px 2px rgba(0,0,0,.25)}
+.cr-complet-zone::before{left:4%;transform:rotate(-8deg)}
+.cr-complet-zone::after{right:5%;transform:rotate(6deg)}
+.cr-complet{position:relative;padding:clamp(96px,12vw,136px) clamp(22px,5vw,56px) 30px;background:var(--papier);color:var(--encre);transform:rotate(-.7deg);
+  background-image:radial-gradient(ellipse at 12% 8%,transparent 55%,rgba(110,74,24,.16)),radial-gradient(ellipse at 90% 95%,transparent 50%,rgba(90,58,16,.22)),radial-gradient(circle at 70% 30%,rgba(120,84,30,.07) 0 6%,transparent 7%);
+  clip-path:polygon(0 2%,6% .2%,13% 1.6%,22% .3%,33% 1.9%,45% .5%,57% 1.7%,69% .1%,81% 1.5%,92% .4%,100% 1.9%,99.3% 23%,100% 48%,99.1% 72%,100% 97.5%,91% 100%,78% 98.4%,66% 100%,53% 98.7%,40% 100%,27% 98.3%,15% 100%,5% 98.6%,0 100%,.7% 75%,0 50%,.9% 25%)}
+.cr-tampon{position:absolute;top:clamp(10px,2vw,20px);right:clamp(12px,4vw,40px);margin:0;padding:.06em .32em;border:.07em solid currentColor;color:var(--rouge);
+  font:400 clamp(40px,6.4vw,64px)/1 "Special Elite","Courier New",monospace;letter-spacing:.1em;text-transform:uppercase;transform:rotate(-9deg);opacity:.9;mix-blend-mode:multiply;
+  -webkit-mask-image:var(--grain);mask-image:var(--grain);-webkit-mask-size:220px;mask-size:220px}
+.cr .cr-complet-titre{max-width:15em;margin:0 0 12px;font:400 clamp(24px,3.2vw,34px)/1.2 "Special Elite","Courier New",monospace;color:var(--encre);text-wrap:balance}
+.cr-complet-texte{max-width:34em;margin:0 0 24px;font:400 16px/1.65 var(--texte);color:#3a342a}
+.cr-attente .cr-champs{display:grid;grid-template-columns:1fr 1fr;gap:14px 22px}
+.cr-attente label span{display:block;font:400 13px/1.4 "Special Elite","Courier New",monospace;letter-spacing:.06em;text-transform:uppercase;color:#4a4236}
+.cr-attente input{width:100%;box-sizing:border-box;padding:8px 2px 6px;border:0;border-bottom:2px dashed var(--encre);border-radius:0;background:transparent;color:var(--encre);font:400 17px/1.4 var(--texte)}
+.cr-attente input:focus{outline:none;border-bottom-style:solid;background:rgba(255,255,255,.28)}
+.cr-champ-large{grid-column:1 / -1}
+.cr-piege{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.cr-attente button{margin-top:24px;padding:13px 26px;border:0;background:var(--encre);color:var(--papier);cursor:pointer;transform:rotate(.8deg);
+  font:400 16px/1 "Special Elite","Courier New",monospace;letter-spacing:.12em;text-transform:uppercase;box-shadow:3px 3px 0 var(--rouge)}
+.cr-attente button:hover{transform:rotate(-.6deg)}
+.cr-attente button:disabled{opacity:.55;cursor:wait}
+.cr-attente button:focus-visible,.cr-attente a:focus-visible{outline:2px solid var(--rouge);outline-offset:4px}
+.cr-attente-retour{min-height:1.6em;margin:14px 0 0;font:400 15px/1.5 "Special Elite","Courier New",monospace;color:var(--rouge)}
+.cr-attente-mention{margin:10px 0 0;font:400 12px/1.6 var(--texte);color:#5a5244}
+.cr-attente-mention a{color:var(--encre)}
+.cr-attente.cr-envoye .cr-champs,.cr-attente.cr-envoye button{display:none}
+.cr-attente.cr-envoye .cr-attente-retour{font-size:clamp(18px,2.4vw,22px)}
+@media (max-width:620px){.cr-attente .cr-champs{grid-template-columns:1fr}.cr-tampon{font-size:40px;top:16px;right:14px}.cr-complet{padding-top:84px}}
+@media (prefers-reduced-motion:reduce){.cr-attente button,.cr-attente button:hover{transform:none}}

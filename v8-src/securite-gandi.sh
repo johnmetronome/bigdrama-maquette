@@ -3,6 +3,7 @@
 # Même réglages et même mot de passe sFTP que deployer.sh (ftp.conf).
 #
 #   bash securite-gandi.sh inventaire          liste légère de l'instance (sites, racines, tâches planifiées). Ne modifie rien.
+#   bash securite-gandi.sh controle            liste complète de notre site et racine des autres sites. Ne modifie rien.
 #   bash securite-gandi.sh voir <site>         montre le dossier du site et sa racine web. Ne modifie rien.
 #   bash securite-gandi.sh isoler <site>       met l'ancien site hors ligne sans rien effacer :
 #                                              htdocs est renommé htdocs-pirate-<date> (plus servi par le web),
@@ -56,6 +57,16 @@ case "$MODE" in
     lancer "mv $VH/$SITE_CIBLE/htdocs $VH/$SITE_CIBLE/htdocs-pirate-$DATE; mkdir $VH/$SITE_CIBLE/htdocs; put -O $VH/$SITE_CIBLE/htdocs $T/.htaccess $T/index.html; chmod -R 755 $VH/$SITE_CIBLE/htdocs; cls -la $VH/$SITE_CIBLE/ $VH/$SITE_CIBLE/htdocs/"
     rm -rf "$T"
     echo "Fait. Vérifie : curl -sI https://$SITE_CIBLE/ | head -3" ;;
+  controle)
+    # lecture seule : tous les fichiers de notre site, et la racine de chaque site de l'instance
+    SORTIE="$ICI/../../gandi-controle-$DATE.txt"
+    {
+      echo "### www.big-drama.fr (tout)"; lancer "find -l $VH/www.big-drama.fr/htdocs"
+      for v in big-drama.fr www.bigdrama.fr dev.bigdrama.fr 849ee7a8c9.url-de-test.ws; do
+        echo "### $v"; lancer "cls -la $VH/$v/ $VH/$v/htdocs/"
+      done
+    } > "$SORTIE" 2>&1 || true
+    echo "$(wc -l < "$SORTIE") lignes · $SORTIE" ;;
   voir)
     # lecture seule : le dossier du site et sa racine web, fichiers cachés compris
     lancer "cls -la $VH/$SITE_CIBLE/ $VH/$SITE_CIBLE/htdocs/" ;;
@@ -63,6 +74,6 @@ case "$MODE" in
     DOSS="${3:?Indique le dossier à remettre, par exemple htdocs-pirate-2026-11-15-1300}"
     case "$DOSS" in htdocs-pirate-*) ;; *) echo "Dossier invalide."; exit 1 ;; esac
     lancer "mv $VH/$SITE_CIBLE/htdocs $VH/$SITE_CIBLE/htdocs-redirection-$DATE; mv $VH/$SITE_CIBLE/$DOSS $VH/$SITE_CIBLE/htdocs; cls -la $VH/$SITE_CIBLE/" ;;
-  *) echo "Mode inconnu : $MODE (inventaire, voir, isoler, retablir)"; exit 1 ;;
+  *) echo "Mode inconnu : $MODE (inventaire, controle, voir, isoler, retablir)"; exit 1 ;;
 esac
 unset LFTP_PASSWORD
