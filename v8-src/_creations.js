@@ -62,10 +62,10 @@
       try {
         await fetch(url, { method: 'POST', mode: 'no-cors', body: d });
         f.classList.add('cr-envoye'); f.reset();
-        retour.textContent = 'Merci. Vous êtes sur la liste, on vous écrit dès qu’une nouvelle Veillée s’annonce.';
+        retour.textContent = 'C’est noté. On vous fait signe pour la prochaine Veillée.';
       } catch (err) {
         bouton.disabled = false;
-        retour.textContent = 'L’envoi n’a pas marché. Réessayez, ou écrivez-nous à contact@big-drama.fr.';
+        retour.textContent = 'Le mot n’est pas passé. Réessayez, ou écrivez-nous à contact@big-drama.fr.';
       }
     });
   });

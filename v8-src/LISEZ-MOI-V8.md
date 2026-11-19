@@ -396,3 +396,11 @@ bash deployer.sh envoi-propre    # envoie et retire du serveur l'ancien site (co
 - Les inscriptions partent vers la feuille Google « Big Drama · Liste d'attente La Veillée » (Drive d'Alex) par une application Web Apps Script. URL dans `creations.py`, constante `LISTE_ATTENTE`. Aucun script tiers : un envoi `fetch` en `no-cors`. CSP des deux pages : `connect-src` ouvert à script.google.com et script.googleusercontent.com.
 - Protection : champ piège anti-robots, adresse vérifiée, cellules protégées contre les formules (côté Apps Script).
 - À faire : ajouter la liste d'attente dans la page Confidentialité quand les pages légales seront validées.
+
+## V8.39 · 19.11.2026 · COMPLET en bouts de scotch
+
+- Retour d'Alex : trop « IA ». COMPLET refait en bouts de scotch sombre, même langage que le packshot La Veillée (lettres en bandes, une bande rouge).
+- Billetterie et page La Veillée : COMPLET scotché sur un mur de journaux éclairé, formulaire sur une feuille de journal salie tenue par deux bouts de scotch. Titre « Les deux soirs affichent complet » retiré.
+- Nouveau texte : « Plus une chaise de libre. » / « Laissez votre nom à la porte. On vous prévient avant tout le monde quand une nouvelle Veillée s’annonce. » / bouton « Laisser mon nom » / « C’est noté. On vous fait signe pour la prochaine Veillée. »
+- Accueil : bande de journal déchirée avec COMPLET en scotch, posée au bas du titre du cartouche.
+- Images dans `v8/assets/complet/`, générées par `v8-src/complet-scotch.py` (Python + Pillow + NumPy) à partir d'une image du packshot v23 et des textures CC0 ambientCG de `LaVeillee_V3_3/textures_cc0`. Le faux texte de journal est fait de mots courants tirés au hasard.
